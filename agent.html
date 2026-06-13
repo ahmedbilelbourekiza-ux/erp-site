@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>واجهة المؤكد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;--bg4:#252532;
+  --border:#2a2a38;--border2:#363648;
+  --text:#e8e8f0;--text2:#9090a8;--text3:#5a5a70;
+  --purple:#7c6af7;--purple2:#9d8fff;--purple-bg:#1e1a3a;
+  --green:#34d399;--green-bg:#0d2920;
+  --amber:#fbbf24;--amber-bg:#2a1f08;
+  --red:#f87171;--red-bg:#2a0f0f;
+  --blue:#60a5fa;--blue-bg:#0f1f35;
+  --radius:10px;--radius-lg:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:32px;width:340px;text-align:center}
+.login-logo{font-size:18px;font-weight:600;color:var(--purple2);margin-bottom:4px}
+.login-sub{font-size:12px;color:var(--text3);margin-bottom:28px}
+.form-group{margin-bottom:14px;text-align:right}
+.form-group label{display:block;font-size:11px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px}
+.form-group input,.form-group select{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color 0.15s}
+.form-group input:focus,.form-group select:focus{border-color:var(--purple)}
+.login-err{font-size:12px;color:var(--red);margin-bottom:12px;min-height:18px}
+
+/* MAIN APP */
+.app{display:none;flex-direction:column;min-height:100vh}
+.app.visible{display:flex}
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.header-left h2{font-size:15px;font-weight:500}
+.header-left p{font-size:11px;color:var(--text3);margin-top:2px}
+.header-right{display:flex;align-items:center;gap:10px}
+
+.agent-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px 20px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.a-stat{text-align:center;background:var(--bg3);border-radius:var(--radius);padding:10px 8px}
+.a-stat .n{font-size:20px;font-weight:600}
+.a-stat .l{font-size:10px;color:var(--text3);margin-top:3px}
+
+.filters{display:flex;gap:8px;padding:14px 20px;background:var(--bg);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.filters select,.filters input{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 12px;font-size:12px;font-family:inherit;outline:none}
+.filters input{flex:1;min-width:160px}
+
+.orders-list{flex:1;padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+
+.order-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:border-color 0.15s}
+.order-card:hover{border-color:var(--border2)}
+.order-card.overdue{border-color:var(--red);background:rgba(248,113,113,0.04)}
+.order-card.confirmed{border-color:var(--green);opacity:0.7}
+
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.card-id{font-size:11px;color:var(--text3);font-family:monospace}
+.card-name{font-size:15px;font-weight:500;margin-top:2px}
+.card-badges{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+
+.card-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.info-item{background:var(--bg3);border-radius:8px;padding:8px 10px}
+.info-label{font-size:10px;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.3px}
+.info-value{font-size:13px}
+.phone-val{font-family:monospace;direction:ltr;text-align:right;font-size:14px;letter-spacing:0.5px}
+
+.card-calls{margin-bottom:12px}
+.call-count{font-size:11px;color:var(--text3);margin-bottom:6px}
+.call-chips{display:flex;gap:4px;flex-wrap:wrap}
+.call-chip{padding:3px 8px;border-radius:20px;font-size:10px;font-weight:500}
+
+.card-actions{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text);transition:all 0.15s;font-weight:500}
+.btn:hover{border-color:var(--border2);background:var(--bg4)}
+.btn-primary{background:var(--purple);border-color:var(--purple);color:white}
+.btn-primary:hover{background:var(--purple2)}
+.btn-green{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-call{background:var(--green-bg);border-color:var(--green);color:var(--green);flex:1;justify-content:center}
+.btn-log{flex:1;justify-content:center}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.b-pending{background:var(--amber-bg);color:var(--amber)}
+.b-confirmed{background:var(--green-bg);color:var(--green)}
+.b-no_answer{background:var(--bg4);color:var(--text2)}
+.b-cancelled{background:var(--red-bg);color:var(--red)}
+.b-callback{background:var(--blue-bg);color:var(--blue)}
+
+.overdue-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--red);background:var(--red-bg);border:1px solid var(--red);padding:2px 7px;border-radius:20px}
+.pulse{animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:24px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.modal-info{font-size:12px;color:var(--text2);background:var(--bg3);padding:10px 12px;border-radius:8px;margin-bottom:16px;line-height:1.8}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.result-btn{padding:12px;border-radius:10px;border:2px solid var(--border);background:var(--bg3);cursor:pointer;text-align:center;transition:all 0.15s;font-family:inherit}
+.result-btn:hover{border-color:var(--border2)}
+.result-btn.selected{border-color:var(--purple);background:var(--purple-bg)}
+.result-btn .icon{font-size:20px;margin-bottom:4px}
+.result-btn .label{font-size:12px;font-weight:500;color:var(--text)}
+.result-btn .sublabel{font-size:10px;color:var(--text3)}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:11px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px}
+.form-group textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;outline:none;height:80px;resize:vertical}
+.form-group textarea:focus{border-color:var(--purple)}
+.modal-footer{display:flex;gap:8px}
+
+.history-title{font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.3px}
+.hist-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:6px}
+.hist-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.hist-time{font-size:10px;color:var(--text3)}
+.hist-note{font-size:12px;color:var(--text2);margin-top:4px}
+
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty p{font-size:14px;margin-top:8px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:10px 18px;border-radius:10px;font-size:13px;z-index:200;transition:transform 0.3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--green);color:var(--green)}
+.toast.error{border-color:var(--red);color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-logo">CRM التأكيدات</div>
+    <div class="login-sub">واجهة المؤكد</div>
+    <div class="form-group">
+      <label>اسمك</label>
+      <select id="loginName">
+        <option value="">— اختر اسمك —</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPass" placeholder="••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">دخول</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="mainApp">
+  <div class="header">
+    <div class="header-left">
+      <h2 id="agentGreeting">مرحباً</h2>
+      <p>طلباتك المُعيّنة اليوم</p>
+    </div>
+    <div class="header-right">
+      <span id="headerTime" style="font-size:11px;color:var(--text3)"></span>
+      <button class="btn btn-sm" onclick="doLogout()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        خروج
+      </button>
+    </div>
+  </div>
+
+  <div class="agent-stats" id="agentStats"></div>
+
+  <div class="filters">
+    <select id="aFStatus" onchange="renderAgentOrders()">
+      <option value="">كل الحالات</option>
+      <option value="pending">في الانتظار</option>
+      <option value="no_answer">لم يرد</option>
+      <option value="callback">إعادة الاتصال</option>
+      <option value="confirmed">مؤكد</option>
+      <option value="cancelled">ملغي</option>
+    </select>
+    <input id="aFSearch" placeholder="بحث بالاسم أو الهاتف..." oninput="renderAgentOrders()" type="text">
+  </div>
+
+  <div class="orders-list" id="ordersList"></div>
+</div>
+
+<!-- CALL MODAL -->
+<div class="overlay" id="callModal">
+  <div class="modal">
+    <h3 id="cModalTitle">تسجيل مكالمة</h3>
+    <div class="modal-info" id="cModalInfo"></div>
+
+    <div class="result-grid">
+      <button class="result-btn" data-val="no_answer" onclick="selectResult(this)">
+        <div class="icon">📵</div>
+        <div class="label">لم يرد</div>
+        <div class="sublabel">الهاتف رن ولم يُجب</div>
+      </button>
+      <button class="result-btn" data-val="callback" onclick="selectResult(this)">
+        <div class="icon">🔁</div>
+        <div class="label">إعادة الاتصال</div>
+        <div class="sublabel">طلب الاتصال لاحقاً</div>
+      </button>
+      <button class="result-btn" data-val="confirmed" onclick="selectResult(this)">
+        <div class="icon">✅</div>
+        <div class="label">تم التأكيد</div>
+        <div class="sublabel">وافق على الطلب</div>
+      </button>
+      <button class="result-btn" data-val="cancelled" onclick="selectResult(this)">
+        <div class="icon">❌</div>
+        <div class="label">إلغاء</div>
+        <div class="sublabel">رفض أو ألغى</div>
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label>ملاحظة (اختياري)</label>
+      <textarea id="cNote" placeholder="مثال: طلب الاتصال بعد الساعة 6..."></textarea>
+    </div>
+
+    <div id="cHistory"></div>
+
+    <div class="modal-footer">
+      <button class="btn btn-sm" style="flex:1;justify-content:center" onclick="closeCallModal()">إلغاء</button>
+      <button class="btn btn-primary btn-sm" style="flex:2;justify-content:center" id="cSaveBtn" onclick="saveCall()">تسجيل</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'crm_data_v2';
+const STATUS_LABEL = { pending:'في الانتظار', confirmed:'مؤكد', no_answer:'لم يرد', cancelled:'ملغي', callback:'إعادة الاتصال' };
+
+let currentAgent = null;
+let callingOrderId = null;
+let selectedResult = null;
+
+function getData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { orders: [], agents: [], settings: {} }; }
+  catch { return { orders: [], agents: [], settings: {} }; }
+}
+
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function fmt(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString('ar-DZ', { day: '2-digit', month: '2-digit' }) + ' ' + d.toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
+}
+
+function minutesAgo(ts) {
+  return Math.round((Date.now() - ts) / 60000);
+}
+
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  setTimeout(() => el.className = 'toast', 2500);
+}
+
+// ---- LOGIN ----
+function initLogin() {
+  const data = getData();
+  const sel = document.getElementById('loginName');
+  sel.innerHTML = '<option value="">— اختر اسمك —</option>' +
+    data.agents.map(a => `<option value="${a.name}">${a.name}</option>`).join('');
+
+  // Check session
+  const saved = sessionStorage.getItem('agent_session');
+  if (saved) {
+    const ag = data.agents.find(a => a.name === saved);
+    if (ag) { currentAgent = ag; showApp(); return; }
+  }
+}
+
+function doLogin() {
+  const name = document.getElementById('loginName').value;
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  if (!name) { err.textContent = 'اختر اسمك'; return; }
+  const data = getData();
+  const ag = data.agents.find(a => a.name === name);
+  if (!ag) { err.textContent = 'المؤكد غير موجود'; return; }
+  if (ag.pass && ag.pass !== pass) { err.textContent = 'كلمة المرور خاطئة'; return; }
+  currentAgent = ag;
+  sessionStorage.setItem('agent_session', ag.name);
+  showApp();
+}
+
+function doLogout() {
+  sessionStorage.removeItem('agent_session');
+  currentAgent = null;
+  document.getElementById('mainApp').classList.remove('visible');
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginErr').textContent = '';
+}
+
+function showApp() {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('mainApp').classList.add('visible');
+  document.getElementById('agentGreeting').textContent = 'مرحباً، ' + currentAgent.name;
+  renderAll();
+  updateClock();
+  setInterval(updateClock, 30000);
+  setInterval(renderAll, 60000);
+}
+
+function updateClock() {
+  const el = document.getElementById('headerTime');
+  if (el) el.textContent = new Date().toLocaleTimeString('ar-DZ', { hour: '2-digit', minute: '2-digit' });
+}
+
+// ---- RENDER ----
+function renderAll() {
+  renderStats();
+  renderAgentOrders();
+}
+
+function renderStats() {
+  const data = getData();
+  const alertMin = data.settings?.alertMinutes || 60;
+  const my = data.orders.filter(o => o.agent === currentAgent.name);
+  const confirmed = my.filter(o => o.status === 'confirmed').length;
+  const pending = my.filter(o => ['pending','no_answer','callback'].includes(o.status)).length;
+  const overdue = my.filter(o => o.calls.length === 0 && minutesAgo(o.createdAt) > alertMin).length;
+  const rate = my.length ? Math.round(confirmed / my.length * 100) : 0;
+
+  document.getElementById('agentStats').innerHTML = `
+    <div class="a-stat"><div class="n">${my.length}</div><div class="l">طلباتي</div></div>
+    <div class="a-stat"><div class="n" style="color:var(--green)">${confirmed}</div><div class="l">مؤكد</div></div>
+    <div class="a-stat"><div class="n" style="color:var(--amber)">${pending}</div><div class="l">في الانتظار</div></div>
+    <div class="a-stat"><div class="n" style="color:${overdue > 0 ? 'var(--red)' : 'var(--text3)'}">${overdue}</div><div class="l">متأخر</div></div>
+  `;
+}
+
+function renderAgentOrders() {
+  const data = getData();
+  const alertMin = data.settings?.alertMinutes || 60;
+  const status = document.getElementById('aFStatus').value;
+  const search = document.getElementById('aFSearch').value.toLowerCase();
+
+  let list = data.orders.filter(o => {
+    if (o.agent !== currentAgent.name) return false;
+    if (status && o.status !== status) return false;
+    if (search && !o.client.includes(search) && !o.phone.includes(search)) return false;
+    return true;
+  });
+
+  // Sort: overdue first, then pending, then others
+  list.sort((a, b) => {
+    const aOver = a.calls.length === 0 && minutesAgo(a.createdAt) > alertMin;
+    const bOver = b.calls.length === 0 && minutesAgo(b.createdAt) > alertMin;
+    if (aOver && !bOver) return -1;
+    if (!aOver && bOver) return 1;
+    if (a.status === 'pending' && b.status !== 'pending') return -1;
+    if (a.status !== 'pending' && b.status === 'pending') return 1;
+    return b.createdAt - a.createdAt;
+  });
+
+  if (!list.length) {
+    document.getElementById('ordersList').innerHTML = `<div class="empty">
+      <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto;display:block;opacity:0.3"><path d="M20 13V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7m16 0v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6m16 0H4"/></svg>
+      <p>لا توجد طلبات معيّنة لك</p>
+    </div>`;
+    return;
+  }
+
+  document.getElementById('ordersList').innerHTML = list.map(o => {
+    const overdue = o.calls.length === 0 && minutesAgo(o.createdAt) > alertMin;
+    const lastCall = o.calls.length ? o.calls[o.calls.length - 1] : null;
+    const isConfirmed = o.status === 'confirmed';
+    const isCancelled = o.status === 'cancelled';
+
+    const callChips = o.calls.slice(-3).map(c =>
+      `<span class="call-chip badge b-${c.result}" style="font-size:10px">${STATUS_LABEL[c.result]}</span>`
+    ).join('');
+
+    return `<div class="order-card ${overdue ? 'overdue' : ''} ${isConfirmed ? 'confirmed' : ''}">
+      <div class="card-top">
+        <div>
+          <div class="card-id">${o.id} · ${fmt(o.createdAt)}</div>
+          <div class="card-name">${o.client}</div>
+        </div>
+        <div class="card-badges">
+          ${overdue ? '<span class="overdue-tag"><span class="dot pulse" style="background:var(--red)"></span>متأخر</span>' : ''}
+          <span class="badge b-${o.status}"><span class="dot"></span>${STATUS_LABEL[o.status]}</span>
+        </div>
+      </div>
+
+      <div class="card-info">
+        <div class="info-item">
+          <div class="info-label">رقم الهاتف</div>
+          <div class="info-value phone-val">${o.phone}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">الولاية</div>
+          <div class="info-value">${o.wilaya || '—'}</div>
+        </div>
+        <div class="info-item" style="grid-column:span 2">
+          <div class="info-label">المنتج</div>
+          <div class="info-value">${o.product || '—'} ${o.price ? '· ' + o.price.toLocaleString() + ' دج' : ''}</div>
+        </div>
+        ${o.note ? `<div class="info-item" style="grid-column:span 2"><div class="info-label">ملاحظة</div><div class="info-value" style="color:var(--text2)">${o.note}</div></div>` : ''}
+      </div>
+
+      ${o.calls.length > 0 ? `<div class="card-calls">
+        <div class="call-count">${o.calls.length} مكالمة — آخرها: ${fmt(lastCall.time)}</div>
+        <div class="call-chips">${callChips}</div>
+      </div>` : '<div style="font-size:11px;color:var(--red);margin-bottom:10px">لم يتم الاتصال بعد</div>'}
+
+      ${!isConfirmed && !isCancelled ? `<div class="card-actions">
+        <a href="tel:${o.phone}" class="btn btn-call btn-sm">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.8A16 16 0 0 0 16 16.91l.95-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          اتصل الآن
+        </a>
+        <button class="btn btn-log btn-sm" onclick="openCallModal('${o.id}')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+          تسجيل نتيجة
+        </button>
+      </div>` : `<div class="badge b-${o.status}" style="font-size:12px;padding:6px 12px">
+        ${isConfirmed ? '✓ تم التأكيد — جاهز للشحن' : '✗ تم الإلغاء'}
+      </div>`}
+    </div>`;
+  }).join('');
+}
+
+// ---- CALL MODAL ----
+function openCallModal(id) {
+  callingOrderId = id;
+  selectedResult = null;
+  const data = getData();
+  const o = data.orders.find(x => x.id === id);
+
+  document.getElementById('cModalTitle').textContent = 'تسجيل نتيجة — ' + o.id;
+  document.getElementById('cModalInfo').innerHTML = `<strong>${o.client}</strong> | ${o.phone}<br>${o.product || ''} ${o.price ? '| ' + o.price.toLocaleString() + ' دج' : ''} | ${o.wilaya || ''}`;
+  document.getElementById('cNote').value = '';
+
+  // Reset selection
+  document.querySelectorAll('.result-btn').forEach(b => b.classList.remove('selected'));
+
+  // Call history
+  const hist = o.calls.length
+    ? `<div class="history-title">المكالمات السابقة (${o.calls.length})</div>` +
+      o.calls.slice().reverse().map(c => `<div class="hist-item">
+        <div class="hist-header">
+          <span class="badge b-${c.result}" style="font-size:10px">${STATUS_LABEL[c.result]}</span>
+          <span class="hist-time">${fmt(c.time)}</span>
+        </div>
+        ${c.note ? `<div class="hist-note">${c.note}</div>` : ''}
+      </div>`).join('')
+    : '';
+  document.getElementById('cHistory').innerHTML = hist;
+  document.getElementById('callModal').classList.add('open');
+}
+
+function selectResult(btn) {
+  document.querySelectorAll('.result-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedResult = btn.dataset.val;
+}
+
+function closeCallModal() {
+  document.getElementById('callModal').classList.remove('open');
+  callingOrderId = null;
+  selectedResult = null;
+}
+
+function saveCall() {
+  if (!selectedResult) { toast('اختر نتيجة المكالمة', 'error'); return; }
+  const note = document.getElementById('cNote').value.trim();
+  const data = getData();
+  const o = data.orders.find(x => x.id === callingOrderId);
+  if (!o) return;
+  o.calls.push({ time: Date.now(), result: selectedResult, note });
+  o.status = selectedResult;
+  saveData(data);
+  closeCallModal();
+  renderAll();
+  const msgs = { confirmed:'✓ تم التأكيد!', no_answer:'تم تسجيل: لم يرد', callback:'تم تسجيل: إعادة الاتصال', cancelled:'تم تسجيل: الإلغاء' };
+  toast(msgs[selectedResult] || 'تم الحفظ', selectedResult === 'confirmed' ? 'success' : '');
+}
+
+// Close modal on overlay tap
+document.getElementById('callModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('callModal')) closeCallModal();
+});
+
+// ---- INIT ----
+initLogin();
+</script>
+</body>
+</html>
