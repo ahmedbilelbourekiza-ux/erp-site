@@ -251,6 +251,14 @@ tr:hover td{background:var(--bg3)}
 </div>
 
 <div class="main">
+  <!-- NOTIFICATIONS PANEL -->
+  <div id="notifPanel" style="display:none;position:fixed;top:54px;right:0;left:var(--sidebar,0);max-width:380px;margin:0 auto;background:var(--bg2);border:1px solid var(--border2);border-radius:0 0 var(--radius-lg) var(--radius-lg);z-index:50;max-height:320px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.4)">
+    <div style="padding:10px 14px;font-size:12px;font-weight:500;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+      <span id="notifPanelTitle">الإشعارات</span>
+      <button onclick="clearNotifs()" style="font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer">مسح</button>
+    </div>
+    <div id="notifList"><div style="padding:14px;text-align:center;font-size:12px;color:var(--text3)">لا توجد إشعارات</div></div>
+  </div>
   <div class="topbar">
     <div class="topbar-left">
       <button class="hamburger" onclick="openSidebar()">
@@ -263,6 +271,10 @@ tr:hover td{background:var(--bg3)}
         <span class="dot pulse"></span>
         <span id="overdueCount">0</span> <span data-i18n="overdue">متأخر</span>
       </span>
+      <button id="notifBell" onclick="toggleNotifPanel()" style="position:relative;background:none;border:none;cursor:pointer;color:var(--text2);padding:4px" title="الإشعارات">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span id="notifBadge" style="display:none;position:absolute;top:-2px;right:-2px;background:var(--red);color:white;border-radius:50%;width:16px;height:16px;font-size:9px;display:none;align-items:center;justify-content:center;font-weight:600">0</span>
+      </button>
       <span id="syncStatus" style="font-size:11px;color:var(--text3)"></span>
       <button class="btn btn-primary btn-sm" onclick="openNewOrder()">
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -366,13 +378,28 @@ tr:hover td{background:var(--bg3)}
         </div>
       </div>
       <div class="section" style="margin-bottom:12px">
-        <div class="section-header"><span class="section-title" data-i18n="alert_settings">إعدادات التنبيهات</span></div>
+        <div class="section-header"><span class="section-title" data-i18n="alert_settings">إعدادات التنبيهات والتحكم</span></div>
         <div style="padding:16px">
           <div class="form-group">
             <label data-i18n="alert_minutes">تنبيه إذا لم يُتصل بالطلب خلال (دقيقة)</label>
             <input type="number" id="alertMinutes" value="60" style="width:100px">
           </div>
-          <button class="btn btn-primary btn-sm" onclick="saveSettings()" data-i18n="save">حفظ</button>
+          <div class="form-group" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+            <label>مكافحة التلاعب — الحد الأدنى لمدة المكالمة (ثانية)</label>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:8px">إذا كانت المدة أقل من هذا الرقم يظهر تحذير ⚠️</div>
+            <input type="number" id="minCallSeconds" value="40" style="width:100px">
+          </div>
+          <div class="form-group" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+            <label>تعيين تلقائي للمؤكدين</label>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:8px">يوزع الطلبات الجديدة تلقائياً على المؤكدين بالتساوي</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <input type="checkbox" id="autoAssignToggle" style="width:18px;height:18px;cursor:pointer">
+              <label for="autoAssignToggle" style="font-size:13px;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text)">تفعيل التعيين التلقائي</label>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+            <button class="btn btn-primary btn-sm" onclick="saveSettings();saveServerSettings()">حفظ كل الإعدادات</button>
+          </div>
         </div>
       </div>
       <div class="section">
@@ -656,8 +683,9 @@ function renderOrders() {
           ${agentOpts.replace(`value="${o.agent}"`, `value="${o.agent}" selected`)}
         </select>
       </td>
-      <td><span class="badge b-${o.status}"><span class="dot"></span>${SL[o.status] || o.status}</span>
-        <div style="font-size:10px;color:${callCount>0?'var(--text3)':'var(--red)'};margin-top:2px">${callCount} ${t('calls')}</div>
+      <td>
+        <span class="badge b-${o.status}"><span class="dot"></span>${SL[o.status] || o.status}</span>
+        <div style="font-size:10px;color:${callCount>0?'var(--text3)':'var(--red)'};margin-top:2px">${callCount} ${t('calls')}${o.calls.some(c=>c.suspicious)?' <span style="color:var(--red)">⚠️</span>':''}</div>
       </td>
       <td style="font-size:11px;color:var(--text3)">${fmt(o.createdAt)}</td>
       <td style="text-align:center;white-space:nowrap">
@@ -764,11 +792,17 @@ function openCallModal(id) {
   document.getElementById('c_result').value = 'no_answer';
   document.getElementById('c_note').value = '';
 
-  function fmtDur(s){ if(!s)return''; return s<60?s+' ث':Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60); }
+  function fmtDur(s){ if(s===null||s===undefined)return''; if(s<60) return s+(currentLang==='ar'?' ث':' sec'); return Math.floor(s/60)+(currentLang==='ar'?' د':' min')+(s%60>0?' '+s%60+(currentLang==='ar'?' ث':' sec'):''); }
   const SL = STATUS_LABEL();
   const hist = o.calls?.length
-    ? `<div class="call-history"><h4>${currentLang==='ar'?'سجل المكالمات':'Historique'}</h4>` + o.calls.slice().reverse().map(c => `<div class="call-item"><div class="call-item-header"><span class="badge b-${c.result}">${SL[c.result]||c.result}</span><span class="call-item-time">${fmt(c.callStartTime||c.time)}</span></div>${c.duration?`<div class="call-duration">⏱ ${fmtDur(c.duration)}</div>`:''} ${c.note?`<div class="call-item-note">${c.note}</div>`:''}</div>`).join('') + '</div>'
-    : `<div class="no-calls">${t('no_calls_yet')}</div>`;
+    ? '<div class="call-history"><h4>'+(currentLang==='ar'?'سجل المكالمات':'Historique')+' ('+o.calls.length+')</h4>' + o.calls.slice().reverse().map(c => {
+        const suspStyle = c.suspicious ? 'border-color:var(--red);background:rgba(248,113,113,0.06)' : '';
+        const durEl = c.duration!==null&&c.duration!==undefined
+          ? '<div class="call-duration" style="color:'+(c.suspicious?'var(--red)':'var(--amber)')+'">⏱ '+fmtDur(c.duration)+(c.suspicious?' <span style="font-size:10px;background:var(--red-bg);color:var(--red);padding:2px 6px;border-radius:4px;border:1px solid var(--red)">⚠️ '+(currentLang==='ar'?'مدة قصيرة — تلاعب محتمل':'Too short — suspicious')+'</span>':'')+'</div>'
+          : '<div style="font-size:11px;color:var(--text3)">⚠️ '+(currentLang==='ar'?'لم يُضغط زر الاتصال':'Call button not pressed')+'</div>';
+        return '<div class="call-item" style="'+suspStyle+'"><div class="call-item-header"><span class="badge b-'+c.result+'">'+(SL[c.result]||c.result)+'</span><span class="call-item-time">'+fmt(c.callStartTime||c.time)+'</span></div>'+durEl+(c.note?'<div class="call-item-note">'+c.note+'</div>':'')+'</div>';
+      }).join('') + '</div>'
+    : '<div class="no-calls">'+t('no_calls_yet')+'</div>';
   document.getElementById('callHistory').innerHTML = hist;
   document.getElementById('callModal').classList.add('open');
 }
@@ -969,6 +1003,96 @@ function clearAllData() {
 
 // Modals close on overlay click
 document.querySelectorAll('.overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
+document.addEventListener('click', e => { if(!e.target.closest('#notifBell')&&!e.target.closest('#notifPanel')) document.getElementById('notifPanel').style.display='none'; });
+
+// ---- NOTIFICATIONS ----
+let notifications = [];
+let unreadCount = 0;
+let sseSource = null;
+
+function connectSSE() {
+  if (sseSource) sseSource.close();
+  sseSource = new EventSource(serverUrl + '/api/notifications/subscribe?agent=manager');
+  sseSource.onmessage = (e) => {
+    try {
+      const data = JSON.parse(e.data);
+      if (data.type === 'connected') return;
+      handleManagerNotif(data);
+    } catch(err){}
+  };
+  sseSource.onerror = () => setTimeout(connectSSE, 5000);
+}
+
+function handleManagerNotif(data) {
+  let title='', body='';
+  if (data.type === 'new_order') {
+    title = currentLang==='ar'?'طلب جديد':'Nouvelle commande';
+    body = data.order?.client + ' — ' + (data.order?.phone||'');
+    fetchOrders().then(refresh);
+  } else if (data.type === 'suspicious_call') {
+    title = currentLang==='ar'?'⚠️ تلاعب محتمل':'⚠️ Suspicious call';
+    body = (data.order?.id||'') + ' — ' + (data.order?.agent||'') + ' — ' + (data.call?.duration||0) + (currentLang==='ar'?' ث':' sec');
+    fetchOrders().then(refresh);
+  } else if (data.type === 'call_logged') {
+    fetchOrders().then(refresh);
+    return;
+  } else { return; }
+
+  notifications.unshift({ title, body, type: data.type, time: Date.now() });
+  unreadCount++;
+  updateNotifBadge();
+  renderNotifList();
+  if (Notification.permission === 'granted') {
+    new Notification('CRM — ' + title, { body });
+  }
+  toast('🔔 ' + title + ': ' + body, data.type==='suspicious_call'?'error':'');
+}
+
+function toggleNotifPanel() {
+  const p = document.getElementById('notifPanel');
+  const isOpen = p.style.display !== 'none';
+  p.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) { unreadCount = 0; updateNotifBadge(); }
+}
+
+function clearNotifs() { notifications=[]; renderNotifList(); }
+
+function updateNotifBadge() {
+  const b = document.getElementById('notifBadge');
+  if (!b) return;
+  if (unreadCount > 0) { b.style.display='flex'; b.textContent=unreadCount>9?'9+':unreadCount; }
+  else b.style.display='none';
+}
+
+function renderNotifList() {
+  const el = document.getElementById('notifList');
+  if (!el) return;
+  if (!notifications.length) { el.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:var(--text3)">'+(currentLang==='ar'?'لا توجد إشعارات':'No notifications')+'</div>'; return; }
+  el.innerHTML = notifications.slice(0,20).map(n => {
+    const colors = { new_order:'var(--green)', suspicious_call:'var(--red)', call_logged:'var(--blue)', order_assigned:'var(--purple)' };
+    return '<div style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;border-right:3px solid '+(colors[n.type]||'var(--border)')+'"><div style="font-weight:500;margin-bottom:2px">'+n.title+'</div><div style="color:var(--text2)">'+n.body+'</div><div style="font-size:10px;color:var(--text3);margin-top:2px">'+fmt(n.time)+'</div></div>';
+  }).join('');
+}
+
+// ---- AUTO-ASSIGN SETTING ----
+async function loadServerSettings() {
+  try {
+    const s = await api('GET', '/api/settings');
+    const el = document.getElementById('autoAssignToggle');
+    if (el) el.checked = s.autoAssign || false;
+    const minEl = document.getElementById('minCallSeconds');
+    if (minEl) minEl.value = s.minCallSeconds || 40;
+  } catch(e){}
+}
+
+async function saveServerSettings() {
+  const autoAssign = document.getElementById('autoAssignToggle')?.checked || false;
+  const minCallSeconds = parseInt(document.getElementById('minCallSeconds')?.value) || 40;
+  try {
+    await api('PUT', '/api/settings', { autoAssign, minCallSeconds });
+    toast(currentLang==='ar'?'تم حفظ الإعدادات':'Settings saved', 'success');
+  } catch(e) { toast('Error', 'error'); }
+}
 
 // ---- REFRESH ----
 function refresh() {
@@ -977,7 +1101,14 @@ function refresh() {
   renderOrders();
 }
 
+// Request browser notification permission
+if ('Notification' in window && Notification.permission === 'default') {
+  Notification.requestPermission();
+}
+
 init();
+connectSSE();
+loadServerSettings();
 </script>
 </body>
 </html>
