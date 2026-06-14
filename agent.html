@@ -5,60 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f0f13">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>واجهة المؤكد</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>Agent CRM</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;--bg4:#252532;
-  --border:#2a2a38;--border2:#363648;
-  --text:#e8e8f0;--text2:#9090a8;--text3:#5a5a70;
-  --purple:#7c6af7;--purple2:#9d8fff;--purple-bg:#1e1a3a;
-  --green:#34d399;--green-bg:#0d2920;
-  --amber:#fbbf24;--amber-bg:#2a1f08;
-  --red:#f87171;--red-bg:#2a0f0f;
-  --blue:#60a5fa;--blue-bg:#0f1f35;
-  --radius:10px;--radius-lg:16px;
-}
+:root{--bg:#0f0f13;--bg2:#16161d;--bg3:#1e1e28;--bg4:#252532;--border:#2a2a38;--border2:#363648;--text:#e8e8f0;--text2:#9090a8;--text3:#5a5a70;--purple:#7c6af7;--purple2:#9d8fff;--purple-bg:#1e1a3a;--green:#34d399;--green-bg:#0d2920;--amber:#fbbf24;--amber-bg:#2a1f08;--red:#f87171;--red-bg:#2a0f0f;--blue:#60a5fa;--blue-bg:#0f1f35;--radius:10px;--radius-lg:16px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
-
-/* LOGIN */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:340px;text-align:center}
 .login-logo{font-size:18px;font-weight:600;color:var(--purple2);margin-bottom:4px}
-.login-sub{font-size:12px;color:var(--text3);margin-bottom:24px}
+.login-sub{font-size:12px;color:var(--text3);margin-bottom:20px}
+.lang-row{display:flex;gap:6px;justify-content:center;margin-bottom:18px}
+.lang-btn{padding:5px 12px;font-size:12px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text2);font-family:inherit;transition:all 0.15s}
+.lang-btn.active{background:var(--purple-bg);color:var(--purple2);border-color:var(--purple)}
 .form-group{margin-bottom:12px;text-align:right}
 .form-group label{display:block;font-size:11px;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.3px}
 .form-group input,.form-group select{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color 0.15s}
 .form-group input:focus,.form-group select:focus{border-color:var(--purple)}
 .login-err{font-size:12px;color:var(--red);margin-bottom:10px;min-height:16px}
-.lang-row{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
-.lang-btn{padding:4px 10px;font-size:11px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text2);font-family:inherit}
-.lang-btn.active{background:var(--purple-bg);color:var(--purple2);border-color:var(--purple)}
-
-/* APP */
 .app{display:none;flex-direction:column;min-height:100vh}
 .app.visible{display:flex}
 .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
 .header-name{font-size:15px;font-weight:500}
 .header-sub{font-size:11px;color:var(--text3);margin-top:1px}
 .header-right{display:flex;align-items:center;gap:8px}
-
-/* STATS */
+.notif-bell{position:relative;cursor:pointer;background:none;border:none;color:var(--text2);padding:4px}
+.notif-bell svg{width:20px;height:20px}
+.notif-badge{position:absolute;top:-2px;right:-2px;background:var(--red);color:white;border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:600}
+.notif-panel{position:fixed;top:54px;right:0;left:0;max-width:400px;margin:0 auto;background:var(--bg2);border:1px solid var(--border2);border-radius:0 0 var(--radius-lg) var(--radius-lg);z-index:50;display:none;max-height:300px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.notif-panel.open{display:block}
+.notif-item{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px}
+.notif-item:last-child{border-bottom:none}
+.notif-item .notif-title{font-weight:500;margin-bottom:2px}
+.notif-item .notif-time{font-size:10px;color:var(--text3)}
+.notif-item.new_order{border-right:3px solid var(--green)}
+.notif-item.assigned{border-right:3px solid var(--purple)}
 .agent-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border)}
 .a-stat{text-align:center;background:var(--bg3);border-radius:var(--radius);padding:10px 6px}
 .a-stat .n{font-size:20px;font-weight:600}
 .a-stat .l{font-size:10px;color:var(--text3);margin-top:2px}
-
-/* FILTERS */
 .filters{display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
 .filters select,.filters input{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 10px;font-size:12px;font-family:inherit;outline:none;flex:1;min-width:120px}
-
-/* ORDERS LIST */
 .orders-list{flex:1;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
-
-/* ORDER CARD */
 .order-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;transition:border-color 0.15s}
 .order-card.overdue{border-color:var(--red);background:rgba(248,113,113,0.04)}
 .order-card.confirmed{border-color:var(--green);opacity:0.75}
@@ -71,14 +59,11 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:va
 .info-item{background:var(--bg3);border-radius:8px;padding:8px 10px}
 .info-label{font-size:9px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:0.4px}
 .info-value{font-size:13px;word-break:break-all}
-.phone-val{font-family:monospace;direction:ltr;text-align:right;font-size:14px;letter-spacing:0.5px}
+.phone-val{font-family:monospace;direction:ltr;text-align:right;font-size:14px;font-weight:500}
 .card-calls{margin-bottom:10px}
 .call-count{font-size:11px;color:var(--text3);margin-bottom:5px}
 .call-chips{display:flex;gap:4px;flex-wrap:wrap}
-.call-chip{padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
 .card-actions{display:flex;gap:8px}
-
-/* BADGES */
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
 .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
 .b-pending{background:var(--amber-bg);color:var(--amber)}
@@ -89,147 +74,123 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:va
 .overdue-tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--red);background:var(--red-bg);border:1px solid var(--red);padding:2px 6px;border-radius:20px}
 .pulse{animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text);transition:all 0.15s;font-weight:500}
-.btn:hover{border-color:var(--border2);background:var(--bg4)}
 .btn-primary{background:var(--purple);border-color:var(--purple);color:white}
 .btn-sm{padding:6px 12px;font-size:12px;border-radius:7px}
 .btn-call{background:var(--green-bg);border-color:var(--green);color:var(--green);flex:1;justify-content:center}
+.btn-call.called{background:var(--amber-bg);border-color:var(--amber);color:var(--amber)}
 .btn-log{flex:1;justify-content:center}
-
-/* MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:flex-end;justify-content:center}
 .overlay.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:20px;width:100%;max-width:500px;max-height:88vh;overflow-y:auto}
 .modal h3{font-size:15px;font-weight:600;margin-bottom:6px}
 .modal-info{font-size:12px;color:var(--text2);background:var(--bg3);padding:10px 12px;border-radius:8px;margin-bottom:14px;line-height:1.8}
+.call-timer{background:var(--amber-bg);border:1px solid var(--amber);border-radius:8px;padding:10px;text-align:center;margin-bottom:14px;font-size:13px;color:var(--amber)}
+.call-timer .timer-val{font-size:24px;font-weight:600;font-family:monospace}
+.no-timer{background:var(--red-bg);border:1px solid var(--red);border-radius:8px;padding:10px;text-align:center;margin-bottom:14px;font-size:12px;color:var(--red)}
 .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .result-btn{padding:12px 8px;border-radius:10px;border:2px solid var(--border);background:var(--bg3);cursor:pointer;text-align:center;transition:all 0.15s;font-family:inherit;width:100%}
 .result-btn.selected{border-color:var(--purple);background:var(--purple-bg)}
 .result-btn .icon{font-size:22px;margin-bottom:4px}
-.result-btn .label{font-size:12px;font-weight:500;color:var(--text)}
-.result-btn .sublabel{font-size:10px;color:var(--text3);margin-top:2px}
+.result-btn .rlabel{font-size:12px;font-weight:500;color:var(--text)}
+.result-btn .rsub{font-size:10px;color:var(--text3);margin-top:2px}
 .form-group{margin-bottom:12px}
 .form-group label{display:block;font-size:11px;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.3px}
 .form-group textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;outline:none;height:70px;resize:vertical}
 .form-group textarea:focus{border-color:var(--purple)}
 .modal-footer{display:flex;gap:8px;margin-top:14px}
-.hist-title{font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.3px}
+.hist-title{font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.3px;margin-top:14px}
 .hist-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:6px}
+.hist-item.suspicious{border-color:var(--red);background:rgba(248,113,113,0.06)}
 .hist-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;flex-wrap:wrap;gap:4px}
 .hist-time{font-size:10px;color:var(--text3)}
 .hist-note{font-size:11px;color:var(--text2);margin-top:3px}
-.hist-duration{font-size:11px;color:var(--amber);margin-top:2px}
-
-/* LOADING */
+.hist-duration{font-size:11px;margin-top:2px}
+.suspicious-warn{font-size:10px;color:var(--red);margin-top:3px;display:flex;align-items:center;gap:3px}
 .loading{text-align:center;padding:40px;color:var(--text3)}
 .spinner{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 10px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* EMPTY */
 .empty{text-align:center;padding:40px 20px;color:var(--text3)}
-.empty p{font-size:13px;margin-top:8px}
-
-/* TOAST */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 16px;border-radius:10px;font-size:13px;z-index:200;transition:transform 0.3s;white-space:nowrap;max-width:90vw;text-align:center}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 16px;border-radius:10px;font-size:13px;z-index:300;transition:transform 0.3s;white-space:nowrap;max-width:90vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.success{border-color:var(--green);color:var(--green)}
 .toast.error{border-color:var(--red);color:var(--red)}
+.toast.warning{border-color:var(--amber);color:var(--amber)}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div class="login-wrap" id="loginWrap">
   <div class="login-card">
-    <div class="login-logo">CRM التأكيدات</div>
-    <div class="login-sub" id="loginSub">واجهة المؤكد</div>
+    <div class="login-logo">CRM</div>
+    <div class="login-sub" id="lSub">واجهة المؤكد</div>
     <div class="lang-row">
-      <button class="lang-btn active" onclick="setLang('ar')">ع</button>
-      <button class="lang-btn" onclick="setLang('fr')">FR</button>
-      <button class="lang-btn" onclick="setLang('en')">EN</button>
+      <button class="lang-btn active" onclick="setLang('ar',this)">ع</button>
+      <button class="lang-btn" onclick="setLang('fr',this)">FR</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
     </div>
-    <div class="form-group">
-      <label id="labelName">اسمك</label>
-      <select id="loginName"><option value="">— اختر —</option></select>
-    </div>
-    <div class="form-group">
-      <label id="labelPass">كلمة المرور</label>
-      <input type="password" id="loginPass" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
+    <div class="form-group"><label id="lName">اسمك</label><select id="loginName"><option value="">—</option></select></div>
+    <div class="form-group"><label id="lPass">كلمة المرور</label><input type="password" id="loginPass" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="login-err" id="loginErr"></div>
-    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()" id="loginBtn">دخول</button>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()" id="lBtn">دخول</button>
   </div>
 </div>
 
-<!-- APP -->
 <div class="app" id="mainApp">
   <div class="header">
     <div>
-      <div class="header-name" id="agentGreeting">مرحباً</div>
-      <div class="header-sub" id="headerSub">طلباتك اليوم</div>
+      <div class="header-name" id="greet">مرحباً</div>
+      <div class="header-sub" id="hSub">طلباتك اليوم</div>
     </div>
     <div class="header-right">
-      <span id="headerTime" style="font-size:11px;color:var(--text3)"></span>
-      <button class="btn btn-sm" onclick="doLogout()" id="logoutBtn">خروج</button>
+      <button class="notif-bell" onclick="toggleNotifPanel()" title="الإشعارات">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+      </button>
+      <span id="clockEl" style="font-size:11px;color:var(--text3)"></span>
+      <button class="btn btn-sm" onclick="doLogout()" id="lOut">خروج</button>
     </div>
+  </div>
+
+  <div class="notif-panel" id="notifPanel">
+    <div style="padding:10px 14px;font-size:12px;font-weight:500;border-bottom:1px solid var(--border);display:flex;justify-content:space-between">
+      <span id="notifTitle">الإشعارات</span>
+      <button onclick="clearNotifs()" style="font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer" id="clearBtn">مسح</button>
+    </div>
+    <div id="notifList"><div style="padding:14px;text-align:center;font-size:12px;color:var(--text3)" id="noNotif">لا توجد إشعارات</div></div>
   </div>
 
   <div class="agent-stats" id="agentStats"></div>
-
   <div class="filters">
-    <select id="aFStatus" onchange="renderAgentOrders()">
-      <option value="" id="fAll">كل الحالات</option>
-      <option value="pending" id="fPending">في الانتظار</option>
-      <option value="no_answer" id="fNoAnswer">لم يرد</option>
-      <option value="callback" id="fCallback">إعادة الاتصال</option>
-      <option value="confirmed" id="fConfirmed">مؤكد</option>
-      <option value="cancelled" id="fCancelled">ملغي</option>
+    <select id="aFStatus" onchange="render()">
+      <option value="" id="o_all">كل الحالات</option>
+      <option value="pending" id="o_pending">في الانتظار</option>
+      <option value="no_answer" id="o_no_answer">لم يرد</option>
+      <option value="callback" id="o_callback">إعادة الاتصال</option>
+      <option value="confirmed" id="o_confirmed">مؤكد</option>
+      <option value="cancelled" id="o_cancelled">ملغي</option>
     </select>
-    <input id="aFSearch" placeholder="بحث..." oninput="renderAgentOrders()" type="text">
+    <input id="aFSearch" placeholder="بحث..." oninput="render()" type="text">
   </div>
-
-  <div class="orders-list" id="ordersList">
-    <div class="loading"><div class="spinner"></div>جاري التحميل...</div>
-  </div>
+  <div class="orders-list" id="ordersList"><div class="loading"><div class="spinner"></div><span id="loadingTxt">جاري التحميل...</span></div></div>
 </div>
 
-<!-- CALL MODAL -->
 <div class="overlay" id="callModal">
   <div class="modal">
-    <h3 id="cModalTitle">تسجيل مكالمة</h3>
-    <div class="modal-info" id="cModalInfo"></div>
+    <h3 id="cTitle">تسجيل مكالمة</h3>
+    <div class="modal-info" id="cInfo"></div>
+    <div id="timerBlock"></div>
     <div class="result-grid">
-      <button class="result-btn" data-val="no_answer" onclick="selectResult(this)">
-        <div class="icon">📵</div>
-        <div class="label" id="r1">لم يرد</div>
-        <div class="sublabel" id="r1s">الهاتف رن ولم يجب</div>
-      </button>
-      <button class="result-btn" data-val="callback" onclick="selectResult(this)">
-        <div class="icon">🔁</div>
-        <div class="label" id="r2">إعادة الاتصال</div>
-        <div class="sublabel" id="r2s">طلب الاتصال لاحقاً</div>
-      </button>
-      <button class="result-btn" data-val="confirmed" onclick="selectResult(this)">
-        <div class="icon">✅</div>
-        <div class="label" id="r3">تم التأكيد</div>
-        <div class="sublabel" id="r3s">وافق على الطلب</div>
-      </button>
-      <button class="result-btn" data-val="cancelled" onclick="selectResult(this)">
-        <div class="icon">❌</div>
-        <div class="label" id="r4">إلغاء</div>
-        <div class="sublabel" id="r4s">رفض أو ألغى</div>
-      </button>
+      <button class="result-btn" data-val="no_answer" onclick="selectR(this)"><div class="icon">📵</div><div class="rlabel" id="r1">لم يرد</div><div class="rsub" id="r1s">الهاتف رن ولم يجب</div></button>
+      <button class="result-btn" data-val="callback" onclick="selectR(this)"><div class="icon">🔁</div><div class="rlabel" id="r2">إعادة الاتصال</div><div class="rsub" id="r2s">طلب الاتصال لاحقاً</div></button>
+      <button class="result-btn" data-val="confirmed" onclick="selectR(this)"><div class="icon">✅</div><div class="rlabel" id="r3">تم التأكيد</div><div class="rsub" id="r3s">وافق على الطلب</div></button>
+      <button class="result-btn" data-val="cancelled" onclick="selectR(this)"><div class="icon">❌</div><div class="rlabel" id="r4">إلغاء</div><div class="rsub" id="r4s">رفض أو ألغى</div></button>
     </div>
-    <div class="form-group">
-      <label id="noteLabel">ملاحظة</label>
-      <textarea id="cNote" placeholder="مثال: طلب الاتصال بعد الساعة 6..."></textarea>
-    </div>
-    <div id="cHistory"></div>
+    <div class="form-group"><label id="nLabel">ملاحظة</label><textarea id="cNote" rows="2"></textarea></div>
+    <div id="cHist"></div>
     <div class="modal-footer">
-      <button class="btn btn-sm" style="flex:1;justify-content:center" onclick="closeCallModal()" id="cancelBtn">إلغاء</button>
-      <button class="btn btn-primary btn-sm" style="flex:2;justify-content:center" onclick="saveCall()" id="saveCallBtn">تسجيل</button>
+      <button class="btn btn-sm" style="flex:1;justify-content:center" onclick="closeModal()" id="cCancel">إلغاء</button>
+      <button class="btn btn-primary btn-sm" style="flex:2;justify-content:center" onclick="saveCall()" id="cSave">تسجيل</button>
     </div>
   </div>
 </div>
@@ -237,116 +198,162 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:va
 <div class="toast" id="toast"></div>
 
 <script>
-// ---- I18N ----
-const LANGS = {
-  ar: { dir:'rtl', login_sub:'واجهة المؤكد', label_name:'اسمك', label_pass:'كلمة المرور', login_btn:'دخول', err_select:'اختر اسمك', err_pass:'كلمة المرور خاطئة', err_agent:'المؤكد غير موجود', greeting:'مرحباً، ', header_sub:'طلباتك اليوم', logout:'خروج', time_label:'', f_all:'كل الحالات', f_pending:'في الانتظار', f_no_answer:'لم يرد', f_callback:'إعادة الاتصال', f_confirmed:'مؤكد', f_cancelled:'ملغي', search_ph:'بحث...', stat_orders:'طلباتي', stat_confirmed:'مؤكد', stat_pending:'انتظار', stat_overdue:'متأخر', modal_title:'تسجيل مكالمة', r1:'لم يرد', r1s:'الهاتف رن ولم يجب', r2:'إعادة الاتصال', r2s:'طلب الاتصال لاحقاً', r3:'تم التأكيد', r3s:'وافق على الطلب', r4:'إلغاء', r4s:'رفض أو ألغى', note_label:'ملاحظة', note_ph:'مثال: طلب الاتصال بعد الساعة 6...', cancel:'إلغاء', save_call:'تسجيل', hist_title:'المكالمات السابقة', no_calls:'لم يتم الاتصال بعد', call_now:'اتصل الآن', log_result:'تسجيل نتيجة', not_called:'لم يتصل بعد', duration:'مدة المكالمة', no_orders:'لا توجد طلبات معيّنة لك', done_confirmed:'✓ تم التأكيد', phone_label:'رقم الهاتف', wilaya_label:'الولاية', product_label:'المنتج', loading:'جاري التحميل...', overdue_tag:'متأخر', calls_count:'مكالمات', confirmed_done:'✓ تم التأكيد — جاهز للشحن', cancelled_done:'✗ تم الإلغاء', no_result:'اختر نتيجة المكالمة', call_logged:'تم تسجيل وقت الاتصال ✓' },
-  fr: { dir:'ltr', login_sub:'Interface Agent', label_name:'Votre nom', label_pass:'Mot de passe', login_btn:'Connexion', err_select:'Choisissez votre nom', err_pass:'Mot de passe incorrect', err_agent:'Agent introuvable', greeting:'Bonjour, ', header_sub:'Vos commandes', logout:'Déconnexion', f_all:'Tous les statuts', f_pending:'En attente', f_no_answer:'Pas de réponse', f_callback:'Rappel', f_confirmed:'Confirmé', f_cancelled:'Annulé', search_ph:'Rechercher...', stat_orders:'Commandes', stat_confirmed:'Confirmé', stat_pending:'En attente', stat_overdue:'En retard', modal_title:'Enregistrer appel', r1:'Pas de réponse', r1s:'Le téléphone a sonné', r2:'Rappel', r2s:'Demande de rappel', r3:'Confirmé', r3s:'A accepté la commande', r4:'Annulé', r4s:'A refusé', note_label:'Note', note_ph:'Ex: rappeler après 18h...', cancel:'Annuler', save_call:'Enregistrer', hist_title:'Appels précédents', no_calls:'Pas encore appelé', call_now:'Appeler', log_result:'Enregistrer résultat', not_called:'Pas encore appelé', duration:'Durée', no_orders:'Aucune commande assignée', done_confirmed:'✓ Confirmé', phone_label:'Téléphone', wilaya_label:'Wilaya', product_label:'Produit', loading:'Chargement...', overdue_tag:'En retard', calls_count:'appels', confirmed_done:'✓ Confirmé — Prêt à expédier', cancelled_done:'✗ Annulé', no_result:'Choisissez un résultat', call_logged:'Heure d\'appel enregistrée ✓' },
-  en: { dir:'ltr', login_sub:'Agent Interface', label_name:'Your name', label_pass:'Password', login_btn:'Login', err_select:'Select your name', err_pass:'Wrong password', err_agent:'Agent not found', greeting:'Hello, ', header_sub:'Your orders today', logout:'Logout', f_all:'All statuses', f_pending:'Pending', f_no_answer:'No answer', f_callback:'Callback', f_confirmed:'Confirmed', f_cancelled:'Cancelled', search_ph:'Search...', stat_orders:'Orders', stat_confirmed:'Confirmed', stat_pending:'Pending', stat_overdue:'Overdue', modal_title:'Log Call', r1:'No Answer', r1s:'Phone rang, no answer', r2:'Callback', r2s:'Asked for callback', r3:'Confirmed', r3s:'Accepted the order', r4:'Cancelled', r4s:'Refused or cancelled', note_label:'Note', note_ph:'Ex: call back after 6pm...', cancel:'Cancel', save_call:'Save', hist_title:'Previous Calls', no_calls:'Not called yet', call_now:'Call Now', log_result:'Log Result', not_called:'Not called yet', duration:'Duration', no_orders:'No orders assigned to you', done_confirmed:'✓ Confirmed', phone_label:'Phone', wilaya_label:'Wilaya', product_label:'Product', loading:'Loading...', overdue_tag:'Overdue', calls_count:'calls', confirmed_done:'✓ Confirmed — Ready to ship', cancelled_done:'✗ Cancelled', no_result:'Select call result', call_logged:'Call time logged ✓' }
+const SERVER = localStorage.getItem('crm_server_url') || 'https://erp-serveur.onrender.com';
+const L = {
+  ar:{dir:'rtl',sub:'واجهة المؤكد',name:'اسمك',pass:'كلمة المرور',login:'دخول',logout:'خروج',greeting:'مرحباً، ',hsub:'طلباتك اليوم',o_all:'كل الحالات',o_pending:'في الانتظار',o_no_answer:'لم يرد',o_callback:'إعادة الاتصال',o_confirmed:'مؤكد',o_cancelled:'ملغي',s_pending:'في الانتظار',s_no_answer:'لم يرد',s_callback:'إعادة الاتصال',s_confirmed:'مؤكد',s_cancelled:'ملغي',search:'بحث...',stat_orders:'طلباتي',stat_conf:'مؤكد',stat_pend:'انتظار',stat_over:'متأخر',modal_title:'تسجيل مكالمة',r1:'لم يرد',r1s:'الهاتف رن ولم يجب',r2:'إعادة الاتصال',r2s:'طلب الاتصال لاحقاً',r3:'تم التأكيد',r3s:'وافق على الطلب',r4:'إلغاء',r4s:'رفض أو ألغى',note:'ملاحظة',cancel:'إلغاء',save:'تسجيل',hist:'المكالمات السابقة',no_calls:'لم يتم الاتصال بعد',call_now:'اتصل الآن',log_res:'تسجيل النتيجة',not_called:'لم يتصل بعد',no_orders:'لا توجد طلبات',loading:'جاري التحميل...',overdue:'متأخر',calls:'مكالمات',done_conf:'✓ تم التأكيد — جاهز للشحن',done_canc:'✗ تم الإلغاء',no_res:'اختر نتيجة أولاً',call_logged:'تم تسجيل وقت الاتصال ✓',suspicious:'⚠️ مدة قصيرة جداً',notif_title:'الإشعارات',clear_notif:'مسح',no_notif:'لا توجد إشعارات',new_order_notif:'طلب جديد',assigned_notif:'تم تعيين طلب لك',err_select:'اختر اسمك',err_pass:'كلمة المرور خاطئة',err_agent:'مؤكد غير موجود',phone:'رقم الهاتف',wilaya:'الولاية',product:'المنتج',timer_title:'وقت المكالمة',no_start:'لم تضغط اتصل الآن — الوقت لن يُسجَّل على السيرفر',duration:'مدة المكالمة'},
+  fr:{dir:'ltr',sub:'Interface Agent',name:'Votre nom',pass:'Mot de passe',login:'Connexion',logout:'Déconnexion',greeting:'Bonjour, ',hsub:'Vos commandes',o_all:'Tous statuts',o_pending:'En attente',o_no_answer:'Pas de réponse',o_callback:'Rappel',o_confirmed:'Confirmé',o_cancelled:'Annulé',s_pending:'En attente',s_no_answer:'Pas de réponse',s_callback:'Rappel',s_confirmed:'Confirmé',s_cancelled:'Annulé',search:'Rechercher...',stat_orders:'Commandes',stat_conf:'Confirmé',stat_pend:'En attente',stat_over:'En retard',modal_title:'Enregistrer appel',r1:'Pas de réponse',r1s:'Téléphone a sonné',r2:'Rappel',r2s:'Demande de rappel',r3:'Confirmé',r3s:'A accepté',r4:'Annulé',r4s:'A refusé',note:'Note',cancel:'Annuler',save:'Enregistrer',hist:'Appels précédents',no_calls:'Pas encore appelé',call_now:'Appeler',log_res:'Résultat',not_called:'Pas encore appelé',no_orders:'Aucune commande',loading:'Chargement...',overdue:'En retard',calls:'appels',done_conf:'✓ Confirmé',done_canc:'✗ Annulé',no_res:'Choisissez un résultat',call_logged:'Heure enregistrée ✓',suspicious:'⚠️ Durée trop courte',notif_title:'Notifications',clear_notif:'Effacer',no_notif:'Aucune notification',new_order_notif:'Nouvelle commande',assigned_notif:'Commande assignée',err_select:'Choisissez votre nom',err_pass:'Mot de passe incorrect',err_agent:'Agent introuvable',phone:'Téléphone',wilaya:'Wilaya',product:'Produit',timer_title:'Durée appel',no_start:'Appuyez sur Appeler d\'abord',duration:'Durée'},
+  en:{dir:'ltr',sub:'Agent Interface',name:'Your name',pass:'Password',login:'Login',logout:'Logout',greeting:'Hello, ',hsub:'Your orders',o_all:'All statuses',o_pending:'Pending',o_no_answer:'No answer',o_callback:'Callback',o_confirmed:'Confirmed',o_cancelled:'Cancelled',s_pending:'Pending',s_no_answer:'No answer',s_callback:'Callback',s_confirmed:'Confirmed',s_cancelled:'Cancelled',search:'Search...',stat_orders:'Orders',stat_conf:'Confirmed',stat_pend:'Pending',stat_over:'Overdue',modal_title:'Log Call',r1:'No Answer',r1s:'Phone rang, no answer',r2:'Callback',r2s:'Asked for callback',r3:'Confirmed',r3s:'Accepted order',r4:'Cancelled',r4s:'Refused',note:'Note',cancel:'Cancel',save:'Save',hist:'Previous Calls',no_calls:'Not called yet',call_now:'Call Now',log_res:'Log Result',not_called:'Not called yet',no_orders:'No orders assigned',loading:'Loading...',overdue:'Overdue',calls:'calls',done_conf:'✓ Confirmed — Ready',done_canc:'✗ Cancelled',no_res:'Select a result first',call_logged:'Call time logged ✓',suspicious:'⚠️ Too short',notif_title:'Notifications',clear_notif:'Clear',no_notif:'No notifications',new_order_notif:'New order',assigned_notif:'Order assigned to you',err_select:'Select your name',err_pass:'Wrong password',err_agent:'Agent not found',phone:'Phone',wilaya:'Wilaya',product:'Product',timer_title:'Call duration',no_start:'Press Call Now first',duration:'Duration'}
 };
 
-const SERVER_URL = localStorage.getItem('crm_server_url') || 'https://erp-serveur.onrender.com';
-let currentLang = localStorage.getItem('agent_lang') || 'ar';
-let currentAgent = null;
-let allOrders = [];
-let callingOrderId = null;
-let selectedResult = null;
-let callStartTimes = {};
+let lang = localStorage.getItem('agent_lang') || 'ar';
+let agent = null;
+let orders = [];
+let callingId = null;
+let selectedRes = null;
+let callTimerInterval = null;
+let callStartLocal = null;
+let notifications = [];
+let unreadCount = 0;
+let sseSource = null;
 
-const t = key => LANGS[currentLang][key] || key;
+const t = k => L[lang][k] || k;
+const SL = () => ({ pending:t('s_pending'), confirmed:t('s_confirmed'), no_answer:t('s_no_answer'), cancelled:t('s_cancelled'), callback:t('s_callback') });
 
-function setLang(lang) {
-  currentLang = lang;
-  localStorage.setItem('agent_lang', lang);
-  document.documentElement.lang = lang;
-  document.documentElement.dir = LANGS[lang].dir;
+function setLang(l, btn) {
+  lang = l;
+  localStorage.setItem('agent_lang', l);
+  document.documentElement.lang = l;
+  document.documentElement.dir = L[l].dir;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  event?.target?.classList.add('active');
-  applyLangUI();
+  if (btn) btn.classList.add('active');
+  applyLang();
 }
 
-function applyLangUI() {
-  const L = LANGS[currentLang];
-  document.getElementById('loginSub').textContent = L.login_sub;
-  document.getElementById('labelName').textContent = L.label_name;
-  document.getElementById('labelPass').textContent = L.label_pass;
-  document.getElementById('loginBtn').textContent = L.login_btn;
-  document.getElementById('logoutBtn').textContent = L.logout;
-  document.getElementById('fAll').textContent = L.f_all;
-  document.getElementById('fPending').textContent = L.f_pending;
-  document.getElementById('fNoAnswer').textContent = L.f_no_answer;
-  document.getElementById('fCallback').textContent = L.f_callback;
-  document.getElementById('fConfirmed').textContent = L.f_confirmed;
-  document.getElementById('fCancelled').textContent = L.f_cancelled;
-  document.getElementById('aFSearch').placeholder = L.search_ph;
-  document.getElementById('r1').textContent = L.r1;
-  document.getElementById('r1s').textContent = L.r1s;
-  document.getElementById('r2').textContent = L.r2;
-  document.getElementById('r2s').textContent = L.r2s;
-  document.getElementById('r3').textContent = L.r3;
-  document.getElementById('r3s').textContent = L.r3s;
-  document.getElementById('r4').textContent = L.r4;
-  document.getElementById('r4s').textContent = L.r4s;
-  document.getElementById('noteLabel').textContent = L.note_label;
-  document.getElementById('cNote').placeholder = L.note_ph;
-  document.getElementById('cancelBtn').textContent = L.cancel;
-  document.getElementById('saveCallBtn').textContent = L.save_call;
-  if (currentAgent) {
-    document.getElementById('agentGreeting').textContent = L.greeting + currentAgent.name;
-    document.getElementById('headerSub').textContent = L.header_sub;
+function applyLang() {
+  const map = { lSub:'sub', lName:'name', lPass:'pass', lBtn:'login', lOut:'logout', loadingTxt:'loading', o_all:'o_all', o_pending:'o_pending', o_no_answer:'o_no_answer', o_callback:'o_callback', o_confirmed:'o_confirmed', o_cancelled:'o_cancelled', r1:'r1', r1s:'r1s', r2:'r2', r2s:'r2s', r3:'r3', r3s:'r3s', r4:'r4', r4s:'r4s', nLabel:'note', cCancel:'cancel', cSave:'save', notifTitle:'notif_title', clearBtn:'clear_notif', noNotif:'no_notif' };
+  Object.entries(map).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.textContent = t(key); });
+  const si = document.getElementById('aFSearch'); if (si) si.placeholder = t('search');
+  if (agent) {
+    const g = document.getElementById('greet'); if (g) g.textContent = t('greeting') + agent.name;
+    const h = document.getElementById('hSub'); if (h) h.textContent = t('hsub');
   }
+  renderStats();
+  render();
 }
 
-// ---- HELPERS ----
 function fmt(ts) {
   if (!ts) return '—';
   const d = new Date(ts);
-  return d.toLocaleDateString(currentLang==='ar'?'ar-DZ':'fr-DZ', {day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString(currentLang==='ar'?'ar-DZ':'fr-DZ', {hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString(lang==='ar'?'ar-DZ':'fr-DZ', {day:'2-digit',month:'2-digit'}) + ' ' + d.toLocaleTimeString(lang==='ar'?'ar-DZ':'fr-DZ', {hour:'2-digit',minute:'2-digit'});
 }
-function minutesAgo(ts) { return Math.round((Date.now()-ts)/60000); }
-function fmtDuration(s) {
-  if (!s) return '';
-  if (s < 60) return s + (currentLang==='ar'?' ث':' sec');
-  const m = Math.floor(s/60), sec = s%60;
-  return m + (currentLang==='ar'?' د':' min') + (sec>0 ? ' '+sec+(currentLang==='ar'?' ث':' sec') : '');
-}
-function toast(msg, type='') {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.className = 'toast show '+type;
-  setTimeout(()=>el.className='toast', 2800);
+function minutesAgo(ts) { return Math.round((Date.now() - ts) / 60000); }
+function fmtDur(s) {
+  if (s === null || s === undefined) return '';
+  if (s < 60) return s + (lang==='ar'?' ث':lang==='fr'?' sec':' sec');
+  const m = Math.floor(s/60), sc = s%60;
+  return m + (lang==='ar'?' د':' min') + (sc > 0 ? ' ' + sc + (lang==='ar'?' ث':' sec') : '');
 }
 
-// ---- API ----
+function toast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show ' + type;
+  setTimeout(() => el.className = 'toast', 3000);
+}
+
 async function api(method, path, body) {
-  const res = await fetch(SERVER_URL + path, {
-    method,
-    headers: {'Content-Type':'application/json'},
-    body: body ? JSON.stringify(body) : undefined
-  });
-  if (!res.ok) throw new Error('HTTP '+res.status);
-  return res.json();
+  const r = await fetch(SERVER + path, { method, headers: {'Content-Type':'application/json'}, body: body ? JSON.stringify(body) : undefined });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+// ---- NOTIFICATIONS ----
+function connectSSE() {
+  if (!agent) return;
+  if (sseSource) sseSource.close();
+  sseSource = new EventSource(SERVER + '/api/notifications/subscribe?agent=' + encodeURIComponent(agent.name));
+  sseSource.onmessage = (e) => {
+    try {
+      const data = JSON.parse(e.data);
+      if (data.type === 'connected') return;
+      handleNotification(data);
+    } catch(err){}
+  };
+  sseSource.onerror = () => { setTimeout(connectSSE, 5000); };
+}
+
+function handleNotification(data) {
+  let title = '', body = '', type = data.type;
+  if (data.type === 'new_order') {
+    if (data.order?.agent !== agent.name && data.order?.agent !== '') return; // only show if assigned to me or unassigned
+    title = t('new_order_notif');
+    body = data.order?.client + ' — ' + data.order?.product;
+    type = 'new_order';
+    // Refresh orders
+    loadOrders();
+  } else if (data.type === 'order_assigned') {
+    if (data.order?.agent !== agent.name) return;
+    title = t('assigned_notif');
+    body = data.order?.id + ' — ' + data.order?.client;
+    type = 'assigned';
+    loadOrders();
+  } else { return; }
+
+  notifications.unshift({ title, body, time: Date.now(), type });
+  unreadCount++;
+  updateNotifBadge();
+  renderNotifList();
+
+  // Browser notification
+  if (Notification.permission === 'granted') {
+    new Notification('CRM — ' + title, { body, icon: '' });
+  }
+  toast('🔔 ' + title + ': ' + body, '');
+}
+
+function requestNotifPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function updateNotifBadge() {
+  const b = document.getElementById('notifBadge');
+  if (!b) return;
+  if (unreadCount > 0) { b.style.display = 'flex'; b.textContent = unreadCount > 9 ? '9+' : unreadCount; }
+  else b.style.display = 'none';
+}
+
+function toggleNotifPanel() {
+  const p = document.getElementById('notifPanel');
+  p.classList.toggle('open');
+  if (p.classList.contains('open')) { unreadCount = 0; updateNotifBadge(); }
+}
+
+function clearNotifs() { notifications = []; renderNotifList(); }
+
+function renderNotifList() {
+  const el = document.getElementById('notifList');
+  if (!notifications.length) { el.innerHTML = `<div style="padding:14px;text-align:center;font-size:12px;color:var(--text3)">${t('no_notif')}</div>`; return; }
+  el.innerHTML = notifications.slice(0, 20).map(n => `<div class="notif-item ${n.type}"><div class="notif-title">${n.title}</div><div style="font-size:12px;color:var(--text2)">${n.body}</div><div class="notif-time">${fmt(n.time)}</div></div>`).join('');
 }
 
 // ---- LOGIN ----
 async function initLogin() {
-  applyLangUI();
-  // Check session
-  const saved = sessionStorage.getItem('agent_session');
+  applyLang();
+  const saved = sessionStorage.getItem('agent_sess');
   if (saved) {
     try {
       const agents = await api('GET', '/api/agents');
       const ag = agents.find(a => a.name === saved);
-      if (ag) { currentAgent = ag; showApp(); return; }
+      if (ag) { agent = ag; showApp(); return; }
     } catch(e) {}
-    sessionStorage.removeItem('agent_session');
+    sessionStorage.removeItem('agent_sess');
   }
-  // Load agents for dropdown
   try {
     const agents = await api('GET', '/api/agents');
     const sel = document.getElementById('loginName');
-    sel.innerHTML = `<option value="">— ${t('err_select')} —</option>` + agents.map(a=>`<option value="${a.name}">${a.name}</option>`).join('');
-  } catch(e) {
-    document.getElementById('loginErr').textContent = 'Cannot connect to server';
-  }
+    sel.innerHTML = `<option value="">— ${t('err_select')} —</option>` + agents.map(a => `<option value="${a.name}">${a.name}</option>`).join('');
+  } catch(e) { document.getElementById('loginErr').textContent = 'Cannot connect to server'; }
 }
 
 function doLogin() {
@@ -354,25 +361,20 @@ function doLogin() {
   const pass = document.getElementById('loginPass').value;
   const err = document.getElementById('loginErr');
   if (!name) { err.textContent = t('err_select'); return; }
-  // Verify against loaded options
-  const opts = document.getElementById('loginName').options;
-  let found = false;
-  for (let o of opts) { if (o.value === name) { found = true; break; } }
-  if (!found) { err.textContent = t('err_agent'); return; }
-  // For simplicity, store agent and verify pass on server-loaded data
   api('GET', '/api/agents').then(agents => {
     const ag = agents.find(a => a.name === name);
     if (!ag) { err.textContent = t('err_agent'); return; }
     if (ag.pass && ag.pass !== pass) { err.textContent = t('err_pass'); return; }
-    currentAgent = ag;
-    sessionStorage.setItem('agent_session', ag.name);
+    agent = ag;
+    sessionStorage.setItem('agent_sess', ag.name);
     showApp();
-  }).catch(() => { err.textContent = 'Server error'; });
+  }).catch(() => err.textContent = 'Server error');
 }
 
 function doLogout() {
-  sessionStorage.removeItem('agent_session');
-  currentAgent = null;
+  sessionStorage.removeItem('agent_sess');
+  if (sseSource) { sseSource.close(); sseSource = null; }
+  agent = null;
   document.getElementById('mainApp').classList.remove('visible');
   document.getElementById('loginWrap').style.display = 'flex';
   document.getElementById('loginPass').value = '';
@@ -383,57 +385,59 @@ function doLogout() {
 async function showApp() {
   document.getElementById('loginWrap').style.display = 'none';
   document.getElementById('mainApp').classList.add('visible');
-  applyLangUI();
+  applyLang();
+  requestNotifPermission();
   await loadOrders();
+  connectSSE();
   updateClock();
   setInterval(updateClock, 30000);
   setInterval(loadOrders, 30000);
 }
 
 function updateClock() {
-  const el = document.getElementById('headerTime');
-  if (el) el.textContent = new Date().toLocaleTimeString(currentLang==='ar'?'ar-DZ':'fr-DZ', {hour:'2-digit',minute:'2-digit'});
+  const el = document.getElementById('clockEl');
+  if (el) el.textContent = new Date().toLocaleTimeString(lang==='ar'?'ar-DZ':'fr-DZ', {hour:'2-digit',minute:'2-digit'});
 }
 
 // ---- ORDERS ----
 async function loadOrders() {
   try {
-    allOrders = await api('GET', '/api/orders');
+    orders = await api('GET', '/api/orders');
     renderStats();
-    renderAgentOrders();
+    render();
   } catch(e) {
     document.getElementById('ordersList').innerHTML = `<div class="empty"><p>⚠️ Cannot connect to server</p></div>`;
   }
 }
 
 function renderStats() {
-  const my = allOrders.filter(o => o.agent === currentAgent.name);
+  if (!agent) return;
+  const my = orders.filter(o => o.agent === agent.name);
   const confirmed = my.filter(o => o.status === 'confirmed').length;
   const pending = my.filter(o => ['pending','no_answer','callback'].includes(o.status)).length;
-  const overdue = my.filter(o => o.calls.length===0 && minutesAgo(o.createdAt)>60).length;
+  const overdue = my.filter(o => (!o.calls||o.calls.length===0) && minutesAgo(o.createdAt) > 60).length;
   document.getElementById('agentStats').innerHTML = `
     <div class="a-stat"><div class="n">${my.length}</div><div class="l">${t('stat_orders')}</div></div>
-    <div class="a-stat"><div class="n" style="color:var(--green)">${confirmed}</div><div class="l">${t('stat_confirmed')}</div></div>
-    <div class="a-stat"><div class="n" style="color:var(--amber)">${pending}</div><div class="l">${t('stat_pending')}</div></div>
-    <div class="a-stat"><div class="n" style="color:${overdue>0?'var(--red)':'var(--text3)'}">${overdue}</div><div class="l">${t('stat_overdue')}</div></div>
+    <div class="a-stat"><div class="n" style="color:var(--green)">${confirmed}</div><div class="l">${t('stat_conf')}</div></div>
+    <div class="a-stat"><div class="n" style="color:var(--amber)">${pending}</div><div class="l">${t('stat_pend')}</div></div>
+    <div class="a-stat"><div class="n" style="color:${overdue>0?'var(--red)':'var(--text3)'}">${overdue}</div><div class="l">${t('stat_over')}</div></div>
   `;
 }
 
-function renderAgentOrders() {
-  const status = document.getElementById('aFStatus').value;
-  const search = document.getElementById('aFSearch').value.toLowerCase();
-  const STATUS_LABEL = { pending:t('f_pending'), confirmed:t('f_confirmed'), no_answer:t('f_no_answer'), cancelled:t('f_cancelled'), callback:t('f_callback') };
+function render() {
+  if (!agent) return;
+  const status = document.getElementById('aFStatus')?.value || '';
+  const search = (document.getElementById('aFSearch')?.value || '').toLowerCase();
+  const sl = SL();
 
-  let list = allOrders.filter(o => {
-    if (o.agent !== currentAgent.name) return false;
+  let list = orders.filter(o => {
+    if (o.agent !== agent.name) return false;
     if (status && o.status !== status) return false;
     if (search && !o.client?.toLowerCase().includes(search) && !o.phone?.includes(search)) return false;
     return true;
-  });
-
-  list.sort((a,b) => {
-    const aOver = a.calls.length===0 && minutesAgo(a.createdAt)>60;
-    const bOver = b.calls.length===0 && minutesAgo(b.createdAt)>60;
+  }).sort((a,b) => {
+    const aOver = (!a.calls||a.calls.length===0) && minutesAgo(a.createdAt)>60;
+    const bOver = (!b.calls||b.calls.length===0) && minutesAgo(b.createdAt)>60;
     if (aOver && !bOver) return -1;
     if (!aOver && bOver) return 1;
     if (a.status==='pending' && b.status!=='pending') return -1;
@@ -447,128 +451,145 @@ function renderAgentOrders() {
   }
 
   document.getElementById('ordersList').innerHTML = list.map(o => {
-    const overdue = o.calls.length===0 && minutesAgo(o.createdAt)>60;
-    const isConfirmed = o.status==='confirmed';
-    const isCancelled = o.status==='cancelled';
+    const overdue = (!o.calls||o.calls.length===0) && minutesAgo(o.createdAt) > 60;
+    const isConf = o.status === 'confirmed', isCanc = o.status === 'cancelled';
     const lastCall = o.calls?.length ? o.calls[o.calls.length-1] : null;
-    const callChips = (o.calls||[]).slice(-3).map(c => `<span class="call-chip badge b-${c.result}" style="font-size:10px">${STATUS_LABEL[c.result]||c.result}</span>`).join('');
+    const hasPendingCall = !!o.pendingCallStart;
+    const callChips = (o.calls||[]).slice(-3).map(c => {
+      const suspicious = c.suspicious;
+      return `<span class="badge b-${c.result}" style="font-size:10px${suspicious?';border:1px solid var(--red)':''}">${sl[c.result]||c.result}${suspicious?' ⚠️':''}</span>`;
+    }).join('');
 
-    return `<div class="order-card ${overdue?'overdue':''} ${isConfirmed?'confirmed':''} ${isCancelled?'cancelled':''}">
+    return `<div class="order-card ${overdue?'overdue':''} ${isConf?'confirmed':''} ${isCanc?'cancelled':''}">
       <div class="card-top">
         <div>
           <div class="card-id">${o.id} · ${fmt(o.createdAt)}</div>
           <div class="card-name">${o.client}</div>
         </div>
         <div class="card-badges">
-          ${overdue?`<span class="overdue-tag"><span class="dot pulse" style="background:var(--red)"></span>${t('overdue_tag')}</span>`:''}
-          <span class="badge b-${o.status}"><span class="dot"></span>${STATUS_LABEL[o.status]||o.status}</span>
+          ${overdue?`<span class="overdue-tag"><span class="dot pulse" style="background:var(--red)"></span>${t('overdue')}</span>`:''}
+          <span class="badge b-${o.status}"><span class="dot"></span>${sl[o.status]||o.status}</span>
         </div>
       </div>
       <div class="card-info">
-        <div class="info-item"><div class="info-label">${t('phone_label')}</div><div class="info-value phone-val">${o.phone}</div></div>
-        <div class="info-item"><div class="info-label">${t('wilaya_label')}</div><div class="info-value">${o.wilaya||'—'}</div></div>
-        <div class="info-item" style="grid-column:span 2"><div class="info-label">${t('product_label')}</div><div class="info-value">${o.product||'—'} ${o.price?'· '+o.price.toLocaleString()+' دج':''}</div></div>
-        ${o.note?`<div class="info-item" style="grid-column:span 2"><div class="info-label">Note</div><div class="info-value" style="color:var(--text2)">${o.note}</div></div>`:''}
+        <div class="info-item"><div class="info-label">${t('phone')}</div><div class="info-value phone-val">${o.phone}</div></div>
+        <div class="info-item"><div class="info-label">${t('wilaya')}</div><div class="info-value">${o.wilaya||'—'}</div></div>
+        <div class="info-item" style="grid-column:span 2"><div class="info-label">${t('product')}</div><div class="info-value">${o.product||'—'} ${o.price?'· '+o.price.toLocaleString()+' دج':''}</div></div>
+        ${o.note?`<div class="info-item" style="grid-column:span 2"><div class="info-label">Note</div><div class="info-value" style="color:var(--text2);font-size:12px">${o.note}</div></div>`:''}
       </div>
-      ${(o.calls||[]).length>0
-        ? `<div class="card-calls"><div class="call-count">${o.calls.length} ${t('calls_count')} — ${fmt(lastCall?.callStartTime||lastCall?.time)}</div><div class="call-chips">${callChips}</div></div>`
-        : `<div style="font-size:11px;color:var(--red);margin-bottom:10px">⚠ ${t('not_called')}</div>`
-      }
-      ${!isConfirmed && !isCancelled
+      ${(o.calls||[]).length > 0
+        ? `<div class="card-calls"><div class="call-count">${o.calls.length} ${t('calls')} · ${fmt(lastCall?.callStartTime||lastCall?.time)}</div><div class="call-chips">${callChips}</div></div>`
+        : `<div style="font-size:11px;color:var(--red);margin-bottom:10px">⚠ ${t('not_called')}</div>`}
+      ${!isConf && !isCanc
         ? `<div class="card-actions">
-            <a href="tel:${o.phone}" class="btn btn-call btn-sm" onclick="logCallStart('${o.id}')">
+            <a href="tel:${o.phone}" class="btn btn-call btn-sm ${hasPendingCall?'called':''}" onclick="logCallStart('${o.id}')">
               <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.8A16 16 0 0 0 16 16.91l.95-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              ${t('call_now')}
+              ${hasPendingCall ? '📞 '+t('call_now') : t('call_now')}
             </a>
-            <button class="btn btn-log btn-sm" onclick="openCallModal('${o.id}')">
+            <button class="btn btn-log btn-sm" onclick="openModal('${o.id}')">
               <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              ${t('log_result')}
+              ${t('log_res')}
             </button>
           </div>`
-        : `<div class="badge b-${o.status}" style="font-size:12px;padding:7px 12px;width:100%;justify-content:center">${isConfirmed?t('confirmed_done'):t('cancelled_done')}</div>`
+        : `<div class="badge b-${o.status}" style="font-size:12px;padding:7px 12px;width:100%;justify-content:center">${isConf?t('done_conf'):t('done_canc')}</div>`
       }
     </div>`;
   }).join('');
 }
 
-// ---- CALL START ----
-function logCallStart(orderId) {
-  callStartTimes[orderId] = Date.now();
-  try { localStorage.setItem('callStarts', JSON.stringify(callStartTimes)); } catch(e){}
-  toast(t('call_logged'), '');
-}
-function getCallStart(orderId) {
-  try { const s = localStorage.getItem('callStarts'); if(s) callStartTimes = {...JSON.parse(s),...callStartTimes}; } catch(e){}
-  return callStartTimes[orderId] || null;
+// ---- CALL START — logged on SERVER ----
+async function logCallStart(orderId) {
+  try {
+    callStartLocal = Date.now();
+    await api('POST', '/api/orders/' + orderId + '/call-start', {});
+    toast(t('call_logged'), '');
+    // Refresh to show pending indicator
+    await loadOrders();
+  } catch(e) {
+    callStartLocal = Date.now(); // fallback
+    toast(t('call_logged'), '');
+  }
 }
 
 // ---- CALL MODAL ----
-function openCallModal(id) {
-  callingOrderId = id;
-  selectedResult = null;
-  const o = allOrders.find(x => x.id === id);
+let timerInterval = null;
+
+function openModal(id) {
+  callingId = id;
+  selectedRes = null;
+  const o = orders.find(x => x.id === id);
   if (!o) return;
-  document.getElementById('cModalTitle').textContent = t('modal_title') + ' — ' + o.id;
-  document.getElementById('cModalInfo').innerHTML = `<strong>${o.client}</strong> | ${o.phone}<br>${o.product||''} ${o.price?'| '+o.price.toLocaleString()+' دج':''} | ${o.wilaya||''}`;
+
+  document.getElementById('cTitle').textContent = t('modal_title') + ' — ' + o.id;
+  document.getElementById('cInfo').innerHTML = `<strong>${o.client}</strong> | ${o.phone}<br>${o.product||''} | ${o.wilaya||''}`;
   document.getElementById('cNote').value = '';
   document.querySelectorAll('.result-btn').forEach(b => b.classList.remove('selected'));
 
-  const STATUS_LABEL = { pending:t('f_pending'), confirmed:t('f_confirmed'), no_answer:t('f_no_answer'), cancelled:t('f_cancelled'), callback:t('f_callback') };
+  // Timer display
+  if (timerInterval) clearInterval(timerInterval);
+  if (o.pendingCallStart) {
+    const start = o.pendingCallStart;
+    const updateTimer = () => {
+      const secs = Math.round((Date.now() - start) / 1000);
+      document.getElementById('timerBlock').innerHTML = `
+        <div class="call-timer">
+          <div style="font-size:11px;margin-bottom:4px">${t('timer_title')}</div>
+          <div class="timer-val">${fmtDur(secs)}</div>
+        </div>`;
+    };
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+  } else {
+    document.getElementById('timerBlock').innerHTML = `<div class="no-timer">⚠️ ${t('no_start')}</div>`;
+  }
+
+  // Call history
+  const sl = SL();
   const hist = (o.calls||[]).length
-    ? `<div class="hist-title">${t('hist_title')} (${o.calls.length})</div>` +
-      o.calls.slice().reverse().map(c => `<div class="hist-item">
+    ? `<div class="hist-title">${t('hist')} (${o.calls.length})</div>` +
+      o.calls.slice().reverse().map(c => `<div class="hist-item${c.suspicious?' suspicious':''}">
         <div class="hist-header">
-          <span class="badge b-${c.result}" style="font-size:10px">${STATUS_LABEL[c.result]||c.result}</span>
+          <span class="badge b-${c.result}" style="font-size:10px">${sl[c.result]||c.result}</span>
           <span class="hist-time">${fmt(c.callStartTime||c.time)}</span>
         </div>
-        ${c.duration?`<div class="hist-duration">⏱ ${fmtDuration(c.duration)}</div>`:''}
+        ${c.duration!==null&&c.duration!==undefined?`<div class="hist-duration" style="color:${c.suspicious?'var(--red)':'var(--amber)'}">⏱ ${fmtDur(c.duration)}</div>`:''}
+        ${c.suspicious?`<div class="suspicious-warn">⚠️ ${t('suspicious')}</div>`:''}
         ${c.note?`<div class="hist-note">${c.note}</div>`:''}
       </div>`).join('')
-    : `<div style="font-size:12px;color:var(--text3);text-align:center;padding:8px">${t('no_calls')}</div>`;
-  document.getElementById('cHistory').innerHTML = hist;
+    : `<div style="text-align:center;font-size:12px;color:var(--text3);padding:8px">${t('no_calls')}</div>`;
+  document.getElementById('cHist').innerHTML = hist;
   document.getElementById('callModal').classList.add('open');
 }
 
-function selectResult(btn) {
+function selectR(btn) {
   document.querySelectorAll('.result-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  selectedResult = btn.dataset.val;
+  selectedRes = btn.dataset.val;
 }
 
-function closeCallModal() {
+function closeModal() {
   document.getElementById('callModal').classList.remove('open');
-  callingOrderId = null;
-  selectedResult = null;
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  callingId = null; selectedRes = null;
 }
 
 async function saveCall() {
-  if (!selectedResult) { toast(t('no_result'), 'error'); return; }
+  if (!selectedRes) { toast(t('no_res'), 'error'); return; }
   const note = document.getElementById('cNote').value.trim();
-  const now = Date.now();
-  const callStart = getCallStart(callingOrderId);
-  const duration = callStart ? Math.round((now - callStart) / 1000) : null;
-
   try {
-    await api('POST', '/api/orders/' + callingOrderId + '/call', {
-      result: selectedResult,
-      note,
-      callStartTime: callStart || now,
-      duration
-    });
-    delete callStartTimes[callingOrderId];
-    try { localStorage.setItem('callStarts', JSON.stringify(callStartTimes)); } catch(e){}
-
-    const STATUS_LABEL = { pending:t('f_pending'), confirmed:t('f_confirmed'), no_answer:t('f_no_answer'), cancelled:t('f_cancelled'), callback:t('f_callback') };
-    const durMsg = duration ? ' (' + fmtDuration(duration) + ')' : '';
-    toast((STATUS_LABEL[selectedResult]||selectedResult) + durMsg, selectedResult==='confirmed'?'success':'');
-    closeCallModal();
+    const res = await api('POST', '/api/orders/' + callingId + '/call', { result: selectedRes, note });
+    const sl = SL();
+    const durMsg = res.duration !== null ? ' (' + fmtDur(res.duration) + ')' : '';
+    const suspMsg = res.suspicious ? ' — ' + t('suspicious') : '';
+    toast((sl[selectedRes]||selectedRes) + durMsg + suspMsg, res.suspicious ? 'warning' : selectedRes==='confirmed' ? 'success' : '');
+    closeModal();
     await loadOrders();
   } catch(e) { toast('Error', 'error'); }
 }
 
-document.getElementById('callModal').addEventListener('click', e => { if(e.target===document.getElementById('callModal')) closeCallModal(); });
+document.getElementById('callModal').addEventListener('click', e => { if(e.target===document.getElementById('callModal')) closeModal(); });
+document.addEventListener('click', e => { if (!e.target.closest('.notif-bell') && !e.target.closest('.notif-panel')) document.getElementById('notifPanel').classList.remove('open'); });
 
-// ---- INIT ----
 initLogin();
 </script>
 </body>
