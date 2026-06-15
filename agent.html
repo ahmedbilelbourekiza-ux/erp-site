@@ -456,8 +456,7 @@ function render() {
     const lastCall = o.calls?.length ? o.calls[o.calls.length-1] : null;
     const hasPendingCall = !!o.pendingCallStart;
     const callChips = (o.calls||[]).slice(-3).map(c => {
-      const suspicious = c.suspicious;
-      return `<span class="badge b-${c.result}" style="font-size:10px${suspicious?';border:1px solid var(--red)':''}">${sl[c.result]||c.result}${suspicious?' ⚠️':''}</span>`;
+      return `<span class="badge b-${c.result}" style="font-size:10px">${sl[c.result]||c.result}</span>`;
     }).join('');
 
     return `<div class="order-card ${overdue?'overdue':''} ${isConf?'confirmed':''} ${isCanc?'cancelled':''}">
@@ -525,23 +524,9 @@ function openModal(id) {
   document.getElementById('cNote').value = '';
   document.querySelectorAll('.result-btn').forEach(b => b.classList.remove('selected'));
 
-  // Timer display
+  // Timer hidden from agent - only tracked server-side
   if (timerInterval) clearInterval(timerInterval);
-  if (o.pendingCallStart) {
-    const start = o.pendingCallStart;
-    const updateTimer = () => {
-      const secs = Math.round((Date.now() - start) / 1000);
-      document.getElementById('timerBlock').innerHTML = `
-        <div class="call-timer">
-          <div style="font-size:11px;margin-bottom:4px">${t('timer_title')}</div>
-          <div class="timer-val">${fmtDur(secs)}</div>
-        </div>`;
-    };
-    updateTimer();
-    timerInterval = setInterval(updateTimer, 1000);
-  } else {
-    document.getElementById('timerBlock').innerHTML = `<div class="no-timer">⚠️ ${t('no_start')}</div>`;
-  }
+  document.getElementById('timerBlock').innerHTML = '';
 
   // Call history
   const sl = SL();
@@ -552,8 +537,7 @@ function openModal(id) {
           <span class="badge b-${c.result}" style="font-size:10px">${sl[c.result]||c.result}</span>
           <span class="hist-time">${fmt(c.callStartTime||c.time)}</span>
         </div>
-        ${c.duration!==null&&c.duration!==undefined?`<div class="hist-duration" style="color:${c.suspicious?'var(--red)':'var(--amber)'}">⏱ ${fmtDur(c.duration)}</div>`:''}
-        ${c.suspicious?`<div class="suspicious-warn">⚠️ ${t('suspicious')}</div>`:''}
+
         ${c.note?`<div class="hist-note">${c.note}</div>`:''}
       </div>`).join('')
     : `<div style="text-align:center;font-size:12px;color:var(--text3);padding:8px">${t('no_calls')}</div>`;
