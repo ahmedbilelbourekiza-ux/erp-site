@@ -46,6 +46,25 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:va
 .a-stat .l{font-size:10px;color:var(--text3);margin-top:2px}
 .filters{display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
 .filters select,.filters input{background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 10px;font-size:12px;font-family:inherit;outline:none;flex:1;min-width:120px}
+
+/* ===== Follow-up (Suivi) panel — shown only for followup/both roles (req §1) ===== */
+@keyframes fupulse{0%,100%{opacity:1}50%{opacity:0.55}}
+.fup-section{display:none;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.fup-section.visible{display:block}
+.fup-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
+.fup-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.fup-count{font-size:11px;padding:2px 9px;border-radius:10px;font-weight:600;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber)}
+.fup-list{display:flex;flex-direction:column;gap:8px}
+.fup-card{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;flex-wrap:wrap}
+.fup-card.overdue{border-color:var(--red);background:rgba(248,113,113,0.06)}
+.fup-card.done{opacity:0.6;border-style:dashed}
+.fup-main{flex:1;min-width:140px}
+.fup-id{font-family:monospace;font-size:12px;color:var(--purple2);font-weight:600}
+.fup-cust{font-size:13px;font-weight:500;margin-top:1px}
+.fup-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.fup-cd{font-size:11px;font-weight:600;font-family:monospace;padding:3px 8px;border-radius:6px;white-space:nowrap;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber)}
+.fup-cd.overdue{background:var(--red-bg);color:var(--red);border-color:var(--red);animation:fupulse 1.5s infinite}
+.fup-empty{font-size:12px;color:var(--text3);text-align:center;padding:10px}
 .orders-list{flex:1;padding:12px 16px;display:flex;flex-direction:column;gap:10px}
 .order-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;transition:border-color 0.15s}
 .order-card.overdue{border-color:var(--red);background:rgba(248,113,113,0.04)}
@@ -126,6 +145,59 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:va
 .toast.success{border-color:var(--green);color:var(--green)}
 .toast.error{border-color:var(--red);color:var(--red)}
 .toast.warning{border-color:var(--amber);color:var(--amber)}
+
+/* ---- Delivery Tracking timeline ---- */
+.tracking-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.tracking-meta{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:16px}
+.tracking-meta .tm{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 10px}
+.tracking-meta .tm .l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:3px}
+.tracking-meta .tm .v{font-size:12px;font-weight:600;word-break:break-all}
+.dl-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.dl-badge.created{background:rgba(99,102,241,.15);color:#a5b4fc}
+.dl-badge.dispatched,.dl-badge.in_transit{background:rgba(168,85,247,.15);color:#c4b5fd}
+.dl-badge.at_office{background:rgba(245,158,11,.15);color:#fcd34d}
+.dl-badge.out_for_delivery{background:rgba(249,115,22,.15);color:#fdba74}
+.dl-badge.delivered{background:rgba(34,197,94,.15);color:#86efac}
+.dl-badge.refused,.dl-badge.returned,.dl-badge.cancelled{background:rgba(239,68,68,.15);color:#fca5a5}
+.dl-badge.pending{background:var(--bg3);color:var(--text2)}
+.timeline{position:relative;padding:4px 0}
+.timeline::before{content:'';position:absolute;top:6px;bottom:6px;inset-inline-start:9px;width:2px;background:var(--border2)}
+.tl-item{position:relative;padding:0 0 16px 26px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:'';position:absolute;inset-inline-start:4px;top:4px;width:11px;height:11px;border-radius:50%;background:#a5b4fc;border:2px solid var(--bg2)}
+.tl-item.first::before{background:#86efac}
+.tl-item.terminal::before{background:#fca5a5}
+.tl-datetime{font-size:10px;color:var(--text3);font-family:monospace;direction:ltr;text-align:start;margin-bottom:2px}
+.tl-status{font-size:13px;font-weight:700;margin-bottom:2px}
+.tl-desc{font-size:11px;color:var(--text2);line-height:1.5}
+.tl-orig{font-size:10px;color:var(--text3);margin-top:2px;font-style:italic}
+.tracking-empty{text-align:center;padding:24px 12px;color:var(--text3);font-size:13px}
+.tracking-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--border2)}
+.card-delivery{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;margin-top:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;font-size:11px}
+/* ---- AI Assistant slide-over ---- */
+.ai-fab{position:fixed;bottom:18px;inset-inline-start:18px;z-index:40;width:52px;height:52px;border-radius:50%;background:var(--purple);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,106,247,.4);transition:transform .15s}
+.ai-fab:hover{transform:scale(1.08)}
+.ai-fab svg{width:24px;height:24px}
+.ai-panel{position:fixed;inset-inline:0;bottom:0;top:0;background:var(--bg);border-inline-start:1px solid var(--border2);z-index:60;width:100%;max-width:420px;display:none;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.4)}
+.ai-panel.open{display:flex}
+.ai-panel-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg2)}
+.ai-panel-head .t{font-size:14px;font-weight:600}
+.ai-panel-head .s{font-size:10px;color:var(--text3)}
+.ai-panel-head .x{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;padding:4px 8px}
+.ai-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.ai-msg.user{background:var(--purple);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.ai-msg.asst{background:var(--bg3);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
+.ai-msg.err{background:var(--red-bg);border:1px solid var(--red);color:var(--red);font-size:12px;align-self:flex-start}
+.ai-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text3);text-align:center;padding:20px;font-size:12px}
+.ai-chips{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.ai-chip{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:5px 10px;border-radius:16px;font-size:10px;cursor:pointer}
+.ai-chip:hover{border-color:var(--purple);color:var(--purple2)}
+.ai-input{padding:10px;border-top:1px solid var(--border);display:flex;gap:7px}
+.ai-input textarea{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 11px;font-size:13px;font-family:inherit;outline:none;resize:none;height:42px;max-height:100px}
+.ai-input textarea:focus{border-color:var(--purple)}
+.ai-cursor{display:inline-block;width:6px;height:13px;background:var(--purple);margin-inline-start:2px;vertical-align:middle;animation:aiblink 1s steps(2) infinite}
+@keyframes aiblink{50%{opacity:0}}
 </style>
 </head>
 <body>
@@ -182,6 +254,16 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:va
     </select>
     <input id="aFSearch" placeholder="بحث..." oninput="render()" type="text">
   </div>
+
+  <!-- Follow-up (Suivi) panel: rendered only for followup/both agents (req §1) -->
+  <div class="fup-section" id="fupSection">
+    <div class="fup-head">
+      <span class="fup-title">📍 <span id="fupTitle">متابعة الطلبات</span></span>
+      <span class="fup-count" id="fupCount">0</span>
+    </div>
+    <div class="fup-list" id="fupList"><div class="fup-empty">—</div></div>
+  </div>
+
   <div class="orders-list" id="ordersList"><div class="loading"><div class="spinner"></div><span id="loadingTxt">جاري التحميل...</span></div></div>
 </div>
 
@@ -210,14 +292,46 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:va
   </div>
 </div>
 
+<!-- Delivery Tracking — full shipment timeline -->
+<div class="overlay" id="trackingModal">
+  <div class="modal">
+    <h3>🚚 <span id="trkTitleLbl">تتبع التوصيل</span> <span id="trkOrderId" style="color:var(--text3);font-weight:400"></span></h3>
+    <div id="trkContent"><div class="tracking-empty">جاري التحميل...</div></div>
+    <div class="modal-footer">
+      <button class="btn btn-sm" style="flex:1;justify-content:center" onclick="closeTracking()" id="trkClose">إغلاق</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
+<!-- AI Assistant FAB -->
+<button class="ai-fab" onclick="toggleAiPanel()" title="AI Assistant">
+  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+
+<!-- AI Assistant slide-over panel -->
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-panel-head">
+    <div><div class="t">🤖 <span id="aiPTitle">AI</span></div><div class="s" id="aiPSub"></div></div>
+    <button class="x" onclick="toggleAiPanel()">×</button>
+  </div>
+  <div class="ai-msgs" id="aiMsgs"></div>
+  <div class="ai-input">
+    <textarea id="aiTxt" rows="1" placeholder="" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();agentAiSend()}"></textarea>
+    <button class="btn btn-primary btn-sm" id="aiSend" onclick="agentAiSend()"></button>
+  </div>
+</div>
 
 <script>
 const SERVER = localStorage.getItem('crm_server_url') || 'https://erp-serveur.onrender.com';
 const L = {
-  ar:{dir:'rtl',sub:'واجهة المؤكد',name:'اسمك',pass:'كلمة المرور',login:'دخول',logout:'خروج',greeting:'مرحباً، ',hsub:'طلباتك اليوم',o_all:'كل الحالات',o_pending:'في الانتظار',o_no_answer:'لم يرد',o_callback:'إعادة الاتصال',o_tentative1:'مبدئي 1',o_tentative2:'مبدئي 2',o_tentative3:'مبدئي 3',o_unreachable:'العميل غير متاح',o_confirmed:'مؤكد',o_cancelled:'ملغي',s_pending:'في الانتظار',s_no_answer:'لم يرد',s_callback:'إعادة الاتصال',s_tentative1:'مبدئي 1',s_tentative2:'مبدئي 2',s_tentative3:'مبدئي 3',s_unreachable:'العميل غير متاح',s_confirmed:'مؤكد',s_cancelled:'ملغي',search:'بحث...',stat_orders:'طلباتي',stat_conf:'مؤكد',stat_pend:'انتظار',stat_over:'متأخر',modal_title:'تسجيل مكالمة',r1:'لم يرد',r1s:'الهاتف رن ولم يجب',r2:'إعادة الاتصال',r2s:'طلب الاتصال لاحقاً',r3:'تم التأكيد',r3s:'وافق على الطلب',r4:'إلغاء',r4s:'رفض أو ألغى',r5:'مبدئي 1',r5s:'محاولة أولى',r6:'مبدئي 2',r6s:'محاولة ثانية',r7:'مبدئي 3',r7s:'محاولة ثالثة',r8:'العميل غير متاح',r8s:'لا يمكن الوصول إليه',note:'ملاحظة',cancel:'إلغاء',save:'تسجيل',hist:'المكالمات السابقة',no_calls:'لم يتم الاتصال بعد',call_now:'اتصل الآن',log_res:'تسجيل النتيجة',not_called:'لم يتصل بعد',no_orders:'لا توجد طلبات',loading:'جاري التحميل...',overdue:'متأخر',calls:'مكالمات',done_conf:'✓ تم التأكيد — جاهز للشحن',done_canc:'✗ تم الإلغاء',no_res:'اختر نتيجة أولاً',call_logged:'تم تسجيل وقت الاتصال ✓',suspicious:'⚠️ مدة قصيرة جداً',last_note:'آخر ملاحظة',notif_title:'الإشعارات',clear_notif:'مسح',no_notif:'لا توجد إشعارات',new_order_notif:'طلب جديد',assigned_notif:'تم تعيين طلب لك',err_select:'اختر اسمك',err_pass:'كلمة المرور خاطئة',err_agent:'مؤكد غير موجود',phone:'رقم الهاتف',wilaya:'الولاية',product:'المنتج',timer_title:'وقت المكالمة',no_start:'لم تضغط اتصل الآن — الوقت لن يُسجَّل على السيرفر',duration:'مدة المكالمة',audit_title:'تفاصيل التحقيق',manip:'⚠️ تلاعب محتمل',manip_click:'انقر للتفاصيل',manip_short:'مدة المكالمة {dur} ثانية أقل من الحد الأدنى {thr} ثانية.',manip_nostart:'لم يُضغط زر الاتصال — لا يوجد وقت بداية مسجَّل على السيرفر.',a_order:'الطلب',a_client:'العميل',a_agent:'المؤكد',a_status:'الحالة الحالية',a_thr:'الحد الأدنى الحالي',a_log:'سجل المكالمات الكامل',a_call:'مكالمة',a_result:'النتيجة',a_start:'وقت البداية',a_end:'وقت النهاية',a_dur:'المدة',a_rthr:'الحد المسجَّل',a_flag:'مُعلَّم',a_yes:'نعم',a_note:'ملاحظة',a_close:'إغلاق',no_call_hist:'لا توجد مكالمات',conn_err:'تعذّر الاتصال بالخادم',server_err:'خطأ في الخادم',err_generic:'خطأ'},
-  fr:{dir:'ltr',sub:'Interface Agent',name:'Votre nom',pass:'Mot de passe',login:'Connexion',logout:'Déconnexion',greeting:'Bonjour, ',hsub:'Vos commandes',o_all:'Tous statuts',o_pending:'En attente',o_no_answer:'Pas de réponse',o_callback:'Rappel',o_tentative1:'Tentative 1',o_tentative2:'Tentative 2',o_tentative3:'Tentative 3',o_unreachable:'Client injoignable',o_confirmed:'Confirmé',o_cancelled:'Annulé',s_pending:'En attente',s_no_answer:'Pas de réponse',s_callback:'Rappel',s_tentative1:'Tentative 1',s_tentative2:'Tentative 2',s_tentative3:'Tentative 3',s_unreachable:'Client injoignable',s_confirmed:'Confirmé',s_cancelled:'Annulé',search:'Rechercher...',stat_orders:'Commandes',stat_conf:'Confirmé',stat_pend:'En attente',stat_over:'En retard',modal_title:'Enregistrer appel',r1:'Pas de réponse',r1s:'Téléphone a sonné',r2:'Rappel',r2s:'Demande de rappel',r3:'Confirmé',r3s:'A accepté',r4:'Annulé',r4s:'A refusé',r5:'Tentative 1',r5s:'Premier essai',r6:'Tentative 2',r6s:'Second essai',r7:'Tentative 3',r7s:'Troisième essai',r8:'Client injoignable',r8s:'Injoignable',note:'Note',cancel:'Annuler',save:'Enregistrer',hist:'Appels précédents',no_calls:'Pas encore appelé',call_now:'Appeler',log_res:'Résultat',not_called:'Pas encore appelé',no_orders:'Aucune commande',loading:'Chargement...',overdue:'En retard',calls:'appels',done_conf:'✓ Confirmé',done_canc:'✗ Annulé',no_res:'Choisissez un résultat',call_logged:'Heure enregistrée ✓',suspicious:'⚠️ Durée trop courte',last_note:'Dernière note',notif_title:'Notifications',clear_notif:'Effacer',no_notif:'Aucune notification',new_order_notif:'Nouvelle commande',assigned_notif:'Commande assignée',err_select:'Choisissez votre nom',err_pass:'Mot de passe incorrect',err_agent:'Agent introuvable',phone:'Téléphone',wilaya:'Wilaya',product:'Produit',timer_title:'Durée appel',no_start:'Appuyez sur Appeler d\'abord',duration:'Durée',audit_title:"Détails de l'audit",manip:'⚠️ Manipulation possible',manip_click:'Cliquez pour détails',manip_short:"Durée d'appel {dur}s inférieure au minimum {thr}s.",manip_nostart:'Bouton "Appeler" non pressé — aucune heure de début enregistrée.',a_order:'Commande',a_client:'Client',a_agent:'Agent',a_status:'Statut actuel',a_thr:'Seuil minimum actuel',a_log:'Journal complet des appels',a_call:'Appel',a_result:'Résultat',a_start:'Heure début',a_end:'Heure fin',a_dur:'Durée',a_rthr:'Seuil enregistré',a_flag:'Signalé',a_yes:'Oui',a_note:'Note',a_close:'Fermer',no_call_hist:'Aucun appel',conn_err:'Connexion au serveur impossible',server_err:'Erreur serveur',err_generic:'Erreur'},
-  en:{dir:'ltr',sub:'Agent Interface',name:'Your name',pass:'Password',login:'Login',logout:'Logout',greeting:'Hello, ',hsub:'Your orders',o_all:'All statuses',o_pending:'Pending',o_no_answer:'No answer',o_callback:'Callback',o_tentative1:'Tentative 1',o_tentative2:'Tentative 2',o_tentative3:'Tentative 3',o_unreachable:'Unreachable',o_confirmed:'Confirmed',o_cancelled:'Cancelled',s_pending:'Pending',s_no_answer:'No answer',s_callback:'Callback',s_tentative1:'Tentative 1',s_tentative2:'Tentative 2',s_tentative3:'Tentative 3',s_unreachable:'Unreachable',s_confirmed:'Confirmed',s_cancelled:'Cancelled',search:'Search...',stat_orders:'Orders',stat_conf:'Confirmed',stat_pend:'Pending',stat_over:'Overdue',modal_title:'Log Call',r1:'No Answer',r1s:'Phone rang, no answer',r2:'Callback',r2s:'Asked for callback',r3:'Confirmed',r3s:'Accepted order',r4:'Cancelled',r4s:'Refused',r5:'Tentative 1',r5s:'First attempt',r6:'Tentative 2',r6s:'Second attempt',r7:'Tentative 3',r7s:'Third attempt',r8:'Unreachable',r8s:'Could not be reached',note:'Note',cancel:'Cancel',save:'Save',hist:'Previous Calls',no_calls:'Not called yet',call_now:'Call Now',log_res:'Log Result',not_called:'Not called yet',no_orders:'No orders assigned',loading:'Loading...',overdue:'Overdue',calls:'calls',done_conf:'✓ Confirmed — Ready',done_canc:'✗ Cancelled',no_res:'Select a result first',call_logged:'Call time logged ✓',suspicious:'⚠️ Too short',last_note:'Latest note',notif_title:'Notifications',clear_notif:'Clear',no_notif:'No notifications',new_order_notif:'New order',assigned_notif:'Order assigned to you',err_select:'Select your name',err_pass:'Wrong password',err_agent:'Agent not found',phone:'Phone',wilaya:'Wilaya',product:'Product',timer_title:'Call duration',no_start:'Press Call Now first',duration:'Duration',audit_title:'Audit details',manip:'⚠️ Possible manipulation',manip_click:'Click for details',manip_short:'Call duration {dur}s is below the minimum of {thr}s.',manip_nostart:'Call button was not pressed — no start time recorded on the server.',a_order:'Order',a_client:'Client',a_agent:'Agent',a_status:'Current status',a_thr:'Current minimum threshold',a_log:'Full call log',a_call:'Call',a_result:'Result',a_start:'Start time',a_end:'End time',a_dur:'Duration',a_rthr:'Recorded threshold',a_flag:'Flagged',a_yes:'Yes',a_note:'Note',a_close:'Close',no_call_hist:'No calls',conn_err:'Cannot connect to server',server_err:'Server error',err_generic:'Error'}
+  ar:{dir:'rtl',sub:'واجهة المؤكد',name:'اسمك',pass:'كلمة المرور',login:'دخول',logout:'خروج',greeting:'مرحباً، ',hsub:'طلباتك اليوم',o_all:'كل الحالات',o_pending:'في الانتظار',o_no_answer:'لم يرد',o_callback:'إعادة الاتصال',o_tentative1:'مبدئي 1',o_tentative2:'مبدئي 2',o_tentative3:'مبدئي 3',o_unreachable:'العميل غير متاح',o_confirmed:'مؤكد',o_cancelled:'ملغي',s_pending:'في الانتظار',s_no_answer:'لم يرد',s_callback:'إعادة الاتصال',s_tentative1:'مبدئي 1',s_tentative2:'مبدئي 2',s_tentative3:'مبدئي 3',s_unreachable:'العميل غير متاح',s_confirmed:'مؤكد',s_cancelled:'ملغي',search:'بحث...',stat_orders:'طلباتي',stat_conf:'مؤكد',stat_pend:'انتظار',stat_over:'متأخر',modal_title:'تسجيل مكالمة',r1:'لم يرد',r1s:'الهاتف رن ولم يجب',r2:'إعادة الاتصال',r2s:'طلب الاتصال لاحقاً',r3:'تم التأكيد',r3s:'وافق على الطلب',r4:'إلغاء',r4s:'رفض أو ألغى',r5:'مبدئي 1',r5s:'محاولة أولى',r6:'مبدئي 2',r6s:'محاولة ثانية',r7:'مبدئي 3',r7s:'محاولة ثالثة',r8:'العميل غير متاح',r8s:'لا يمكن الوصول إليه',note:'ملاحظة',cancel:'إلغاء',save:'تسجيل',hist:'المكالمات السابقة',no_calls:'لم يتم الاتصال بعد',call_now:'اتصل الآن',log_res:'تسجيل النتيجة',not_called:'لم يتصل بعد',no_orders:'لا توجد طلبات',loading:'جاري التحميل...',overdue:'متأخر',calls:'مكالمات',done_conf:'✓ تم التأكيد — جاهز للشحن',done_canc:'✗ تم الإلغاء',no_res:'اختر نتيجة أولاً',call_logged:'تم تسجيل وقت الاتصال ✓',suspicious:'⚠️ مدة قصيرة جداً',last_note:'آخر ملاحظة',notif_title:'الإشعارات',clear_notif:'مسح',no_notif:'لا توجد إشعارات',new_order_notif:'طلب جديد',assigned_notif:'تم تعيين طلب لك',err_select:'اختر اسمك',err_pass:'كلمة المرور خاطئة',err_agent:'مؤكد غير موجود',phone:'رقم الهاتف',wilaya:'الولاية',product:'المنتج',timer_title:'وقت المكالمة',no_start:'لم تضغط اتصل الآن — الوقت لن يُسجَّل على السيرفر',duration:'مدة المكالمة',audit_title:'تفاصيل التحقيق',manip:'⚠️ تلاعب محتمل',manip_click:'انقر للتفاصيل',manip_short:'مدة المكالمة {dur} ثانية أقل من الحد الأدنى {thr} ثانية.',manip_nostart:'لم يُضغط زر الاتصال — لا يوجد وقت بداية مسجَّل على السيرفر.',a_order:'الطلب',a_client:'العميل',a_agent:'المؤكد',a_status:'الحالة الحالية',a_thr:'الحد الأدنى الحالي',a_log:'سجل المكالمات الكامل',a_call:'مكالمة',a_result:'النتيجة',a_start:'وقت البداية',a_end:'وقت النهاية',a_dur:'المدة',a_rthr:'الحد المسجَّل',a_flag:'مُعلَّم',a_yes:'نعم',a_note:'ملاحظة',a_close:'إغلاق',no_call_hist:'لا توجد مكالمات',conn_err:'تعذّر الاتصال بالخادم',server_err:'خطأ في الخادم',err_generic:'خطأ',trk_title:'تتبع التوصيل',trk_loading:'جاري التحميل...',trk_none:'لا توجد شحنة لهذا الطلب بعد',trk_create:'إنشاء شحنة',trk_confirm_first:'أكّد الطلب أولاً',trk_no_events:'لا توجد أحداث تتبّع بعد',trk_refresh:'تحديث',trk_tracknum:'رقم التتبّع',trk_carrier:'المزوّد',trk_shipid:'معرّف الشحنة',trk_events:'الأحداث',trk_open:'تتبع',trk_delivered:'تم التسليم',trk_ship_created:'تم إنشاء الشحنة',trk_ship_failed:'فشل إنشاء الشحنة',trk_updated:'تم التحديث',trk_err:'خطأ',trk_status:'الحالة',fup_title:'متابعة الطلبات',fup_count:'متابعة',fup_empty:'لا توجد مهام متابعة',fup_resolve:'تم الاتصال بالعميل',fup_countdown:'متبقٍ',fup_overdue:'🚨 تذكير متابعة متأخر',fup_reason:'السبب',fup_open:'متابعة',
+  ai_open:'المساعد الذكي',ai_title:'مساعدك الذكي',ai_sub:'اسأل عن طلباتك أو أفضل وقت للاتصال',ai_send:'إرسال',ai_thinking:'يفكّر…',ai_ph:'مثال: لخّص طلباتي المعلّقة',ai_hi:'مرحباً! كيف أساعدك؟',ai_need:'المساعد غير مهيّأ بعد — تواصل مع المدير.',ai_err:'خطأ من الخادم',ai_clear:'مسح',ai_q1:'لخّص طلباتي المعلّقة',ai_q2:'أفضل وقت للاتصال بالعميل؟',ai_q3:'كم طلبي المؤكد اليوم؟',ai_role:'أنت',ai_bot:'المساعد'},
+  fr:{dir:'ltr',sub:'Interface Agent',name:'Votre nom',pass:'Mot de passe',login:'Connexion',logout:'Déconnexion',greeting:'Bonjour, ',hsub:'Vos commandes',o_all:'Tous statuts',o_pending:'En attente',o_no_answer:'Pas de réponse',o_callback:'Rappel',o_tentative1:'Tentative 1',o_tentative2:'Tentative 2',o_tentative3:'Tentative 3',o_unreachable:'Client injoignable',o_confirmed:'Confirmé',o_cancelled:'Annulé',s_pending:'En attente',s_no_answer:'Pas de réponse',s_callback:'Rappel',s_tentative1:'Tentative 1',s_tentative2:'Tentative 2',s_tentative3:'Tentative 3',s_unreachable:'Client injoignable',s_confirmed:'Confirmé',s_cancelled:'Annulé',search:'Rechercher...',stat_orders:'Commandes',stat_conf:'Confirmé',stat_pend:'En attente',stat_over:'En retard',modal_title:'Enregistrer appel',r1:'Pas de réponse',r1s:'Téléphone a sonné',r2:'Rappel',r2s:'Demande de rappel',r3:'Confirmé',r3s:'A accepté',r4:'Annulé',r4s:'A refusé',r5:'Tentative 1',r5s:'Premier essai',r6:'Tentative 2',r6s:'Second essai',r7:'Tentative 3',r7s:'Troisième essai',r8:'Client injoignable',r8s:'Injoignable',note:'Note',cancel:'Annuler',save:'Enregistrer',hist:'Appels précédents',no_calls:'Pas encore appelé',call_now:'Appeler',log_res:'Résultat',not_called:'Pas encore appelé',no_orders:'Aucune commande',loading:'Chargement...',overdue:'En retard',calls:'appels',done_conf:'✓ Confirmé',done_canc:'✗ Annulé',no_res:'Choisissez un résultat',call_logged:'Heure enregistrée ✓',suspicious:'⚠️ Durée trop courte',last_note:'Dernière note',notif_title:'Notifications',clear_notif:'Effacer',no_notif:'Aucune notification',new_order_notif:'Nouvelle commande',assigned_notif:'Commande assignée',err_select:'Choisissez votre nom',err_pass:'Mot de passe incorrect',err_agent:'Agent introuvable',phone:'Téléphone',wilaya:'Wilaya',product:'Produit',timer_title:'Durée appel',no_start:'Appuyez sur Appeler d\'abord',duration:'Durée',audit_title:"Détails de l'audit",manip:'⚠️ Manipulation possible',manip_click:'Cliquez pour détails',manip_short:"Durée d'appel {dur}s inférieure au minimum {thr}s.",manip_nostart:'Bouton "Appeler" non pressé — aucune heure de début enregistrée.',a_order:'Commande',a_client:'Client',a_agent:'Agent',a_status:'Statut actuel',a_thr:'Seuil minimum actuel',a_log:'Journal complet des appels',a_call:'Appel',a_result:'Résultat',a_start:'Heure début',a_end:'Heure fin',a_dur:'Durée',a_rthr:'Seuil enregistré',a_flag:'Signalé',a_yes:'Oui',a_note:'Note',a_close:'Fermer',no_call_hist:'Aucun appel',conn_err:'Connexion au serveur impossible',server_err:'Erreur serveur',err_generic:'Erreur',trk_title:'Suivi de livraison',trk_loading:'Chargement...',trk_none:'Aucun colis pour cette commande',trk_create:'Créer le colis',trk_confirm_first:'Confirmez d\'abord',trk_no_events:'Aucun événement de suivi',trk_refresh:'Rafraîchir',trk_tracknum:'N° de suivi',trk_carrier:'Transporteur',trk_shipid:'ID Colis',trk_events:'Événements',trk_open:'Suivre',trk_delivered:'Livré',trk_ship_created:'Colis créé',trk_ship_failed:'Échec création',trk_updated:'Mis à jour',trk_err:'Erreur',trk_status:'Statut',fup_title:'Suivi des commandes',fup_count:'suivi',fup_empty:'Aucune tâche de suivi',fup_resolve:'Client contacté',fup_countdown:'restant',fup_overdue:'🚨 Rappel de suivi en retard',fup_reason:'Raison',fup_open:'Suivi',
+  ai_open:'Assistant IA',ai_title:'Votre assistant IA',ai_sub:'Demandez à propos de vos commandes ou du meilleur moment pour appeler',ai_send:'Envoyer',ai_thinking:'Réflexion…',ai_ph:'Ex : résumez mes commandes en attente',ai_hi:'Bonjour ! Comment puis-je aider ?',ai_need:'Assistant non configuré — contactez le manager.',ai_err:'Erreur serveur',ai_clear:'Effacer',ai_q1:'Résumez mes commandes en attente',ai_q2:'Meilleur moment pour appeler ce client ?',ai_q3:'Combien de confirmations aujourd\'hui ?',ai_role:'Vous',ai_bot:'Assistant'},
+  en:{dir:'ltr',sub:'Agent Interface',name:'Your name',pass:'Password',login:'Login',logout:'Logout',greeting:'Hello, ',hsub:'Your orders',o_all:'All statuses',o_pending:'Pending',o_no_answer:'No answer',o_callback:'Callback',o_tentative1:'Tentative 1',o_tentative2:'Tentative 2',o_tentative3:'Tentative 3',o_unreachable:'Unreachable',o_confirmed:'Confirmed',o_cancelled:'Cancelled',s_pending:'Pending',s_no_answer:'No answer',s_callback:'Callback',s_tentative1:'Tentative 1',s_tentative2:'Tentative 2',s_tentative3:'Tentative 3',s_unreachable:'Unreachable',s_confirmed:'Confirmed',s_cancelled:'Cancelled',search:'Search...',stat_orders:'Orders',stat_conf:'Confirmed',stat_pend:'Pending',stat_over:'Overdue',modal_title:'Log Call',r1:'No Answer',r1s:'Phone rang, no answer',r2:'Callback',r2s:'Asked for callback',r3:'Confirmed',r3s:'Accepted order',r4:'Cancelled',r4s:'Refused',r5:'Tentative 1',r5s:'First attempt',r6:'Tentative 2',r6s:'Second attempt',r7:'Tentative 3',r7s:'Third attempt',r8:'Unreachable',r8s:'Could not be reached',note:'Note',cancel:'Cancel',save:'Save',hist:'Previous Calls',no_calls:'Not called yet',call_now:'Call Now',log_res:'Log Result',not_called:'Not called yet',no_orders:'No orders assigned',loading:'Loading...',overdue:'Overdue',calls:'calls',done_conf:'✓ Confirmed — Ready',done_canc:'✗ Cancelled',no_res:'Select a result first',call_logged:'Call time logged ✓',suspicious:'⚠️ Too short',last_note:'Latest note',notif_title:'Notifications',clear_notif:'Clear',no_notif:'No notifications',new_order_notif:'New order',assigned_notif:'Order assigned to you',err_select:'Select your name',err_pass:'Wrong password',err_agent:'Agent not found',phone:'Phone',wilaya:'Wilaya',product:'Product',timer_title:'Call duration',no_start:'Press Call Now first',duration:'Duration',audit_title:'Audit details',manip:'⚠️ Possible manipulation',manip_click:'Click for details',manip_short:'Call duration {dur}s is below the minimum of {thr}s.',manip_nostart:'Call button was not pressed — no start time recorded on the server.',a_order:'Order',a_client:'Client',a_agent:'Agent',a_status:'Current status',a_thr:'Current minimum threshold',a_log:'Full call log',a_call:'Call',a_result:'Result',a_start:'Start time',a_end:'End time',a_dur:'Duration',a_rthr:'Recorded threshold',a_flag:'Flagged',a_yes:'Yes',a_note:'Note',a_close:'Close',no_call_hist:'No calls',conn_err:'Cannot connect to server',server_err:'Server error',err_generic:'Error',trk_title:'Delivery Tracking',trk_loading:'Loading...',trk_none:'No shipment for this order yet',trk_create:'Create Shipment',trk_confirm_first:'Confirm the order first',trk_no_events:'No tracking events yet',trk_refresh:'Refresh',trk_tracknum:'Tracking No.',trk_carrier:'Carrier',trk_shipid:'Shipment ID',trk_events:'Events',trk_open:'Track',trk_delivered:'Delivered',trk_ship_created:'Shipment created',trk_ship_failed:'Shipment failed',trk_updated:'Updated',trk_err:'Error',trk_status:'Status',fup_title:'Order Follow-up',fup_count:'follow-up',fup_empty:'No follow-up tasks',fup_resolve:'Customer contacted',fup_countdown:'left',fup_overdue:'🚨 Overdue follow-up reminder',fup_reason:'Reason',fup_open:'Follow-up',
+  ai_open:'AI Assistant',ai_title:'Your AI Assistant',ai_sub:'Ask about your orders or the best time to call',ai_send:'Send',ai_thinking:'Thinking…',ai_ph:'e.g. summarize my pending orders',ai_hi:'Hi! How can I help?',ai_need:'Assistant not configured yet — contact your manager.',ai_err:'Server error',ai_clear:'Clear',ai_q1:'Summarize my pending orders',ai_q2:'Best time to call this customer?',ai_q3:'How many of my orders are confirmed today?',ai_role:'You',ai_bot:'Assistant'}
 };
 
 let lang = localStorage.getItem('agent_lang') || 'ar';
@@ -262,6 +376,8 @@ function applyLang() {
   }
   renderStats();
   render();
+  // Keep the follow-up panel labels + countdowns in sync on language switch.
+  if (agentHasFollowupRole()) renderFupPanel();
 }
 
 function fmt(ts) {
@@ -319,6 +435,29 @@ function handleNotification(data) {
     body = data.order?.id + ' — ' + data.order?.client;
     type = 'assigned';
     loadOrders();
+  } else if (data.type === 'shipment_created') {
+    title = t('trk_ship_created'); body = [data.orderId, data.trackingNumber].filter(Boolean).join(' · ');
+    type = 'delivery'; loadOrders();
+    if (currentTrackingOrderId === data.orderId) openTracking(data.orderId);
+  } else if (data.type === 'shipment_failed') {
+    title = t('trk_ship_failed'); body = [data.orderId, data.body].filter(Boolean).join(' · ');
+    type = 'delivery'; loadOrders();
+  } else if (data.type === 'delivery_update' && data.shipmentId) {
+    title = '🚚 ' + (data.description || ''); body = [data.orderId, data.originalStatus].filter(Boolean).join(' · ');
+    type = 'delivery'; loadOrders();
+    if (currentTrackingOrderId === data.orderId) openTracking(data.orderId);
+  } else if (String(data.type).indexOf('delivery_') === 0 || String(data.type).indexOf('notif_') === 0) {
+    title = data.title || '🔔 '; body = data.body || ''; type = 'delivery'; loadOrders();
+  } else if (data.type === 'followup_assigned' || data.type === 'followup_reminder' ||
+             data.type === 'followup_resolved' || data.type === 'followup_overdue') {
+    // Only relevant to follow-up agents, and only when addressed to me.
+    if (!agentHasFollowupRole()) return;
+    if (data.agent && data.agent !== agent.name) return;
+    if (data.type === 'followup_assigned') { title = '📍 ' + t('fup_title'); body = (data.orderId||'') + ' → ' + (data.agent||''); }
+    else if (data.type === 'followup_reminder') { title = '📞 ' + t('fup_open'); body = (data.orderId||'') + (data.reason ? ' — ' + data.reason : ''); }
+    else { title = data.title || ('🚨 ' + t('fup_overdue')); body = data.body || ''; }
+    type = (data.type === 'followup_overdue') ? 'overdue' : 'followup';
+    loadFollowupTasks();
   } else { return; }
 
   notifications.unshift({ title, body, time: Date.now(), type });
@@ -397,6 +536,7 @@ function doLogin() {
 function doLogout() {
   sessionStorage.removeItem('agent_sess');
   if (sseSource) { sseSource.close(); sseSource = null; }
+  hideFupPanel(); // stop the countdown ticker + clear tasks
   agent = null;
   document.getElementById('mainApp').classList.remove('visible');
   document.getElementById('loginWrap').style.display = 'flex';
@@ -411,15 +551,131 @@ async function showApp() {
   applyLang();
   requestNotifPermission();
   await loadOrders();
+  await loadFollowupTasks();
   connectSSE();
   updateClock();
   setInterval(updateClock, 30000);
   setInterval(loadOrders, 30000);
+  if (agentHasFollowupRole()) setInterval(loadFollowupTasks, 30000);
 }
 
 function updateClock() {
   const el = document.getElementById('clockEl');
   if (el) el.textContent = new Date().toLocaleTimeString(lang==='ar'?'ar-DZ':'fr-DZ', {hour:'2-digit',minute:'2-digit'});
+}
+
+// ---- FOLLOW-UP (SUIVI) — role-aware panel for followup/both agents (req §1) ----
+let followupTasks = [];     // open tasks assigned to this agent
+let fupTicker = null;       // countdown refresh interval
+
+/** True when the logged-in agent handles follow-ups. Confirmation-only agents
+ *  never see the panel. 'both' agents see it alongside their confirmation list. */
+function agentHasFollowupRole() {
+  return agent && (agent.role === 'followup' || agent.role === 'both');
+}
+
+/** Fetch this agent's open follow-up tasks, then render the panel.
+ *  Called on login, on order refresh, and on follow-up SSE events. */
+async function loadFollowupTasks() {
+  if (!agentHasFollowupRole()) { hideFupPanel(); return; }
+  try {
+    const r = await api('GET', '/api/followup/tasks?agent=' + encodeURIComponent(agent.name) + '&status=open');
+    followupTasks = r.items || [];
+  } catch(e) { followupTasks = []; }
+  renderFupPanel();
+}
+
+function hideFupPanel() {
+  const sec = document.getElementById('fupSection');
+  if (sec) sec.classList.remove('visible');
+  followupTasks = [];
+  if (fupTicker) { clearInterval(fupTicker); fupTicker = null; }
+}
+
+/** Render the follow-up task list with live countdowns. Overdue tasks are
+ *  pinned to the top and pulse red. */
+function renderFupPanel() {
+  const sec = document.getElementById('fupSection');
+  if (!sec || !agentHasFollowupRole()) return;
+  sec.classList.add('visible');
+  document.getElementById('fupTitle').textContent = t('fup_title');
+  document.getElementById('fupCount').textContent = followupTasks.length;
+
+  const list = document.getElementById('fupList');
+  if (!followupTasks.length) {
+    list.innerHTML = `<div class="fup-empty">${t('fup_empty')}</div>`;
+    return;
+  }
+
+  // Sort: overdue first, then by soonest dueAt.
+  const sorted = [...followupTasks].sort((a, b) => {
+    const ao = isOverdue(a), bo = isOverdue(b);
+    if (ao && !bo) return -1;
+    if (!ao && bo) return 1;
+    return (a.dueAt || Infinity) - (b.dueAt || Infinity);
+  });
+
+  list.innerHTML = sorted.map(task => {
+    const order = orders.find(o => o.id === task.orderId);
+    const overdue = isOverdue(task);
+    const cd = countdownHtml(task);
+    const cust = order ? escapeHtml(order.client || '') : task.orderId;
+    const meta = [
+      order ? escapeHtml(order.deliveryStatus || order.delivery || '') : '',
+      task.reason ? t('fup_reason') + ': ' + escapeHtml(task.reason) : '',
+      order && order.phone ? order.phone : '',
+    ].filter(Boolean).join(' · ');
+    return `<div class="fup-card ${overdue ? 'overdue' : ''}">
+      <div class="fup-main">
+        <div class="fup-id">${task.orderId}</div>
+        <div class="fup-cust">${cust}</div>
+        ${meta ? `<div class="fup-meta">${meta}</div>` : ''}
+      </div>
+      ${cd}
+      <button class="btn btn-sm btn-call" onclick="resolveFollowupTask('${task.id}')">${t('fup_resolve')}</button>
+    </div>`;
+  }).join('');
+
+  // Re-render countdowns every 15s so they stay accurate without a full reload.
+  if (!fupTicker) fupTicker = setInterval(refreshFupCountdowns, 15000);
+}
+
+function isOverdue(task) {
+  return task.dueAt && task.dueAt < Date.now();
+}
+
+/** Countdown label for a single task: "left: 3m" while due, else an overdue badge. */
+function countdownHtml(task) {
+  if (!task.dueAt) return '';
+  if (isOverdue(task)) {
+    return `<span class="fup-cd overdue">${t('fup_overdue')}</span>`;
+  }
+  return `<span class="fup-cd" data-due="${task.dueAt}">${t('fup_countdown')}: ${fmtDur(Math.round((task.dueAt - Date.now()) / 1000))}</span>`;
+}
+
+/** Lightweight in-place countdown refresh (avoids re-rendering the whole list). */
+function refreshFupCountdowns() {
+  document.querySelectorAll('.fup-cd[data-due]').forEach(el => {
+    const due = Number(el.dataset.due);
+    if (!due) return;
+    if (due < Date.now()) {
+      // Became overdue — do a full re-render to apply the overdue styling + sort.
+      renderFupPanel();
+    } else {
+      el.textContent = t('fup_countdown') + ': ' + fmtDur(Math.round((due - Date.now()) / 1000));
+    }
+  });
+}
+
+/** Resolve a task = "I contacted the customer". Hits the resolve endpoint,
+ *  removes the task, and refreshes. */
+async function resolveFollowupTask(taskId) {
+  try {
+    await api('POST', '/api/followup/tasks/' + taskId + '/resolve', {});
+    followupTasks = followupTasks.filter(x => x.id !== taskId);
+    toast(t('fup_resolve') + ' ✓', 'success');
+    renderFupPanel();
+  } catch(e) { toast(t('err_generic'), ''); }
 }
 
 // ---- ORDERS ----
@@ -502,6 +758,7 @@ function render() {
         <div class="info-item" style="grid-column:span 2"><div class="info-label">${t('product')}</div><div class="info-value">${o.product||'—'} ${o.price?'· '+o.price.toLocaleString()+' '+(lang==='ar'?'دج':'DA'):''}</div></div>
       </div>
       ${note?`<div class="note-box"><div class="nb-label">${t('last_note')}</div>${escapeHtml(note)}</div>`:''}
+      ${(isConf&&(o.deliveryStatus||o.trackingNumber))?`<div class="card-delivery" onclick="openTracking('${o.id}')" style="cursor:pointer"><div><div style="color:var(--text3);font-size:9px;text-transform:uppercase;letter-spacing:.3px">${t('trk_status')}</div><div style="font-weight:600;margin-top:2px">🚚 ${escapeHtml(o.deliveryStatus||mapDl(o.deliveryStatus)||'—')}</div></div><div style="color:var(--purple2);font-size:11px;font-weight:600">${t('trk_open')} ›</div></div>`:''}
       ${(o.calls||[]).length > 0
         ? `<div class="card-calls"><div class="call-count">${o.calls.length} ${t('calls')} · ${fmt(lastCall?.callStartTime||lastCall?.time)}</div><div class="call-chips">${callChips}</div></div>`
         : `<div style="font-size:11px;color:var(--red);margin-bottom:10px">⚠ ${t('not_called')}</div>`}
@@ -516,7 +773,7 @@ function render() {
               ${t('log_res')}
             </button>
           </div>`
-        : `<div class="badge b-${o.status}" style="font-size:12px;padding:7px 12px;width:100%;justify-content:center">${isConf?t('done_conf'):t('done_canc')}</div>`
+        : `<div style="display:flex;gap:8px;width:100%"><div class="badge b-${o.status}" style="font-size:12px;padding:7px 12px;flex:1;justify-content:center">${isConf?t('done_conf'):t('done_canc')}</div>${isConf?`<button class="btn btn-sm" style="flex-shrink:0" onclick="openTracking('${o.id}')" title="${t('trk_title')}">🚚 ${t('trk_open')}</button>`:''}</div>`
       }
     </div>`;
   }).join('');
@@ -650,9 +907,176 @@ async function openAudit(id) {
 }
 function closeAudit() { document.getElementById('auditModal').classList.remove('open'); }
 
+/* ===========================================================================
+ * DELIVERY TRACKING — agent view. Read-only timeline; agents never leave the
+ * CRM to see what's happening with a parcel.
+ * ======================================================================== */
+let currentTrackingOrderId = null;
+const DL_LABEL = {created:'Création',dispatched:'Dispatché',in_transit:'En route',at_office:'Au bureau',out_for_delivery:'Sorti en livraison',delivered:'Livré',refused:'Refusé',returned:'Retourné',cancelled:'Annulé',pending:'En attente'};
+function mapDl(s){ return DL_LABEL[s] || ''; }
+
+async function openTracking(orderId) {
+  currentTrackingOrderId = orderId;
+  document.getElementById('trkOrderId').textContent = orderId ? ('· ' + orderId) : '';
+  document.getElementById('trkContent').innerHTML = '<div class="tracking-empty">' + t('trk_loading') + '</div>';
+  document.getElementById('trackingModal').classList.add('open');
+  try {
+    const data = await api('GET', '/api/orders/' + orderId + '/shipment');
+    renderTracking(orderId, data);
+  } catch (e) {
+    document.getElementById('trkContent').innerHTML = '<div class="tracking-empty" style="color:var(--red)">' + escapeHtml(e.message || t('trk_err')) + '</div>';
+  }
+}
+
+function renderTracking(orderId, data) {
+  const el = document.getElementById('trkContent');
+  const { shipment, events, provider } = data;
+  const o = orders.find(x => x.id === orderId) || {};
+  if (!shipment) {
+    el.innerHTML = '<div class="tracking-empty">🚚 ' + t('trk_none') + '</div>' +
+      '<div class="tracking-actions">' +
+        (o.status === 'confirmed'
+          ? '<button class="btn btn-primary btn-sm" style="flex:1;justify-content:center" onclick="createShipment(\'' + orderId + '\')">' + t('trk_create') + '</button>'
+          : '<div style="font-size:11px;color:var(--text3);text-align:center;flex:1">' + t('trk_confirm_first') + '</div>') +
+      '</div>';
+    return;
+  }
+  const ordered = [...events].sort((a, b) => b.eventTime - a.eventTime);
+  const itemsHtml = ordered.length ? ordered.map((e, i) => {
+    const cls = i === 0 ? 'first' : '';
+    const d = new Date(e.eventTime || Date.now());
+    const dd = String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+    const tt = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    return '<div class="tl-item ' + cls + '">' +
+      '<div class="tl-datetime">' + dd + ' ' + tt + '</div>' +
+      '<div class="tl-status">' + escapeHtml(mapDl(e.crmStatus) || e.originalStatus || '—') + '</div>' +
+      (e.description ? '<div class="tl-desc">' + escapeHtml(e.description) + '</div>' : '') +
+      (e.originalStatus && e.originalStatus !== mapDl(e.crmStatus) ? '<div class="tl-orig">' + escapeHtml(e.originalStatus) + '</div>' : '') +
+    '</div>';
+  }).join('') : '<div class="tracking-empty">' + t('trk_no_events') + '</div>';
+
+  el.innerHTML =
+    '<div class="tracking-head">' +
+      '<div><span class="dl-badge ' + (shipment.crmStatus || 'pending') + '">' + escapeHtml(mapDl(shipment.crmStatus) || shipment.crmStatus || '—') + '</span></div>' +
+    '</div>' +
+    '<div class="tracking-meta">' +
+      '<div class="tm"><div class="l">' + t('trk_tracknum') + '</div><div class="v" dir="ltr">' + escapeHtml(shipment.trackingNumber || '—') + '</div></div>' +
+      '<div class="tm"><div class="l">' + t('trk_carrier') + '</div><div class="v">' + escapeHtml(provider?.name || o.delivery || '—') + '</div></div>' +
+      '<div class="tm"><div class="l">' + t('trk_events') + '</div><div class="v">' + events.length + '</div></div>' +
+    '</div>' +
+    '<div class="timeline">' + itemsHtml + '</div>' +
+    '<div class="tracking-actions">' +
+      '<button class="btn btn-sm" style="flex:1;justify-content:center" onclick="refreshTracking(\'' + orderId + '\')">⟳ ' + t('trk_refresh') + '</button>' +
+    '</div>';
+}
+
+function closeTracking() { document.getElementById('trackingModal').classList.remove('open'); currentTrackingOrderId = null; }
+
+async function createShipment(orderId) {
+  try {
+    const data = await api('POST', '/api/orders/' + orderId + '/shipment', {});
+    renderTracking(orderId, data);
+    toast(t('trk_ship_created'), 'success');
+    await loadOrders();
+  } catch (e) { toast(t('trk_err') + ': ' + e.message, 'error'); }
+}
+
+async function refreshTracking(orderId) {
+  try {
+    const data = await api('POST', '/api/orders/' + orderId + '/shipment/refresh', {});
+    renderTracking(orderId, data);
+    toast(t('trk_updated'), 'success');
+    await loadOrders();
+  } catch (e) { toast(t('trk_err') + ': ' + e.message, 'error'); }
+}
+
 document.getElementById('callModal').addEventListener('click', e => { if(e.target===document.getElementById('callModal')) closeModal(); });
 document.getElementById('auditModal').addEventListener('click', e => { if(e.target===document.getElementById('auditModal')) closeAudit(); });
 document.addEventListener('click', e => { if (!e.target.closest('.notif-bell') && !e.target.closest('.notif-panel')) document.getElementById('notifPanel').classList.remove('open'); });
+
+/* ===========================================================================
+ * AI ASSISTANT — scoped to this confirmation agent. Orders passed to the model
+ * are limited to the agent's own (scopedAgent). Reuses the manager-side
+ * /api/ai/chat/stream endpoint with the same SSE protocol. No model hardcoded
+ * client-side; the server resolves the adapter. Advisory only — never executes.
+ * ======================================================================== */
+let aiStream=null, aiBusy=false, aiAgentId=null;
+
+function toggleAiPanel(){
+  const p=document.getElementById('aiPanel');
+  const opening=!p.classList.contains('open');
+  p.classList.toggle('open');
+  if(opening){ initAiPanel(); }
+}
+async function initAiPanel(){
+  document.getElementById('aiPTitle').textContent=t('ai_title');
+  document.getElementById('aiPSub').textContent=t('ai_sub');
+  document.getElementById('aiSend').textContent=t('ai_send');
+  document.getElementById('aiTxt').placeholder=t('ai_ph');
+  // Pick the Confirmation Assistant if available, else first enabled agent.
+  try{
+    const list=await api('GET','/api/ai/agents/enabled');
+    const conf=(list||[]).find(a=>a.role==='confirmation')||(list||[])[0];
+    aiAgentId=conf?conf.id:null;
+  }catch(e){ aiAgentId=null; }
+  renderAiEmpty();
+  loadAiHistory();
+}
+function renderAiEmpty(){
+  const el=document.getElementById('aiMsgs');
+  el.innerHTML='<div class="ai-empty"><div>'+t('ai_hi')+'</div><div class="ai-chips">'
+    +[t('ai_q1'),t('ai_q2'),t('ai_q3')].map(q=>'<span class="ai-chip" onclick="useAiChip(this)">'+escapeHtml(q)+'</span>').join('')
+    +'</div></div>';
+}
+function useAiChip(el){ document.getElementById('aiTxt').value=el.textContent; agentAiSend(); }
+async function loadAiHistory(){
+  if(!aiAgentId||!agent) return;
+  try{
+    const r=await api('GET','/api/ai/conversations/'+aiAgentId+'?actor=agent:'+encodeURIComponent(agent.name));
+    if(r.items&&r.items.length){ const el=document.getElementById('aiMsgs'); el.innerHTML=''; r.items.forEach(turn=>appendAiMsg(turn.role,turn.content)); }
+  }catch(e){}
+}
+function appendAiMsg(role,text){
+  const el=document.getElementById('aiMsgs');
+  if(el.querySelector('.ai-empty')) el.innerHTML='';
+  const div=document.createElement('div');
+  div.className='ai-msg '+(role==='user'?'user':'asst');
+  div.textContent=text;
+  el.appendChild(div);
+  el.scrollTop=el.scrollHeight;
+  return div;
+}
+function agentAiSend(){
+  if(aiBusy||!agent) return;
+  const inp=document.getElementById('aiTxt');
+  const msg=inp.value.trim();
+  if(!msg) return;
+  if(!aiAgentId){ appendAiMsg('assistant', t('ai_need')); document.querySelector('.ai-msg.asst:last-child')?.classList.add('err'); return; }
+  inp.value=''; inp.style.height='auto';
+  appendAiMsg('user', msg);
+  const asst=appendAiMsg('assistant','');
+  asst.innerHTML='<span class="ai-cursor"></span>';
+  aiBusy=true; document.getElementById('aiSend').textContent=t('ai_thinking');
+
+  let acc='';
+  const url=SERVER+'/api/ai/chat/stream?'+new URLSearchParams({
+    agentId:aiAgentId, message:msg, actor:'agent:'+agent.name, scopedAgent:agent.name
+  });
+  try{
+    if(aiStream) aiStream.close();
+    aiStream=new EventSource(url);
+    aiStream.onmessage=(e)=>{
+      let d; try{ d=JSON.parse(e.data); }catch{ return; }
+      if(d.type==='connected') return;
+      if(d.type==='delta'){ acc+=d.delta; asst.innerHTML=escapeHtml(acc)+'<span class="ai-cursor"></span>'; scrollAi(); }
+      else if(d.type==='done'){ acc=d.text||acc; asst.textContent=acc; finishAi(); }
+      else if(d.type==='error'){ asst.className='ai-msg err'; asst.textContent='⚠️ '+(d.error||t('ai_err'))+(d.code==='NO_AI_PROVIDER'?' ('+t('ai_need')+')':''); finishAi(); }
+    };
+    aiStream.onerror=()=>{ if(aiBusy){ asst.textContent=acc||('⚠️ '+t('ai_err')); finishAi(); } };
+  }catch(e){ asst.className='ai-msg err'; asst.textContent='⚠️ '+t('ai_err'); finishAi(); }
+}
+function finishAi(){ aiBusy=false; document.getElementById('aiSend').textContent=t('ai_send'); scrollAi(); if(aiStream){ try{aiStream.close();}catch{} aiStream=null; } }
+function scrollAi(){ const el=document.getElementById('aiMsgs'); el.scrollTop=el.scrollHeight; }
 
 initLogin();
 </script>
