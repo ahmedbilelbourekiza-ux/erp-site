@@ -88,6 +88,7 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
 .lv-type{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;margin-top:4px}
 .lv-type.normal{background:var(--blue-bg);color:var(--blue)}
 .lv-type.abandoned{background:var(--orange-bg);color:var(--orange)}
+.lv-type.draft{background:var(--teal-bg);color:var(--teal)}
 .lv-date{font-size:11px;color:var(--text3);margin-top:3px}
 /* CLIENT column */
 .lv-cust-name{font-size:15px;font-weight:600;line-height:1.25;word-break:break-word}
@@ -1243,7 +1244,7 @@ const I18N = {
     attempts_title:'محاولات التأكيد',attempts_day:'اليوم',attempts_t1:'مبدئي 1',attempts_t2:'مبدئي 2',attempts_t3:'مبدئي 3',attempts_empty:'لم تُسجَّل محاولة بعد',attempts_date:'التاريخ',attempts_time:'الوقت',attempts_duration:'المدة',attempts_result:'النتيجة',attempts_agent:'المؤكد',attempts_note:'ملاحظة',attempts_matrix:'مصفوفة المحاولات',attempts_view:'عرض المحاولات',
     fake_title:'طلب وهمي',fake_classify:'تصنيف كطلب وهمي',fake_unclassify:'إلغاء التصنيف',fake_reason:'سبب الوهم',fake_responsible:'المؤكد المسؤول',fake_count:'طلبات وهمية',fake_filter:'وهمي',fake_marked:'تم التصنيف كوهمي',fake_yes:'نعم',fake_no:'لا',
     bulk_select_page:'تحديد الصفحة',bulk_select_all:'تحديد كل المُصفّى',bulk_clear:'إلغاء التحديد',bulk_create_shipments:'إنشاء شحنات',bulk_send_delivery:'إرسال للتوصيل',bulk_print:'طباعة',bulk_export:'تصدير',bulk_action:'إجراء جماعي',bulk_done:'اكتمل',bulk_of:'من',
-    store_info:'معلومات المتجر',store_logo:'شعار المتجر',store_platform_short:'المنصة',store_brand_short:'العلامة',order_type:'نوع الطلب',order_type_normal:'طلب عادي',order_type_abandoned:'سلة مهجورة',latest_delivery_status:'آخر حالة توصيل',default_carrier:'المزوّد الافتراضي للمتجر',carrier_selector:'اختر شركة التوصيل'
+    store_info:'معلومات المتجر',store_logo:'شعار المتجر',store_platform_short:'المنصة',store_brand_short:'العلامة',order_type:'نوع الطلب',order_type_normal:'طلب عادي',order_type_abandoned:'سلة مهجورة',order_type_draft:'طلب مسودة',latest_delivery_status:'آخر حالة توصيل',default_carrier:'المزوّد الافتراضي للمتجر',carrier_selector:'اختر شركة التوصيل'
   },
   fr:{_dir:'ltr',
     brand_title:'CRM Confirmations',brand_sub:'Console Manager',nav_orders:'Commandes',nav_agents:'Agents',nav_products:'Produits & Stock',nav_export:'Export',nav_analytics:'Analystes',nav_import:'Import CSV',nav_settings:'Paramètres',agent_iface:'Interface Agents',
@@ -1273,7 +1274,7 @@ const I18N = {
     attempts_title:'Tentatives de confirmation',attempts_day:'Jour',attempts_t1:'Tentative 1',attempts_t2:'Tentative 2',attempts_t3:'Tentative 3',attempts_empty:'Aucune tentative enregistrée',attempts_date:'Date',attempts_time:'Heure',attempts_duration:'Durée',attempts_result:'Résultat',attempts_agent:'Agent',attempts_note:'Note',attempts_matrix:'Matrice des tentatives',attempts_view:'Voir les tentatives',
     fake_title:'Fausse commande',fake_classify:'Classer comme fausse',fake_unclassify:'Annuler la classification',fake_reason:'Raison',fake_responsible:'Agent responsable',fake_count:'fausse(s)',fake_filter:'Fausse',fake_marked:'Classée comme fausse',fake_yes:'Oui',fake_no:'Non',
     bulk_select_page:'Sélectionner la page',bulk_select_all:'Tout sélectionner (filtré)',bulk_clear:'Effacer la sélection',bulk_create_shipments:'Créer les colis',bulk_send_delivery:'Envoyer au transporteur',bulk_print:'Imprimer',bulk_export:'Exporter',bulk_action:'Action groupée',bulk_done:'terminé',bulk_of:'sur',
-    store_info:'Infos boutique',store_logo:'Logo boutique',store_platform_short:'Plateforme',store_brand_short:'Marque',order_type:'Type de commande',order_type_normal:'Commande normale',order_type_abandoned:'Panier abandonné',latest_delivery_status:'Dernier statut livraison',default_carrier:'Transporteur par défaut',carrier_selector:'Choisir le transporteur'
+    store_info:'Infos boutique',store_logo:'Logo boutique',store_platform_short:'Plateforme',store_brand_short:'Marque',order_type:'Type de commande',order_type_normal:'Commande normale',order_type_abandoned:'Panier abandonné',order_type_draft:'Commande brouillon',latest_delivery_status:'Dernier statut livraison',default_carrier:'Transporteur par défaut',carrier_selector:'Choisir le transporteur'
   },
   en:{_dir:'ltr',
     brand_title:'Confirmation CRM',brand_sub:'Manager Console',nav_orders:'Orders',nav_agents:'Agents',nav_products:'Products & Stock',nav_export:'Export',nav_analytics:'Analytics',nav_import:'CSV Import',nav_settings:'Settings',agent_iface:'Agents Interface',
@@ -1303,7 +1304,7 @@ const I18N = {
     attempts_title:'Confirmation Attempts',attempts_day:'Day',attempts_t1:'Tentative 1',attempts_t2:'Tentative 2',attempts_t3:'Tentative 3',attempts_empty:'No attempt recorded',attempts_date:'Date',attempts_time:'Time',attempts_duration:'Duration',attempts_result:'Result',attempts_agent:'Agent',attempts_note:'Note',attempts_matrix:'Attempts matrix',attempts_view:'View attempts',
     fake_title:'Fake Order',fake_classify:'Classify as fake',fake_unclassify:'Remove classification',fake_reason:'Reason',fake_responsible:'Responsible agent',fake_count:'fake order(s)',fake_filter:'Fake',fake_marked:'Classified as fake',fake_yes:'Yes',fake_no:'No',
     bulk_select_page:'Select page',bulk_select_all:'Select all (filtered)',bulk_clear:'Clear selection',bulk_create_shipments:'Create shipments',bulk_send_delivery:'Send to delivery',bulk_print:'Print',bulk_export:'Export',bulk_action:'Bulk action',bulk_done:'done',bulk_of:'of',
-    store_info:'Store info',store_logo:'Store logo',store_platform_short:'Platform',store_brand_short:'Brand',order_type:'Order type',order_type_normal:'Normal order',order_type_abandoned:'Abandoned cart',latest_delivery_status:'Latest delivery status',default_carrier:'Default carrier',carrier_selector:'Select delivery company'
+    store_info:'Store info',store_logo:'Store logo',store_platform_short:'Platform',store_brand_short:'Brand',order_type:'Order type',order_type_normal:'Normal order',order_type_abandoned:'Abandoned cart',order_type_draft:'Draft order',latest_delivery_status:'Latest delivery status',default_carrier:'Default carrier',carrier_selector:'Select delivery company'
   }
 };
 
@@ -1343,6 +1344,7 @@ function variantImageFor(o){
 }
 /* Order type: abandoned is metadata now (req §4). Honors legacy status too. */
 function isAbandonedOrder(o){ return o.orderType==='abandoned' || o.status==='abandoned' || o.source==='shopify_abandoned'; }
+function isDraftOrder(o){ return o.orderType==='draft' || o.source==='shopify_draft'; }
 /* Resolve the store for an order (by storeId, falling back to denormalized fields). */
 function storeForOrder(o){
   if(o.storeId){ const s=storesCache.find(x=>x.id===o.storeId); if(s) return s; }
@@ -1701,6 +1703,7 @@ function renderListView(list,alertMin){
     const suspicious=hasSuspicious(o);
     const callCount=(o.calls&&o.calls.length)||0;
     const isAbandoned = isAbandonedOrder(o);
+    const isDraft = isDraftOrder(o);
     const isFake = o.classification==='fake';
     const manipClick=suspicious?' <span style="color:var(--red);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();openAudit(\''+o.id+'\')">⚠️</span>':'';
     const checked = selectedOrders.has(o.id) ? 'checked' : '';
@@ -1722,7 +1725,7 @@ function renderListView(list,alertMin){
       /* COL 1: ORDER */
       '<div>'+
         '<div class="lv-order-id">'+(o.shopifyName||o.id)+'</div>'+
-        '<span class="lv-type '+(isAbandoned?'abandoned':'normal')+'">'+(isAbandoned?'🛒 '+t('order_type_abandoned'):'🧾 '+t('order_type_normal'))+'</span>'+
+        '<span class="lv-type '+(isDraft?'draft':(isAbandoned?'abandoned':'normal'))+'">'+(isDraft?'📝 '+t('order_type_draft'):(isAbandoned?'🛒 '+t('order_type_abandoned'):'🧾 '+t('order_type_normal')))+'</span>'+
         (isFake?' <span class="fake-badge">🚫 '+t('fake_filter')+'</span>':'')+
         (overdue?'<span class="overdue-tag" style="margin-top:4px"><span class="dot pulse" style="background:var(--red)"></span>'+t('overdue')+'</span>':'')+
         (function(){const st=storeNameFor(o),pf=platformFor(o),br=brandFor(o),lg=storeLogoFor(o);
@@ -1809,6 +1812,7 @@ function renderBoardView(list,alertMin){
     const hasPending=!!o.pendingCallStart;
     const isFake=o.classification==='fake';
     const isAbandoned=isAbandonedOrder(o);
+    const isDraft=isDraftOrder(o);
     const manipTag=suspicious?'<span class="overdue-tag" style="cursor:pointer;border-color:var(--red);color:var(--red)" onclick="event.stopPropagation();openAudit(\''+o.id+'\')">⚠️ '+t('manip_click')+'</span>':'';
     const storeLine=(function(){const st=storeNameFor(o),pf=platformFor(o),br=brandFor(o),lg=storeLogoFor(o);
       return (st||pf||br)?('<div class="store-info">'+
@@ -1818,7 +1822,7 @@ function renderBoardView(list,alertMin){
       '</div>'):'';
     })();
     return '<div class="order-board-card '+(overdue?'overdue':'')+' '+(o.status==='confirmed'?'confirmed':'')+'">'+
-      '<div class="card-header"><div><div class="card-order-id">'+(o.shopifyName||o.id)+'</div>'+(isAbandoned?'<span class="lv-type abandoned" style="margin-top:2px">🛒 '+t('order_type_abandoned')+'</span>':'')+(isFake?' <span class="fake-badge">🚫 '+t('fake_filter')+'</span>':'')+storeLine+'<div class="card-date">'+fmt(o.createdAt)+'</div></div>'+
+      '<div class="card-header"><div><div class="card-order-id">'+(o.shopifyName||o.id)+'</div>'+(isDraft?'<span class="lv-type draft" style="margin-top:2px">📝 '+t('order_type_draft')+'</span>':(isAbandoned?'<span class="lv-type abandoned" style="margin-top:2px">🛒 '+t('order_type_abandoned')+'</span>':''))+(isFake?' <span class="fake-badge">🚫 '+t('fake_filter')+'</span>':'')+storeLine+'<div class="card-date">'+fmt(o.createdAt)+'</div></div>'+
         '<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end">'+(o.followupAgent?'<span class="followup-badge">📍 '+escapeHtml(o.followupAgent)+'</span>':'')+(overdue?'<span class="overdue-tag"><span class="dot pulse" style="background:var(--red)"></span>'+t('overdue')+'</span>':'')+manipTag+'<span class="badge b-'+o.status+'"><span class="dot"></span>'+statusLabel(o.status)+'</span></div></div>'+
       '<div class="card-body">'+
         '<div class="card-client">'+(o.client||'')+'</div>'+
