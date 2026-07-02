@@ -412,6 +412,12 @@ function connectSSE() {
 }
 
 function handleNotification(data) {
+  // Hard block: these event types are manager-only by design (Confirmation
+  // Agent Dashboard spec §1) and must never surface here, regardless of how
+  // they were delivered. Explicit block, not just "unhandled type falls
+  // through" — belt-and-suspenders on top of the server only targeting
+  // 'manager' for these broadcasts.
+  if (['agent_overdue', 'agent_suspended', 'suspicious_call'].includes(data.type)) return;
   let title = '', body = '', type = data.type;
   if (data.type === 'new_order') {
     if (data.order?.agent !== agent.name && data.order?.agent !== '') return; // only show if assigned to me or unassigned
