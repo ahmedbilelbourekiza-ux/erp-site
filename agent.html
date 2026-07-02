@@ -283,16 +283,6 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:va
   </div>
 </div>
 
-<div class="overlay" id="auditModal">
-  <div class="modal">
-    <h3 id="aTitle">⚠️ تفاصيل التحقيق</h3>
-    <div id="aContent"></div>
-    <div class="modal-footer">
-      <button class="btn btn-sm" style="flex:1;justify-content:center" onclick="closeAudit()" id="aClose">إغلاق</button>
-    </div>
-  </div>
-</div>
-
 <!-- Delivery Tracking — full shipment timeline -->
 <div class="overlay" id="trackingModal">
   <div class="modal">
@@ -735,7 +725,6 @@ function render() {
     const isConf = o.status === 'confirmed', isCanc = o.status === 'cancelled';
     const lastCall = o.calls?.length ? o.calls[o.calls.length-1] : null;
     const hasPendingCall = !!o.pendingCallStart;
-    const hasSusp = (o.calls||[]).some(c=>c.suspicious);
     const isDraft = o.orderType === 'draft' || o.source === 'shopify_draft';
     const note = latestNote(o);
     const callChips = (o.calls||[]).slice(-3).map(c => {
@@ -750,7 +739,6 @@ function render() {
         </div>
         <div class="card-badges">
           ${overdue?`<span class="overdue-tag"><span class="dot pulse" style="background:var(--red)"></span>${t('overdue')}</span>`:''}
-          ${hasSusp?`<span class="overdue-tag clickable" onclick="openAudit('${o.id}')">⚠️ ${t('manip_click')}</span>`:''}
           ${isDraft?`<span class="draft-tag">📝 ${t('order_type_draft')}</span>`:''}
           <span class="badge b-${o.status}"><span class="dot"></span>${sl[o.status]||o.status}</span>
         </div>
@@ -819,16 +807,15 @@ function openModal(id) {
   if (timerInterval) clearInterval(timerInterval);
   document.getElementById('timerBlock').innerHTML = '';
 
-  // Call history with clickable manipulation link + recorded duration
+  // Call history with recorded duration (manipulation flag is manager-only)
   const sl = SL();
   const hist = (o.calls||[]).length
     ? `<div class="hist-title">${t('hist')} (${o.calls.length})</div>` +
       o.calls.slice().reverse().map(c => {
-        const manipLink = c.suspicious ? `<span class="manip-link" onclick="openAudit('${id}')">⚠️ ${t('manip_click')}</span>` : '';
         const dur = c.duration!==null && c.duration!==undefined
-          ? `<div class="hist-duration" style="color:${c.suspicious?'var(--red)':'var(--amber)'}">⏱ ${fmtDur(c.duration)}${manipLink}</div>`
+          ? `<div class="hist-duration" style="color:var(--amber)">⏱ ${fmtDur(c.duration)}</div>`
           : `<div class="hist-duration" style="color:var(--text3)">⚠️ ${t('no_start')}</div>`;
-        return `<div class="hist-item${c.suspicious?' suspicious':''}">
+        return `<div class="hist-item">
           <div class="hist-header">
             <span class="badge b-${c.result}" style="font-size:10px">${sl[c.result]||c.result}</span>
             <span class="hist-time">${fmt(c.callStartTime||c.time)}</span>
@@ -861,54 +848,12 @@ async function saveCall() {
     const res = await api('POST', '/api/orders/' + callingId + '/call', { result: selectedRes, note });
     const sl = SL();
     const durMsg = res.duration !== null && res.duration !== undefined ? ' (' + fmtDur(res.duration) + ')' : '';
-    const suspMsg = res.suspicious ? ' — ' + t('suspicious') : '';
-    toast((sl[selectedRes]||selectedRes) + durMsg + suspMsg, res.suspicious ? 'warning' : selectedRes==='confirmed' ? 'success' : '');
+    toast((sl[selectedRes]||selectedRes) + durMsg, selectedRes==='confirmed' ? 'success' : '');
     closeModal();
     await loadOrders();
   } catch(e) { toast(t('err_generic'), 'error'); }
 }
 
-// ---- AUDIT (clickable manipulation warning) ----
-async function openAudit(id) {
-  closeModal();
-  let audit;
-  try { audit = await api('GET', '/api/orders/' + id + '/audit'); }
-  catch(e) { toast(t('conn_err'), 'error'); return; }
-
-  const flagged = audit.calls.filter(c => c.suspicious);
-  const reasons = flagged.map(c => {
-    if (c.noStart || c.callStartTime === null) return '#'+c.index+': '+tfmt('manip_nostart');
-    const thr = c.threshold ?? audit.currentThreshold;
-    return '#'+c.index+': '+tfmt('manip_short', {dur:c.duration, thr});
-  });
-  const banner = reasons.length ? `<div class="reason-banner"><strong>${t('manip')}</strong><br>${reasons.map(r=>'• '+r).join('<br>')}</div>` : '';
-
-  const sl = SL();
-  const callsHtml = audit.calls.map(c => {
-    const flag = c.suspicious;
-    return `<div class="audit-call ${flag?'flagged':''}">
-      <div class="audit-row"><span class="ak">${t('a_call')} #${c.index}</span><span class="av">${flag?('⚠️ '+t('a_flag')+' '+t('a_yes')):''}</span></div>
-      <div class="audit-row"><span class="ak">${t('a_result')}</span><span class="av"><span class="badge b-${c.result}">${sl[c.result]||c.result}</span></span></div>
-      <div class="audit-row"><span class="ak">${t('a_agent')}</span><span class="av">${c.agent||'—'}</span></div>
-      <div class="audit-row"><span class="ak">${t('a_start')}</span><span class="av">${c.callStartTime?fmt(c.callStartTime):'— ('+tfmt('manip_nostart')+')'}</span></div>
-      <div class="audit-row"><span class="ak">${t('a_end')}</span><span class="av">${fmt(c.time)}</span></div>
-      <div class="audit-row"><span class="ak">${t('a_dur')}</span><span class="av" style="color:${flag?'var(--red)':'var(--text)'}">${c.duration!==null?fmtDur(c.duration)+' ('+c.duration+'s)':'—'}</span></div>
-      <div class="audit-row"><span class="ak">${t('a_rthr')}</span><span class="av">${c.threshold!==null?c.threshold+'s':audit.currentThreshold+'s'}</span></div>
-      ${c.note?`<div class="audit-row"><span class="ak">${t('a_note')}</span><span class="av">${escapeHtml(c.note)}</span></div>`:''}
-    </div>`;
-  }).join('') || `<div style="text-align:center;color:var(--text3);padding:16px">${t('no_call_hist')}</div>`;
-
-  document.getElementById('aContent').innerHTML =
-    banner +
-    `<div class="audit-row"><span class="ak">${t('a_order')}</span><span class="av" style="font-family:monospace">${audit.orderId}</span></div>` +
-    `<div class="audit-row"><span class="ak">${t('a_client')}</span><span class="av">${audit.client||'—'}</span></div>` +
-    `<div class="audit-row"><span class="ak">${t('a_agent')}</span><span class="av">${audit.assignedAgent||'—'}</span></div>` +
-    `<div class="audit-row"><span class="ak">${t('a_status')}</span><span class="av"><span class="badge b-${audit.currentStatus}">${sl[audit.currentStatus]||audit.currentStatus}</span></span></div>` +
-    `<div class="audit-row"><span class="ak">${t('a_thr')}</span><span class="av">${audit.currentThreshold}s</span></div>` +
-    `<div class="hist-title">${t('a_log')}</div>${callsHtml}`;
-  document.getElementById('auditModal').classList.add('open');
-}
-function closeAudit() { document.getElementById('auditModal').classList.remove('open'); }
 
 /* ===========================================================================
  * DELIVERY TRACKING — agent view. Read-only timeline; agents never leave the
@@ -994,7 +939,6 @@ async function refreshTracking(orderId) {
 }
 
 document.getElementById('callModal').addEventListener('click', e => { if(e.target===document.getElementById('callModal')) closeModal(); });
-document.getElementById('auditModal').addEventListener('click', e => { if(e.target===document.getElementById('auditModal')) closeAudit(); });
 document.addEventListener('click', e => { if (!e.target.closest('.notif-bell') && !e.target.closest('.notif-panel')) document.getElementById('notifPanel').classList.remove('open'); });
 
 /* ===========================================================================
