@@ -1661,7 +1661,7 @@ function showPage(name,btn){
   const titleKey = { 'ai-chat':'nav_ai_chat', 'ai-settings':'nav_ai_settings' }[name] || ('nav_'+name);
   document.getElementById('pageTitle').textContent=t(titleKey);
   if(name==='agents') renderAgents();
-  if(name==='products') renderProducts();
+  if(name==='products') { fetchProducts().then(renderProducts); }
   if(name==='export') updateExportCount();
   if(name==='analytics') renderAnalytics();
   if(name==='delivery') renderProvidersPage();
@@ -2487,6 +2487,7 @@ async function saveFakeClassification(){
  * INVENTORY — per-variant stock editor + append-only history (req §8, §10).
  * ======================================================================== */
 let inventoryProductId = null; // current product shown in the inventory modal
+let inventoryHasVariants = false; // whether that product has any variants
 async function openInventoryModal(productId){
   inventoryProductId = productId;
   document.getElementById('inventoryModalTitle').textContent=t('inv_history');
@@ -2502,6 +2503,7 @@ async function openInventoryModal(productId){
 }
 function renderInventoryModal(inv,movements){
   const el=document.getElementById('inventoryContent');
+  inventoryHasVariants = !!(inv.variants && inv.variants.length); // used by submitInventoryAdjust to allow no-variant products
   // Variant summary
   const variantsHtml=(inv.variants&&inv.variants.length)?inv.variants.map(v=>{
     const low=(v.stock!==null&&v.threshold!==null&&v.stock<=v.threshold);
@@ -2551,11 +2553,16 @@ async function submitInventoryAdjust(){
   const variantName=document.getElementById('invAdjVariant')?.value||'';
   const delta=Number(document.getElementById('invAdjDelta')?.value);
   const reason=document.getElementById('invAdjReason')?.value.trim()||'adjustment';
-  if(!variantName){ toast(t('variant')+'?','error'); return; }
+  // A variant is only REQUIRED when the product actually has variants to
+  // choose from — for a variant-less product, empty variantName is the
+  // correct, expected value (applyMovement treats it as a product-level
+  // movement), not a validation error.
+  if(!variantName && inventoryHasVariants){ toast(t('variant')+'?','error'); return; }
   if(!delta || delta===0){ toast(t('inv_delta')+' ±N','error'); return; }
   try{
     const r=await api('POST','/api/products/'+inventoryProductId+'/inventory/adjust',{variantName,delta,reason});
-    toast((delta>0?'+':'')+delta+' → '+(r.inventory?.variants?.find(v=>v.name===variantName)?.stock ?? ''),'success');
+    const newStock = variantName ? (r.inventory?.variants?.find(v=>v.name===variantName)?.stock ?? '') : (r.inventory?.flatStock ?? '');
+    toast((delta>0?'+':'')+delta+' → '+newStock,'success');
     document.getElementById('invAdjDelta').value='';
     document.getElementById('invAdjReason').value='';
     await fetchProducts(); // keep the grid in sync
