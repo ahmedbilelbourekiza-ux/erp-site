@@ -90,6 +90,7 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
 .lv-type.abandoned{background:var(--orange-bg);color:var(--orange)}
 .lv-type.draft{background:var(--teal-bg);color:var(--teal)}
 .lv-date{font-size:11px;color:var(--text3);margin-top:3px}
+.lv-note-preview{font-size:11px;color:var(--text2);margin-top:5px;padding:4px 7px;background:var(--blue-bg);border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 /* CLIENT column */
 .lv-cust-name{font-size:15px;font-weight:600;line-height:1.25;word-break:break-word}
 .lv-phone{font-family:monospace;direction:ltr;text-align:right;font-size:14px;font-weight:600;margin-top:3px;letter-spacing:0.3px}
@@ -1847,8 +1848,10 @@ function renderListView(list,alertMin){
         '<select class="inline-select lv-status-sel" onchange="setOrderStatus(\''+o.id+'\',this.value)">'+STATUS_ORDER.map(s=>'<option value="'+s+'"'+(s===o.status?' selected':'')+'>'+statusLabel(s)+'</option>').join('')+'</select>'+
         '<div class="lv-meta">'+
           '<select class="inline-select" style="max-width:120px" data-id="'+o.id+'" data-field="agent" onchange="updateOrderField(this.dataset.id,this.dataset.field,this.value)" title="'+t('th_agent')+'">'+agentOptionsHtml(o.agent)+'</select>'+
+          '<select class="inline-select" style="max-width:120px" data-id="'+o.id+'" data-field="delivery" onchange="updateOrderField(this.dataset.id,this.dataset.field,this.value)" title="'+t('carrier_selector')+'">'+deliveryOptionsHtml(o.delivery)+'</select>'+
           (o.deliveryStatus?'<span style="color:var(--blue)" title="'+t('latest_delivery_status')+'">🚚 '+escapeHtml(o.deliveryStatus)+'</span>':'')+
         '</div>'+
+        (note?'<div class="lv-note-preview" title="'+escapeHtml(note)+'">📝 '+escapeHtml(note)+'</div>':'')+
       '</div>'+
 
       /* COL 6: ACTIONS */
