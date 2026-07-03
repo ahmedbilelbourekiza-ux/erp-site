@@ -1026,6 +1026,13 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
   <div class="modal">
     <h3 id="productModalTitle" data-i18n="new_product">منتج جديد</h3>
     <div class="form-group"><label data-i18n="product_name">اسم المنتج *</label><input type="text" id="p_name"></div>
+    <div class="form-group">
+      <label data-i18n="product_image">صورة المنتج (تُستعمل إذا ماكانش تنويعات، أو التنويع بلا صورة خاصة به)</label>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="productImagePreview"><div class="variant-thumb ph">🖼️</div></div>
+        <label class="vbtn" data-i18n="upload">صورة<input type="file" accept="image/*" onchange="setProductImage(this)"></label>
+      </div>
+    </div>
     <div class="form-row-2">
       <div class="form-group"><label data-i18n="sku">SKU / الرمز</label><input type="text" id="p_sku"></div>
       <div class="form-group"><label data-i18n="price">السعر (دج)</label><input type="number" id="p_price"></div>
@@ -1292,7 +1299,7 @@ const I18N = {
     attempts_title:'محاولات التأكيد',attempts_day:'اليوم',attempts_t1:'مبدئي 1',attempts_t2:'مبدئي 2',attempts_t3:'مبدئي 3',attempts_empty:'لم تُسجَّل محاولة بعد',attempts_date:'التاريخ',attempts_time:'الوقت',attempts_duration:'المدة',attempts_result:'النتيجة',attempts_agent:'المؤكد',attempts_note:'ملاحظة',attempts_matrix:'مصفوفة المحاولات',attempts_view:'عرض المحاولات',
     fake_title:'طلب وهمي',fake_classify:'تصنيف كطلب وهمي',fake_unclassify:'إلغاء التصنيف',fake_reason:'سبب الوهم',fake_responsible:'المؤكد المسؤول',fake_count:'طلبات وهمية',fake_filter:'وهمي',fake_marked:'تم التصنيف كوهمي',fake_yes:'نعم',fake_no:'لا',
     bulk_select_page:'تحديد الصفحة',bulk_select_all:'تحديد كل المُصفّى',bulk_clear:'إلغاء التحديد',bulk_create_shipments:'إنشاء شحنات',bulk_send_delivery:'إرسال للتوصيل',bulk_print:'طباعة',bulk_export:'تصدير',bulk_action:'إجراء جماعي',bulk_done:'اكتمل',bulk_of:'من',
-    store_info:'معلومات المتجر',store_logo:'شعار المتجر',store_platform_short:'المنصة',store_brand_short:'العلامة',order_type:'نوع الطلب',order_type_normal:'طلب عادي',order_type_abandoned:'سلة مهجورة',order_type_draft:'طلب مسودة',nav_alerts:'تنبيهات الوكلاء',alerts_total:'التنبيهات النشطة',alerts_none:'لا توجد تنبيهات حالياً',alerts_flagged_calls:'مكالمة مشبوهة',has_notes_title:'ملاحظة',agent_suspended_label:'الحساب موقوف',role_confirmation:'وكيل تأكيد',err_work_hours_range:'ساعة النهاية لازم تكون أكبر من ساعة البداية',role_followup:'وكيل متابعة',role_both:'الاثنين معاً',reactivate:'إعادة تفعيل',missed_orders_label:'طلبات فايتة',reset_counter:'تصفير العداد',acct_section_title:'مساءلة وكلاء التأكيد',acct_section_help:'هذا مختلف عن "تنبيه إذا لم يُتصل" فوق — ذاك مجرد تنبيه بصري عندك، وهذا فعل تلقائي حقيقي على الخادم (إعادة تعيين + تعليق حساب).',reassign_minutes:'دقائق بلا اتصال قبل إعادة التعيين التلقائي',enable_auto_reassign:'تفعيل إعادة التعيين التلقائي',auto_reassign_off_help:'إذا معطل: الطلب يبقى عند نفس الوكيل، بصح التنبيه للمدير والعداد يبقاو خدامين',work_hours:'ساعات الدوام (توقيت الجزائر) — السويب ما يخدمش برا هاذ النطاق',to_label:'إلى',enable_auto_suspend:'تفعيل التعليق التلقائي',suspend_threshold:'عدد الطلبات الفايتة قبل التعليق التلقائي',latest_delivery_status:'آخر حالة توصيل',default_carrier:'المزوّد الافتراضي للمتجر',carrier_selector:'اختر شركة التوصيل'
+    store_info:'معلومات المتجر',store_logo:'شعار المتجر',store_platform_short:'المنصة',store_brand_short:'العلامة',order_type:'نوع الطلب',order_type_normal:'طلب عادي',order_type_abandoned:'سلة مهجورة',order_type_draft:'طلب مسودة',nav_alerts:'تنبيهات الوكلاء',alerts_total:'التنبيهات النشطة',alerts_none:'لا توجد تنبيهات حالياً',alerts_flagged_calls:'مكالمة مشبوهة',has_notes_title:'ملاحظة',agent_suspended_label:'الحساب موقوف',role_confirmation:'وكيل تأكيد',err_work_hours_range:'ساعة النهاية لازم تكون أكبر من ساعة البداية',product_image:'صورة المنتج (تُستعمل إذا ماكانش تنويعات، أو التنويع بلا صورة خاصة به)',role_followup:'وكيل متابعة',role_both:'الاثنين معاً',reactivate:'إعادة تفعيل',missed_orders_label:'طلبات فايتة',reset_counter:'تصفير العداد',acct_section_title:'مساءلة وكلاء التأكيد',acct_section_help:'هذا مختلف عن "تنبيه إذا لم يُتصل" فوق — ذاك مجرد تنبيه بصري عندك، وهذا فعل تلقائي حقيقي على الخادم (إعادة تعيين + تعليق حساب).',reassign_minutes:'دقائق بلا اتصال قبل إعادة التعيين التلقائي',enable_auto_reassign:'تفعيل إعادة التعيين التلقائي',auto_reassign_off_help:'إذا معطل: الطلب يبقى عند نفس الوكيل، بصح التنبيه للمدير والعداد يبقاو خدامين',work_hours:'ساعات الدوام (توقيت الجزائر) — السويب ما يخدمش برا هاذ النطاق',to_label:'إلى',enable_auto_suspend:'تفعيل التعليق التلقائي',suspend_threshold:'عدد الطلبات الفايتة قبل التعليق التلقائي',latest_delivery_status:'آخر حالة توصيل',default_carrier:'المزوّد الافتراضي للمتجر',carrier_selector:'اختر شركة التوصيل'
   },
   fr:{_dir:'ltr',
     brand_title:'CRM Confirmations',brand_sub:'Console Manager',nav_orders:'Commandes',nav_agents:'Agents',nav_products:'Produits & Stock',nav_export:'Export',nav_analytics:'Analystes',nav_import:'Import CSV',nav_settings:'Paramètres',agent_iface:'Interface Agents',
@@ -1322,7 +1329,7 @@ const I18N = {
     attempts_title:'Tentatives de confirmation',attempts_day:'Jour',attempts_t1:'Tentative 1',attempts_t2:'Tentative 2',attempts_t3:'Tentative 3',attempts_empty:'Aucune tentative enregistrée',attempts_date:'Date',attempts_time:'Heure',attempts_duration:'Durée',attempts_result:'Résultat',attempts_agent:'Agent',attempts_note:'Note',attempts_matrix:'Matrice des tentatives',attempts_view:'Voir les tentatives',
     fake_title:'Fausse commande',fake_classify:'Classer comme fausse',fake_unclassify:'Annuler la classification',fake_reason:'Raison',fake_responsible:'Agent responsable',fake_count:'fausse(s)',fake_filter:'Fausse',fake_marked:'Classée comme fausse',fake_yes:'Oui',fake_no:'Non',
     bulk_select_page:'Sélectionner la page',bulk_select_all:'Tout sélectionner (filtré)',bulk_clear:'Effacer la sélection',bulk_create_shipments:'Créer les colis',bulk_send_delivery:'Envoyer au transporteur',bulk_print:'Imprimer',bulk_export:'Exporter',bulk_action:'Action groupée',bulk_done:'terminé',bulk_of:'sur',
-    store_info:'Infos boutique',store_logo:'Logo boutique',store_platform_short:'Plateforme',store_brand_short:'Marque',order_type:'Type de commande',order_type_normal:'Commande normale',order_type_abandoned:'Panier abandonné',order_type_draft:'Commande brouillon',nav_alerts:'Alertes agents',alerts_total:'Alertes actives',alerts_none:'Aucune alerte actuellement',alerts_flagged_calls:'appel(s) suspect(s)',agent_suspended_label:'Compte suspendu',role_confirmation:'Agent confirmation',err_work_hours_range:"L'heure de fin doit être supérieure à l'heure de début",role_followup:'Agent suivi',role_both:'Les deux',reactivate:'Réactiver',missed_orders_label:'Commandes manquées',reset_counter:'Réinitialiser',acct_section_title:'Responsabilité des agents',acct_section_help:'Différent de "alerte si pas appelé" ci-dessus — ça c\'est juste un indicateur visuel local, ceci est une action automatique réelle côté serveur (réaffectation + suspension).',reassign_minutes:'Minutes sans appel avant réaffectation automatique',enable_auto_reassign:'Activer la réaffectation automatique',auto_reassign_off_help:'Si désactivé : la commande reste chez le même agent, mais l\'alerte manager et le compteur continuent de fonctionner',work_hours:'Heures de travail (heure d\'Algérie) — le balayage n\'agit pas en dehors',to_label:'à',enable_auto_suspend:'Activer la suspension automatique',suspend_threshold:'Nombre de commandes manquées avant suspension automatique',has_notes_title:'Note',latest_delivery_status:'Dernier statut livraison',default_carrier:'Transporteur par défaut',carrier_selector:'Choisir le transporteur'
+    store_info:'Infos boutique',store_logo:'Logo boutique',store_platform_short:'Plateforme',store_brand_short:'Marque',order_type:'Type de commande',order_type_normal:'Commande normale',order_type_abandoned:'Panier abandonné',order_type_draft:'Commande brouillon',nav_alerts:'Alertes agents',alerts_total:'Alertes actives',alerts_none:'Aucune alerte actuellement',alerts_flagged_calls:'appel(s) suspect(s)',agent_suspended_label:'Compte suspendu',role_confirmation:'Agent confirmation',err_work_hours_range:"L'heure de fin doit être supérieure à l'heure de début",product_image:"Image du produit (utilisée s'il n'y a pas de variantes, ou si la variante n'a pas sa propre image)",role_followup:'Agent suivi',role_both:'Les deux',reactivate:'Réactiver',missed_orders_label:'Commandes manquées',reset_counter:'Réinitialiser',acct_section_title:'Responsabilité des agents',acct_section_help:'Différent de "alerte si pas appelé" ci-dessus — ça c\'est juste un indicateur visuel local, ceci est une action automatique réelle côté serveur (réaffectation + suspension).',reassign_minutes:'Minutes sans appel avant réaffectation automatique',enable_auto_reassign:'Activer la réaffectation automatique',auto_reassign_off_help:'Si désactivé : la commande reste chez le même agent, mais l\'alerte manager et le compteur continuent de fonctionner',work_hours:'Heures de travail (heure d\'Algérie) — le balayage n\'agit pas en dehors',to_label:'à',enable_auto_suspend:'Activer la suspension automatique',suspend_threshold:'Nombre de commandes manquées avant suspension automatique',has_notes_title:'Note',latest_delivery_status:'Dernier statut livraison',default_carrier:'Transporteur par défaut',carrier_selector:'Choisir le transporteur'
   },
   en:{_dir:'ltr',
     brand_title:'Confirmation CRM',brand_sub:'Manager Console',nav_orders:'Orders',nav_agents:'Agents',nav_products:'Products & Stock',nav_export:'Export',nav_analytics:'Analytics',nav_import:'CSV Import',nav_settings:'Settings',agent_iface:'Agents Interface',
@@ -1352,7 +1359,7 @@ const I18N = {
     attempts_title:'Confirmation Attempts',attempts_day:'Day',attempts_t1:'Tentative 1',attempts_t2:'Tentative 2',attempts_t3:'Tentative 3',attempts_empty:'No attempt recorded',attempts_date:'Date',attempts_time:'Time',attempts_duration:'Duration',attempts_result:'Result',attempts_agent:'Agent',attempts_note:'Note',attempts_matrix:'Attempts matrix',attempts_view:'View attempts',
     fake_title:'Fake Order',fake_classify:'Classify as fake',fake_unclassify:'Remove classification',fake_reason:'Reason',fake_responsible:'Responsible agent',fake_count:'fake order(s)',fake_filter:'Fake',fake_marked:'Classified as fake',fake_yes:'Yes',fake_no:'No',
     bulk_select_page:'Select page',bulk_select_all:'Select all (filtered)',bulk_clear:'Clear selection',bulk_create_shipments:'Create shipments',bulk_send_delivery:'Send to delivery',bulk_print:'Print',bulk_export:'Export',bulk_action:'Bulk action',bulk_done:'done',bulk_of:'of',
-    store_info:'Store info',store_logo:'Store logo',store_platform_short:'Platform',store_brand_short:'Brand',order_type:'Order type',order_type_normal:'Normal order',order_type_abandoned:'Abandoned cart',order_type_draft:'Draft order',nav_alerts:'Agent Alerts',alerts_total:'Active alerts',alerts_none:'No alerts right now',alerts_flagged_calls:'flagged call(s)',agent_suspended_label:'Account suspended',role_confirmation:'Confirmation agent',err_work_hours_range:'End hour must be greater than start hour',role_followup:'Follow-up agent',role_both:'Both',reactivate:'Reactivate',missed_orders_label:'Missed orders',reset_counter:'Reset counter',acct_section_title:'Confirmation Agent Accountability',acct_section_help:'Different from "alert if not called" above — that\'s just a local visual indicator, this is a real automatic server-side action (reassignment + suspension).',reassign_minutes:'Minutes with no call before automatic reassignment',enable_auto_reassign:'Enable automatic reassignment',auto_reassign_off_help:'If disabled: the order stays with the same agent, but the manager alert and counter still work',work_hours:'Working hours (Algeria time) — the sweep does not act outside this window',to_label:'to',enable_auto_suspend:'Enable automatic suspension',suspend_threshold:'Missed orders before automatic suspension',has_notes_title:'Note',latest_delivery_status:'Latest delivery status',default_carrier:'Default carrier',carrier_selector:'Select delivery company'
+    store_info:'Store info',store_logo:'Store logo',store_platform_short:'Platform',store_brand_short:'Brand',order_type:'Order type',order_type_normal:'Normal order',order_type_abandoned:'Abandoned cart',order_type_draft:'Draft order',nav_alerts:'Agent Alerts',alerts_total:'Active alerts',alerts_none:'No alerts right now',alerts_flagged_calls:'flagged call(s)',agent_suspended_label:'Account suspended',role_confirmation:'Confirmation agent',err_work_hours_range:'End hour must be greater than start hour',product_image:"Product image (used when there are no variants, or a variant has no image of its own)",role_followup:'Follow-up agent',role_both:'Both',reactivate:'Reactivate',missed_orders_label:'Missed orders',reset_counter:'Reset counter',acct_section_title:'Confirmation Agent Accountability',acct_section_help:'Different from "alert if not called" above — that\'s just a local visual indicator, this is a real automatic server-side action (reassignment + suspension).',reassign_minutes:'Minutes with no call before automatic reassignment',enable_auto_reassign:'Enable automatic reassignment',auto_reassign_off_help:'If disabled: the order stays with the same agent, but the manager alert and counter still work',work_hours:'Working hours (Algeria time) — the sweep does not act outside this window',to_label:'to',enable_auto_suspend:'Enable automatic suspension',suspend_threshold:'Missed orders before automatic suspension',has_notes_title:'Note',latest_delivery_status:'Latest delivery status',default_carrier:'Default carrier',carrier_selector:'Select delivery company'
   }
 };
 
@@ -1382,13 +1389,24 @@ function statusLabel(s){ return t('s_'+s) || s; }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function latestAgentNote(o){ if(!o.calls||!o.calls.length)return''; for(let i=o.calls.length-1;i>=0;i--) if(o.calls[i].note) return o.calls[i].note; return ''; }
 function hasSuspicious(o){ return o.calls && o.calls.some(c=>c.suspicious); }
-/* Find the image for an order's selected variant (if any). */
+/* Same normalization as the backend's inventory matching — keeps product
+ * lookups consistent everywhere a ™ symbol / extra space / casing
+ * difference could otherwise silently break a name match. */
+function normalizeProductName(s){
+  return String(s||'').replace(/\u00A0/g,' ').trim().toLowerCase().replace(/[™®©]/g,'').replace(/\s+/g,' ');
+}
+/* Find the image for an order's selected variant, falling back to the
+ * product's own image if the variant has none (or there are no variants). */
 function variantImageFor(o){
-  if(!o.productVariant) return '';
-  const p = products.find(p => p.name === o.product);
-  if(!p || !p.variants) return '';
-  const v = p.variants.find(v => (typeof v==='string'?v:v.name) === o.productVariant);
-  return v ? ((typeof v==='string'?'':v.image)||'') : '';
+  const target = normalizeProductName(o.product);
+  const p = products.find(p => normalizeProductName(p.name) === target);
+  if(!p) return '';
+  if(o.productVariant && p.variants){
+    const v = p.variants.find(v => (typeof v==='string'?v:v.name) === o.productVariant);
+    const vImg = v ? ((typeof v==='string'?'':v.image)||'') : '';
+    if (vImg) return vImg;
+  }
+  return p.image || '';
 }
 /* Order type: abandoned is metadata now (req §4). Honors legacy status too. */
 function isAbandonedOrder(o){ return o.orderType==='abandoned' || o.status==='abandoned' || o.source==='shopify_abandoned'; }
@@ -2145,7 +2163,7 @@ function renderProducts(){
   // Low-stock banner (req §8): show how many variants are below threshold.
   api('GET','/api/inventory/low-stock').then(r=>{const b=document.getElementById('lowStockBanner');if(!b)return;if(r.items&&r.items.length){b.style.display='flex';b.innerHTML='⚠️ '+r.items.length+' '+t('inv_low_stock_count')+' · '+r.items.slice(0,5).map(i=>escapeHtml(i.productName+(i.variantName?'/'+i.variantName:''))).join(', ')+(r.items.length>5?'…':'');}else{b.style.display='none';}}).catch(()=>{});
   document.getElementById('productsGrid').innerHTML=products.map(p=>{
-    const sold=orders.filter(o=>o.product===p.name).reduce((s,o)=>s+(o.quantity||1),0);
+    const sold=orders.filter(o=>normalizeProductName(o.product)===normalizeProductName(p.name)).reduce((s,o)=>s+(o.quantity||1),0);
     const stockPct=p.stock>0?Math.min(100,Math.round(p.stock/(p.stock+sold)*100)):0;
     const isLow=p.stock<10;
     const variants=(p.variants||[]);
@@ -2183,6 +2201,20 @@ function renderProducts(){
 }
 /* ---------- Variant editor (per-variant image) ---------- */
 let editingVariants = []; // [{name, image, stock, threshold}]
+let editingProductImage = ''; // product-level image, used when there are no variants
+function setProductImage(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  if(file.size > 20*1024*1024){ toast((t('t_err')||'Error')+': >20MB','error'); input.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = e => { editingProductImage = e.target.result; renderProductImagePreview(); };
+  reader.readAsDataURL(file);
+}
+function renderProductImagePreview(){
+  const el = document.getElementById('productImagePreview');
+  if(!el) return;
+  el.innerHTML = editingProductImage ? '<img class="variant-thumb" src="'+editingProductImage+'" alt="">' : '<div class="variant-thumb ph">🖼️</div>';
+}
 function addVariantRow(name='', image=''){ editingVariants.push({name, image}); renderVariantEditor(); }
 function removeVariantRow(i){ editingVariants.splice(i,1); renderVariantEditor(); }
 function setVariantName(i, v){ if(editingVariants[i]) editingVariants[i].name = v; }
@@ -2219,9 +2251,9 @@ function renderVariantEditor(){
     '</div>';
   }).join('');
 }
-function openNewProduct(){ editingProductId=null; editingVariants=[]; document.getElementById('productModalTitle').textContent=t('new_product'); ['p_name','p_sku','p_desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); document.getElementById('p_price').value=''; document.getElementById('p_stock').value=0; renderVariantEditor(); document.getElementById('productModal').classList.add('open'); }
-function openEditProduct(id){ editingProductId=id; const p=products.find(x=>x.id===id); if(!p)return; document.getElementById('productModalTitle').textContent=t('edit'); document.getElementById('p_name').value=p.name||''; document.getElementById('p_sku').value=p.sku||''; document.getElementById('p_price').value=p.price||''; document.getElementById('p_stock').value=p.stock||0; document.getElementById('p_desc').value=p.description||''; editingVariants=(p.variants||[]).map(v=>({name:(typeof v==='string'?v:v.name)||'',image:(typeof v==='string'?'':v.image)||'',stock:(typeof v==='string'?null:(v.stock===undefined?null:v.stock)),threshold:(typeof v==='string'?null:(v.threshold===undefined?null:v.threshold))})); renderVariantEditor(); document.getElementById('productModal').classList.add('open'); }
-async function saveProduct(){ const name=document.getElementById('p_name').value.trim(); if(!name){toast(t('t_name_prod_req'),'error');return;} const variants=editingVariants.filter(v=>(v.name||'').trim()).map(v=>({name:v.name.trim(),image:v.image||'',stock:(v.stock===undefined?undefined:v.stock),threshold:(v.threshold===undefined?undefined:v.threshold)})); const body={name,sku:document.getElementById('p_sku').value.trim(),price:parseFloat(document.getElementById('p_price').value)||0,stock:parseInt(document.getElementById('p_stock').value)||0,variants,description:document.getElementById('p_desc').value.trim()}; try{ if(editingProductId) await api('PUT','/api/products/'+editingProductId,body); else await api('POST','/api/products',body); toast(editingProductId?t('t_updated'):t('t_added_product'),'success'); closeModal('productModal'); await fetchProducts(); renderProducts(); }catch(e){ toast(t('t_err'),'error'); } }
+function openNewProduct(){ editingProductId=null; editingVariants=[]; editingProductImage=''; document.getElementById('productModalTitle').textContent=t('new_product'); ['p_name','p_sku','p_desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); document.getElementById('p_price').value=''; document.getElementById('p_stock').value=0; renderVariantEditor(); renderProductImagePreview(); document.getElementById('productModal').classList.add('open'); }
+function openEditProduct(id){ editingProductId=id; const p=products.find(x=>x.id===id); if(!p)return; document.getElementById('productModalTitle').textContent=t('edit'); document.getElementById('p_name').value=p.name||''; document.getElementById('p_sku').value=p.sku||''; document.getElementById('p_price').value=p.price||''; document.getElementById('p_stock').value=p.stock||0; document.getElementById('p_desc').value=p.description||''; editingProductImage=p.image||''; editingVariants=(p.variants||[]).map(v=>({name:(typeof v==='string'?v:v.name)||'',image:(typeof v==='string'?'':v.image)||'',stock:(typeof v==='string'?null:(v.stock===undefined?null:v.stock)),threshold:(typeof v==='string'?null:(v.threshold===undefined?null:v.threshold))})); renderVariantEditor(); renderProductImagePreview(); document.getElementById('productModal').classList.add('open'); }
+async function saveProduct(){ const name=document.getElementById('p_name').value.trim(); if(!name){toast(t('t_name_prod_req'),'error');return;} const variants=editingVariants.filter(v=>(v.name||'').trim()).map(v=>({name:v.name.trim(),image:v.image||'',stock:(v.stock===undefined?undefined:v.stock),threshold:(v.threshold===undefined?undefined:v.threshold)})); const body={name,sku:document.getElementById('p_sku').value.trim(),price:parseFloat(document.getElementById('p_price').value)||0,stock:parseInt(document.getElementById('p_stock').value)||0,variants,image:editingProductImage||'',description:document.getElementById('p_desc').value.trim()}; try{ if(editingProductId) await api('PUT','/api/products/'+editingProductId,body); else await api('POST','/api/products',body); toast(editingProductId?t('t_updated'):t('t_added_product'),'success'); closeModal('productModal'); await fetchProducts(); renderProducts(); }catch(e){ toast(t('t_err'),'error'); } }
 async function deleteProduct(id){ if(!confirm(t('t_del_product_confirm')))return; try{ await api('DELETE','/api/products/'+id); toast(t('t_deleted'),'success'); await fetchProducts(); renderProducts(); }catch(e){ toast(t('t_err'),'error'); } }
 
 function confirmedOrders(){return orders.filter(o=>o.status==='confirmed');}
