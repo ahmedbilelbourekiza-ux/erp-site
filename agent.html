@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f0f13">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CRM Agent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
 <title>Agent CRM</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1037,6 +1042,15 @@ function finishAi(){ aiBusy=false; document.getElementById('aiSend').textContent
 function scrollAi(){ const el=document.getElementById('aiMsgs'); el.scrollTop=el.scrollHeight; }
 
 initLogin();
+
+// Register the service worker (installability + offline app-shell). Wrapped
+// so that any failure here (e.g. an older browser) never blocks the actual
+// app from working — this is purely additive.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
