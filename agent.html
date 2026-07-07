@@ -416,6 +416,31 @@ function connectSSE() {
   sseSource.onerror = () => { setTimeout(connectSSE, 5000); };
 }
 
+/** Generates a short, clean two-tone notification chime directly in the
+ *  browser (Web Audio API) — no external sound file to host/deploy. Wrapped
+ *  in try/catch since some browsers block audio before any user interaction
+ *  on the page; if that happens, the visual/toast notification still shows,
+ *  this is purely an enhancement. */
+function playNotificationSound(){
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = ctx.currentTime;
+    [880, 1175].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      const start = now + i * 0.13;
+      gain.gain.setValueAtTime(0, start);
+      gain.gain.linearRampToValueAtTime(0.25, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.3);
+    });
+  } catch(e) { /* audio blocked or unsupported — visual notification still works */ }
+}
+
 function handleNotification(data) {
   // Hard block: these event types are manager-only by design (Confirmation
   // Agent Dashboard spec §1) and must never surface here, regardless of how
@@ -436,6 +461,7 @@ function handleNotification(data) {
     title = t('assigned_notif');
     body = data.order?.id + ' — ' + data.order?.client;
     type = 'assigned';
+    playNotificationSound();
     loadOrders();
   } else if (data.type === 'shipment_created') {
     title = t('trk_ship_created'); body = [data.orderId, data.trackingNumber].filter(Boolean).join(' · ');
@@ -504,15 +530,15 @@ function renderNotifList() {
 // ---- LOGIN ----
 async function initLogin() {
   applyLang();
-  const saved = sessionStorage.getItem('agent_sess');
+  const saved = localStorage.getItem('agent_sess');
   if (saved) {
     try {
       const agents = await api('GET', '/api/agents');
       const ag = agents.find(a => a.name === saved);
-      if (ag && ag.suspended) { sessionStorage.removeItem('agent_sess'); document.getElementById('loginErr').textContent = t('err_suspended'); }
+      if (ag && ag.suspended) { localStorage.removeItem('agent_sess'); document.getElementById('loginErr').textContent = t('err_suspended'); }
       else if (ag) { agent = ag; showApp(); return; }
     } catch(e) {}
-    sessionStorage.removeItem('agent_sess');
+    localStorage.removeItem('agent_sess');
   }
   try {
     const agents = await api('GET', '/api/agents');
@@ -532,13 +558,13 @@ function doLogin() {
     if (ag.pass && ag.pass !== pass) { err.textContent = t('err_pass'); return; }
     if (ag.suspended) { err.textContent = t('err_suspended'); return; }
     agent = ag;
-    sessionStorage.setItem('agent_sess', ag.name);
+    localStorage.setItem('agent_sess', ag.name);
     showApp();
   }).catch(() => err.textContent = t('server_err'));
 }
 
 function doLogout() {
-  sessionStorage.removeItem('agent_sess');
+  localStorage.removeItem('agent_sess');
   if (sseSource) { sseSource.close(); sseSource = null; }
   hideFupPanel(); // stop the countdown ticker + clear tasks
   agent = null;
