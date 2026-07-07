@@ -416,65 +416,17 @@ function connectSSE() {
   sseSource.onerror = () => { setTimeout(connectSSE, 5000); };
 }
 
-/** Synthesizes a "cha-ching" cash-register-style sound directly in the
- *  browser (Web Audio API) — an APPROXIMATION built from oscillators/noise,
- *  not a recorded sample, so it won't be a perfect match to a real till.
- *  Two parts: a short filtered-noise "cha" (mechanical click), then a
- *  bright bell-like "ching" made of several deliberately INHARMONIC sine
- *  partials — real bells/registers ring inharmonically, which is what
- *  makes them sound metallic rather than like a plain musical tone.
- *  Gain is set near the maximum safe level (just under clipping) so the
- *  sound is as loud as this code can make it — but the sound the agent
- *  actually hears is still capped by the PHONE's own volume/silent-mode
- *  setting, which no website or web app can override; that's a standard,
- *  intentional OS/browser boundary, not a limitation of this code. */
+/** Plays the real cash-register "cha-ching" sound effect (cash-register.mp3,
+ *  hosted alongside this page) for a new/assigned order. Falls back silently
+ *  if playback is blocked (some browsers require a prior user interaction on
+ *  the page before allowing audio) — the visual/toast notification still
+ *  shows either way, so nothing is lost if the sound doesn't fire. */
 function playNotificationSound(){
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const now = ctx.currentTime;
-    const master = ctx.createGain();
-    master.gain.value = 1.0;
-    master.connect(ctx.destination);
-
-    // --- "cha": short metallic click (drawer/lever mechanism) ---
-    const noiseDur = 0.07;
-    const noiseBuf = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * noiseDur), ctx.sampleRate);
-    const noiseData = noiseBuf.getChannelData(0);
-    for (let i = 0; i < noiseData.length; i++) noiseData[i] = Math.random() * 2 - 1;
-    const noiseSrc = ctx.createBufferSource();
-    noiseSrc.buffer = noiseBuf;
-    const noiseFilter = ctx.createBiquadFilter();
-    noiseFilter.type = 'bandpass';
-    noiseFilter.frequency.value = 2200;
-    noiseFilter.Q.value = 1.1;
-    const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(1.0, now);
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + noiseDur);
-    noiseSrc.connect(noiseFilter).connect(noiseGain).connect(master);
-    noiseSrc.start(now);
-    noiseSrc.stop(now + noiseDur + 0.02);
-
-    // --- "ching": bright inharmonic bell ring ---
-    const bellStart = now + 0.05;
-    const base = 2100;
-    [
-      { mult: 0.5,  gain: 0.55, decay: 1.1 },
-      { mult: 1,    gain: 0.65, decay: 0.9 },
-      { mult: 2.41, gain: 0.4,  decay: 0.6 },
-      { mult: 3.9,  gain: 0.22, decay: 0.35 },
-    ].forEach(p => {
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = base * p.mult;
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0, bellStart);
-      g.gain.linearRampToValueAtTime(p.gain, bellStart + 0.006);
-      g.gain.exponentialRampToValueAtTime(0.001, bellStart + p.decay);
-      osc.connect(g).connect(master);
-      osc.start(bellStart);
-      osc.stop(bellStart + p.decay + 0.05);
-    });
-  } catch(e) { /* audio blocked or unsupported — visual notification still works */ }
+    const audio = new Audio('cash-register.mp3');
+    audio.volume = 1.0;
+    audio.play().catch(() => { /* playback blocked — visual notification still works */ });
+  } catch(e) { /* Audio unsupported — visual notification still works */ }
 }
 
 function handleNotification(data) {
