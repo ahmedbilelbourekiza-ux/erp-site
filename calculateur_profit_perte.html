@@ -568,7 +568,7 @@
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div style="font-size:11px;font-weight:700;color:#f97316;text-transform:uppercase;letter-spacing:.5px;">🔁 Échanges</div>
           <div id="exch-list_${pid}" style="display:flex;flex-direction:column;gap:8px;"></div>
-          <button onclick="addExchange()" style="background:rgba(249,115,22,.12);border:1px dashed rgba(249,115,22,.4);color:#f97316;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;letter-spacing:.3px;transition:background .2s;">+ Ajouter un échange</button>
+          <button onclick="addExchange('${pid}')" style="background:rgba(249,115,22,.12);border:1px dashed rgba(249,115,22,.4);color:#f97316;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;letter-spacing:.3px;transition:background .2s;">+ Ajouter un échange</button>
           <div class="computed">
             <span class="computed-label">Total échanges (<span id="exch_count_label_${pid}">0</span>)</span>
             <span class="computed-value neg" id="exch_total_${pid}">0 DA</span>
