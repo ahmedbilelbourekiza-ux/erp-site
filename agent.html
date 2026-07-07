@@ -536,10 +536,46 @@ function handleNotification(data) {
   toast('🔔 ' + title + ': ' + body, '');
 }
 
-function requestNotifPermission() {
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
+/** Converts a base64url-encoded VAPID public key (as returned by the server)
+ *  into the Uint8Array format the PushManager API requires. Standard,
+ *  well-established conversion for this exact purpose. */
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; i++) outputArray[i] = rawData.charCodeAt(i);
+  return outputArray;
+}
+
+/** Requests notification permission, then — if granted and the browser
+ *  supports it — subscribes this device to real Web Push and registers the
+ *  subscription with the server for THIS agent. Safe to call every login:
+ *  re-subscribing with an already-active subscription is a normal no-op on
+ *  the browser side, and the server UPSERTs by endpoint so no duplicates. */
+async function requestNotifPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    await Notification.requestPermission();
   }
+  if (Notification.permission !== 'granted') return;
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const { publicKey } = await api('GET', '/api/push/vapid-public-key');
+    if (!publicKey) return; // server hasn't configured VAPID keys yet — Phase 2 not fully wired server-side
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(publicKey),
+      });
+    }
+    await fetch(SERVER + '/api/push/subscribe', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ agent: agent.name, subscription: sub.toJSON() }),
+    });
+  } catch (e) { /* push not available/blocked on this device — SSE in-app notifications still work while the app is open */ }
 }
 
 function updateNotifBadge() {
