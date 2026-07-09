@@ -276,6 +276,19 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
 .variant-thumb.ph{display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:18px}
 .variant-row .vbtn{padding:6px 8px;font-size:11px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-family:inherit;white-space:nowrap}
 .variant-row .vbtn.del{color:var(--red);border-color:var(--red)}
+.optval-pills{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;min-height:32px}
+.optval-pill{display:inline-flex;align-items:center;gap:4px;background:var(--bg4);color:var(--text);border-radius:20px;padding:3px 4px 3px 10px;font-size:12px;white-space:nowrap}
+.optval-pill .x{cursor:pointer;color:var(--text3);font-size:12px;line-height:1;padding:3px 5px;border-radius:50%}
+.optval-pill .x:hover{color:var(--red);background:var(--red-bg)}
+.optval-input{flex:1;min-width:90px;background:none;border:none;color:var(--text);font-size:13px;font-family:inherit;outline:none;padding:4px 2px}
+.variant-group{margin-bottom:8px}
+.variant-group-header{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;user-select:none}
+.variant-group-header:hover{border-color:var(--border2)}
+.variant-group-chevron{color:var(--text3);font-size:10px;width:10px;text-align:center;flex-shrink:0}
+.variant-group-label{font-size:13px;font-weight:600;color:var(--text)}
+.variant-group-count{font-size:11px;color:var(--text3)}
+.variant-group-total{margin-inline-start:auto;font-size:11px;color:var(--purple2);font-weight:600;white-space:nowrap}
+.variant-row-child{margin-top:6px;margin-inline-start:20px;width:calc(100% - 20px)}
 .drop-zone:hover,.drop-zone.drag{border-color:var(--purple);background:var(--purple-bg)}
 .code-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:12px;color:var(--purple2);overflow-x:auto;white-space:pre;margin:6px 0;direction:ltr}
 
@@ -1321,7 +1334,7 @@ const I18N = {
     export_confirmed:'تصدير الطلبات المؤكدة',export_info:'يتم تصدير الطلبات بحالة "مؤكد" فقط',export_zr_desc:'ملف Excel جاهز لـ ZR Express',export_zr:'تصدير ZR Express',export_ecom_desc:'ملف Excel جاهز لـ Ecom Delivery',export_ecom:'تصدير Ecom Delivery',export_ecotrac_desc:'ملف Excel جاهز لـ Ecotrac',export_ecotrac:'تصدير Ecotrac',report_title:'تقرير الأداء الكامل',report_desc:'تقرير شامل بكل الطلبات وأداء المؤكدين',export_report:'تصدير التقرير',
     import_title:'استيراد من Shopify CSV',import_info:'من Shopify: Orders → Export → CSV',upload_csv:'رفع ملف CSV',drop_here:'اسحب ملف CSV هنا أو اضغط للاختيار',preview:'معاينة',import_btn:'استيراد',
     server_settings:'إعدادات السيرفر',server_url:'رابط السيرفر',save:'حفظ',webhook_url:'رابط الـ Webhook (للـ Shopify)',delivery_webhook:'رابط Webhook التوصيل (لـ Maystro/ZR)',alerts_settings:'إعدادات التنبيهات والتحكم',alert_minutes:'تنبيه إذا لم يُتصل بالطلب خلال (دقيقة)',min_call_sec:'الحد الأدنى لمدة المكالمة (ثانية) — ما دونه يُعتبر تلاعب ⚠️',auto_assign:'تعيين تلقائي للمؤكدين',auto_assign_help:'يوزع الطلبات الجديدة تلقائياً على المؤكدين بالتساوي — يمكنك تغييره يدوياً لاحقاً',enable_auto_assign:'تفعيل التعيين التلقائي',save_all:'حفظ كل الإعدادات',data_mgmt:'إدارة البيانات',backup:'نسخة احتياطية',restore:'استعادة',sound_settings:'إعدادات الأصوات',sound_enable:'تفعيل أصوات الإشعارات',sound_master:'تشغيل الأصوات',sound_volume:'مستوى الصوت',sound_test:'تجربة',sound_events:'أصوات منفصلة لكل حدث',
-    client_name:'اسم العميل *',phone:'الهاتف *',wilaya:'الولاية',commune:'البلدية / المدينة',product:'المنتج',variant:'التنويع (Variant)',quantity:'الكمية',unit_price:'سعر الوحدة (دج)',discount:'الخصم (دج)',shipping:'رسوم الشحن (دج)',total:'الإجمالي (دج)',agent:'المؤكد',delivery_platform:'منصة التوصيل',agent_note:'ملاحظة للمؤكد',manager_note:'ملاحظة المدير (داخلية)',cancel:'إلغاء',save_order:'حفظ الطلب',log_call:'تسجيل مكالمة',note:'ملاحظة',name:'الاسم',password:'كلمة المرور',add:'إضافة',new_product:'منتج جديد',product_name:'اسم المنتج *',sku:'SKU / الرمز',price:'السعر (دج)',stock:'المخزون الحالي',variants:'التنويعات',description:'وصف المنتج',close:'إغلاق',add_variant:'+ إضافة تنويع',variant_name:'اسم التنويع',upload:'صورة',cost_price:'سعر التكلفة (دج)',packaging_cost:'تكلفة التغليف (دج)',product_options:'خيارات المنتج (الأبعاد)',product_options_help:'عرّف أبعاداً مثل اللون والمقاس، ثم ولّد كل التوليفات تلقائياً بدل كتابتها يدوياً',add_option:'+ إضافة خيار',option_name_ph:'اسم الخيار (مثال: اللون)',option_values_ph:'القيم مفصولة بفاصلة (مثال: أسود, أبيض)',generate_variants:'⚡ توليد التنويعات',variant_sku_ph:'SKU',t_no_option_values:'أضف خياراً واحداً على الأقل مع قيمه أولاً',t_variants_generated:'تم توليد {n} تنويعة',variant_stock_total:'إجمالي مخزون التنويعات',
+    client_name:'اسم العميل *',phone:'الهاتف *',wilaya:'الولاية',commune:'البلدية / المدينة',product:'المنتج',variant:'التنويع (Variant)',quantity:'الكمية',unit_price:'سعر الوحدة (دج)',discount:'الخصم (دج)',shipping:'رسوم الشحن (دج)',total:'الإجمالي (دج)',agent:'المؤكد',delivery_platform:'منصة التوصيل',agent_note:'ملاحظة للمؤكد',manager_note:'ملاحظة المدير (داخلية)',cancel:'إلغاء',save_order:'حفظ الطلب',log_call:'تسجيل مكالمة',note:'ملاحظة',name:'الاسم',password:'كلمة المرور',add:'إضافة',new_product:'منتج جديد',product_name:'اسم المنتج *',sku:'SKU / الرمز',price:'السعر (دج)',stock:'المخزون الحالي',variants:'التنويعات',description:'وصف المنتج',close:'إغلاق',add_variant:'+ إضافة تنويع',variant_name:'اسم التنويع',upload:'صورة',cost_price:'سعر التكلفة (دج)',packaging_cost:'تكلفة التغليف (دج)',product_options:'خيارات المنتج (الأبعاد)',product_options_help:'عرّف أبعاداً مثل اللون والمقاس، ثم ولّد كل التوليفات تلقائياً بدل كتابتها يدوياً',add_option:'+ إضافة خيار',option_name_ph:'اسم الخيار (مثال: اللون)',option_values_ph:'القيم مفصولة بفاصلة (مثال: أسود, أبيض)',generate_variants:'⚡ توليد التنويعات',variant_sku_ph:'SKU',t_no_option_values:'أضف خياراً واحداً على الأقل مع قيمه أولاً',t_variants_generated:'تم توليد {n} تنويعة',variant_stock_total:'إجمالي مخزون التنويعات',one_variant:'تنويعة واحدة',other_variants:'أخرى',t_click_generate_hint:'حدد قيم كل خيار، ثم اضغط "توليد التنويعات" لإنشاء كل التوليفات أوتوماتيكياً',group_total_label:'المجموع',
     s_pending:'في الانتظار',s_confirmed:'مؤكد',s_no_answer:'لم يرد',s_cancelled:'ملغي',s_callback:'إعادة الاتصال',s_tentative1:'مبدئي 1',s_tentative2:'مبدئي 2',s_tentative3:'مبدئي 3',s_unreachable:'العميل غير متاح',s_abandoned:'سلة مهجورة',
     f_all_status:'كل الحالات',f_all_agents:'كل المؤكدين',date_all:'كل التواريخ',date_today:'اليوم',date_yesterday:'أمس',date_week:'هذا الأسبوع',date_month:'هذا الشهر',date_custom:'مخصص...',th_id:'رقم الطلب',th_client:'العميل',th_phone:'الهاتف',th_product:'المنتج',th_total:'الإجمالي',th_agent:'المؤكد',th_status:'الحالة',th_date:'التاريخ',th_actions:'إجراء',
     no_agent:'—',calls:'مكالمة',not_called:'لم يُتصل بعد',latest_note:'آخر ملاحظة من المؤكد',call_btn:'اتصل',edit:'تعديل',delete:'حذف',more:'المزيد',audit:'عرض التحقيق',change_status:'تغيير الحالة يدوياً',bulk_selected:'محدد',bulk_set_status:'تغيير الحالة',bulk_assign:'تعيين مؤكد',apply:'تطبيق',
@@ -1351,7 +1364,7 @@ const I18N = {
     export_confirmed:'Exporter commandes confirmées',export_info:'Seules les commandes "Confirmées" sont exportées',export_zr_desc:'Fichier Excel prêt pour ZR Express',export_zr:'Exporter ZR Express',export_ecom_desc:'Fichier Excel prêt pour Ecom Delivery',export_ecom:'Exporter Ecom Delivery',export_ecotrac_desc:'Fichier Excel prêt pour Ecotrac',export_ecotrac:'Exporter Ecotrac',report_title:'Rapport complet',report_desc:'Rapport global des commandes et performances agents',export_report:'Exporter le rapport',
     import_title:'Importer depuis Shopify CSV',import_info:'Depuis Shopify : Orders → Export → CSV',upload_csv:'Téléverser un CSV',drop_here:'Glissez le CSV ici ou cliquez',preview:'Aperçu',import_btn:'Importer',
     server_settings:'Paramètres serveur',server_url:'URL du serveur',save:'Enregistrer',webhook_url:'URL Webhook (Shopify)',delivery_webhook:'URL Webhook livraison (Maystro/ZR)',alerts_settings:'Alertes & contrôle',alert_minutes:'Alerte si non appelé depuis (minutes)',min_call_sec:"Durée minimale d'appel (s) — en dessous = manipulation ⚠️",auto_assign:'Assignation auto des agents',auto_assign_help:'Répartit les nouvelles commandes entre agents équitablement — modifiable ensuite',enable_auto_assign:"Activer l'assignation auto",save_all:'Tout enregistrer',data_mgmt:'Gestion des données',backup:'Sauvegarde',restore:'Restaurer',sound_settings:'Sons',sound_enable:'Activer les sons',sound_master:'Sons activés',sound_volume:'Volume',sound_test:'Tester',sound_events:'Sons séparés par événement',
-    client_name:'Client *',phone:'Téléphone *',wilaya:'Wilaya',commune:'Commune / Ville',product:'Produit',variant:'Variante',quantity:'Quantité',unit_price:'Prix unitaire (DA)',discount:'Remise (DA)',shipping:'Frais de livraison (DA)',total:'Total (DA)',agent:'Agent',delivery_platform:'Plateforme de livraison',agent_note:"Note pour l'agent",manager_note:'Note manager (interne)',cancel:'Annuler',save_order:'Enregistrer',log_call:'Enregistrer appel',note:'Note',name:'Nom',password:'Mot de passe',add:'Ajouter',new_product:'Nouveau produit',product_name:'Nom du produit *',sku:'SKU / Code',price:'Prix (DA)',stock:'Stock actuel',variants:'Variantes',description:'Description',close:'Fermer',add_variant:'+ Ajouter variante',variant_name:'Nom variante',upload:'Image',cost_price:'Prix de revient (DA)',packaging_cost:'Coût emballage (DA)',product_options:'Options du produit (dimensions)',product_options_help:'Définissez des dimensions comme Couleur et Taille, puis générez toutes les combinaisons automatiquement',add_option:'+ Ajouter une option',option_name_ph:'Nom de l\'option (ex: Couleur)',option_values_ph:'Valeurs séparées par une virgule (ex: Noir, Blanc)',generate_variants:'⚡ Générer les variantes',variant_sku_ph:'SKU',t_no_option_values:'Ajoutez au moins une option avec ses valeurs d\'abord',t_variants_generated:'{n} variantes générées',variant_stock_total:'Stock total des variantes',
+    client_name:'Client *',phone:'Téléphone *',wilaya:'Wilaya',commune:'Commune / Ville',product:'Produit',variant:'Variante',quantity:'Quantité',unit_price:'Prix unitaire (DA)',discount:'Remise (DA)',shipping:'Frais de livraison (DA)',total:'Total (DA)',agent:'Agent',delivery_platform:'Plateforme de livraison',agent_note:"Note pour l'agent",manager_note:'Note manager (interne)',cancel:'Annuler',save_order:'Enregistrer',log_call:'Enregistrer appel',note:'Note',name:'Nom',password:'Mot de passe',add:'Ajouter',new_product:'Nouveau produit',product_name:'Nom du produit *',sku:'SKU / Code',price:'Prix (DA)',stock:'Stock actuel',variants:'Variantes',description:'Description',close:'Fermer',add_variant:'+ Ajouter variante',variant_name:'Nom variante',upload:'Image',cost_price:'Prix de revient (DA)',packaging_cost:'Coût emballage (DA)',product_options:'Options du produit (dimensions)',product_options_help:'Définissez des dimensions comme Couleur et Taille, puis générez toutes les combinaisons automatiquement',add_option:'+ Ajouter une option',option_name_ph:'Nom de l\'option (ex: Couleur)',option_values_ph:'Valeurs séparées par une virgule (ex: Noir, Blanc)',generate_variants:'⚡ Générer les variantes',variant_sku_ph:'SKU',t_no_option_values:'Ajoutez au moins une option avec ses valeurs d\'abord',t_variants_generated:'{n} variantes générées',variant_stock_total:'Stock total des variantes',one_variant:'1 variante',other_variants:'Autres',t_click_generate_hint:'Définissez les valeurs de chaque option, puis cliquez sur "Générer les variantes"',group_total_label:'Total',
     s_pending:'En attente',s_confirmed:'Confirmé',s_no_answer:'Pas de réponse',s_cancelled:'Annulé',s_callback:'Rappel',s_tentative1:'Tentative 1',s_tentative2:'Tentative 2',s_tentative3:'Tentative 3',s_unreachable:'Client injoignable',s_abandoned:'Panier abandonné',
     f_all_status:'Tous statuts',f_all_agents:'Tous agents',date_all:'Toutes dates',date_today:"Aujourd'hui",date_yesterday:'Hier',date_week:'Cette semaine',date_month:'Ce mois-ci',date_custom:'Personnalisé...',th_id:'N° commande',th_client:'Client',th_phone:'Téléphone',th_product:'Produit',th_total:'Total',th_agent:'Agent',th_status:'Statut',th_date:'Date',th_actions:'Action',
     no_agent:'—',calls:'appels',not_called:'Pas encore appelé',latest_note:'Dernière note agent',call_btn:'Appeler',edit:'Modifier',delete:'Supprimer',more:'Plus',audit:"Voir l'audit",change_status:'Changer le statut',bulk_selected:'sélectionné(s)',bulk_set_status:'Changer statut',bulk_assign:'Assigner agent',apply:'Appliquer',
@@ -1381,7 +1394,7 @@ const I18N = {
     export_confirmed:'Export Confirmed Orders',export_info:'Only "Confirmed" orders are exported',export_zr_desc:'Excel file ready for ZR Express',export_zr:'Export ZR Express',export_ecom_desc:'Excel file ready for Ecom Delivery',export_ecom:'Export Ecom Delivery',export_ecotrac_desc:'Excel file ready for Ecotrac',export_ecotrac:'Export Ecotrac',report_title:'Full Performance Report',report_desc:'Comprehensive report of all orders and agent performance',export_report:'Export Report',
     import_title:'Import from Shopify CSV',import_info:'From Shopify: Orders → Export → CSV',upload_csv:'Upload CSV file',drop_here:'Drag CSV here or click to choose',preview:'Preview',import_btn:'Import',
     server_settings:'Server settings',server_url:'Server URL',save:'Save',webhook_url:'Webhook URL (Shopify)',delivery_webhook:'Delivery Webhook URL (Maystro/ZR)',alerts_settings:'Alerts & Control',alert_minutes:'Alert if not called within (minutes)',min_call_sec:'Minimum call duration (sec) — below is manipulation ⚠️',auto_assign:'Automatic agent assignment',auto_assign_help:'Distributes new orders evenly among agents — you can change it manually later',enable_auto_assign:'Enable auto-assignment',save_all:'Save all settings',data_mgmt:'Data management',backup:'Backup',restore:'Restore',sound_settings:'Sounds',sound_enable:'Enable notification sounds',sound_master:'Sounds on',sound_volume:'Volume',sound_test:'Test',sound_events:'Separate sound per event',
-    client_name:'Client name *',phone:'Phone *',wilaya:'Wilaya',commune:'Commune / City',product:'Product',variant:'Variant',quantity:'Quantity',unit_price:'Unit price (DA)',discount:'Discount (DA)',shipping:'Shipping (DA)',total:'Total (DA)',agent:'Agent',delivery_platform:'Delivery platform',agent_note:'Note for agent',manager_note:'Manager note (internal)',cancel:'Cancel',save_order:'Save order',log_call:'Log Call',note:'Note',name:'Name',password:'Password',add:'Add',new_product:'New product',product_name:'Product name *',sku:'SKU / Code',price:'Price (DA)',stock:'Current stock',variants:'Variants',description:'Description',close:'Close',add_variant:'+ Add variant',variant_name:'Variant name',upload:'Image',cost_price:'Cost price (DA)',packaging_cost:'Packaging cost (DA)',product_options:'Product options (dimensions)',product_options_help:'Define dimensions like Color and Size, then generate every combination automatically',add_option:'+ Add option',option_name_ph:'Option name (e.g. Color)',option_values_ph:'Values, comma-separated (e.g. Black, White)',generate_variants:'⚡ Generate variants',variant_sku_ph:'SKU',t_no_option_values:'Add at least one option with its values first',t_variants_generated:'{n} variants generated',variant_stock_total:'Total variant stock',
+    client_name:'Client name *',phone:'Phone *',wilaya:'Wilaya',commune:'Commune / City',product:'Product',variant:'Variant',quantity:'Quantity',unit_price:'Unit price (DA)',discount:'Discount (DA)',shipping:'Shipping (DA)',total:'Total (DA)',agent:'Agent',delivery_platform:'Delivery platform',agent_note:'Note for agent',manager_note:'Manager note (internal)',cancel:'Cancel',save_order:'Save order',log_call:'Log Call',note:'Note',name:'Name',password:'Password',add:'Add',new_product:'New product',product_name:'Product name *',sku:'SKU / Code',price:'Price (DA)',stock:'Current stock',variants:'Variants',description:'Description',close:'Close',add_variant:'+ Add variant',variant_name:'Variant name',upload:'Image',cost_price:'Cost price (DA)',packaging_cost:'Packaging cost (DA)',product_options:'Product options (dimensions)',product_options_help:'Define dimensions like Color and Size, then generate every combination automatically',add_option:'+ Add option',option_name_ph:'Option name (e.g. Color)',option_values_ph:'Values, comma-separated (e.g. Black, White)',generate_variants:'⚡ Generate variants',variant_sku_ph:'SKU',t_no_option_values:'Add at least one option with its values first',t_variants_generated:'{n} variants generated',variant_stock_total:'Total variant stock',one_variant:'1 variant',other_variants:'Other',t_click_generate_hint:'Set values for each option, then click "Generate variants"',group_total_label:'Total',
     s_pending:'Pending',s_confirmed:'Confirmed',s_no_answer:'No Answer',s_cancelled:'Cancelled',s_callback:'Call Back',s_tentative1:'Tentative 1',s_tentative2:'Tentative 2',s_tentative3:'Tentative 3',s_unreachable:'Client Unreachable',s_abandoned:'Abandoned cart',
     f_all_status:'All statuses',f_all_agents:'All agents',date_all:'All dates',date_today:'Today',date_yesterday:'Yesterday',date_week:'This week',date_month:'This month',date_custom:'Custom...',th_id:'Order #',th_client:'Client',th_phone:'Phone',th_product:'Product',th_total:'Total',th_agent:'Agent',th_status:'Status',th_date:'Date',th_actions:'Action',
     no_agent:'—',calls:'calls',not_called:'Not called yet',latest_note:'Latest agent note',call_btn:'Call',edit:'Edit',delete:'Delete',more:'More',audit:'View audit',change_status:'Change status',bulk_selected:'selected',bulk_set_status:'Set status',bulk_assign:'Assign agent',apply:'Apply',
@@ -2280,22 +2293,68 @@ function renderProductImagePreview(){
   el.innerHTML = editingProductImage ? '<img class="variant-thumb" src="'+editingProductImage+'" alt="">' : '<div class="variant-thumb ph">🖼️</div>';
 }
 /* ---------- Option-def editor (multi-dimensional variant axes) ---------- */
-function addOptionDef(){ editingOptionDefs.push({name:'', values:[]}); renderOptionDefsEditor(); }
-function removeOptionDef(i){ editingOptionDefs.splice(i,1); renderOptionDefsEditor(); }
+function addOptionDef(){ editingOptionDefs.push({name:'', values:[]}); renderOptionDefsEditor('name', editingOptionDefs.length-1); renderVariantEditor(); }
+function removeOptionDef(i){ editingOptionDefs.splice(i,1); renderOptionDefsEditor(); renderVariantEditor(); }
 function setOptionDefName(i,v){ if(editingOptionDefs[i]) editingOptionDefs[i].name = v; }
-function setOptionDefValues(i,v){ if(editingOptionDefs[i]) editingOptionDefs[i].values = v.split(',').map(s=>s.trim()).filter(Boolean); }
-function renderOptionDefsEditor(){
+/** Adds ONE value as a pill/tag to option i (e.g. "black" under "Color").
+ *  Trims whitespace, ignores empty input, and skips case-insensitive
+ *  duplicates so pressing Enter twice on the same word doesn't create two
+ *  identical pills. */
+function addOptionDefValue(i, raw){
+  if(!editingOptionDefs[i]) return;
+  const val = (raw||'').trim();
+  if(!val) return;
+  if(editingOptionDefs[i].values.some(v => v.toLowerCase() === val.toLowerCase())) return;
+  editingOptionDefs[i].values.push(val);
+  renderOptionDefsEditor('value', i);
+  renderVariantEditor();
+}
+function removeOptionDefValue(i, vi){
+  if(!editingOptionDefs[i]) return;
+  editingOptionDefs[i].values.splice(vi,1);
+  renderOptionDefsEditor('value', i);
+  renderVariantEditor();
+}
+/** Enter or comma commits the typed text as a new pill (matches the fast
+ *  tag-entry flow of the Shopify variants screen this was modeled on).
+ *  Backspace on an EMPTY value input quick-deletes the last pill, so the
+ *  keyboard never has to leave the input to fix a typo. */
+function handleOptionValueKeydown(ev, i){
+  if(ev.key==='Enter' || ev.key===','){
+    ev.preventDefault();
+    addOptionDefValue(i, ev.target.value);
+    ev.target.value='';
+  } else if(ev.key==='Backspace' && !ev.target.value && editingOptionDefs[i] && editingOptionDefs[i].values.length){
+    removeOptionDefValue(i, editingOptionDefs[i].values.length-1);
+  }
+}
+/** focusRole/focusIndex re-focus a specific input after the innerHTML swap
+ *  (rebuilding the DOM otherwise steals focus, which would break "type a
+ *  value, hit Enter, keep typing the next one" — the whole point of a tag
+ *  input). */
+function renderOptionDefsEditor(focusRole, focusIndex){
   const wrap = document.getElementById('optionDefsEditor');
   if(!wrap) return;
   wrap.innerHTML = editingOptionDefs.map((o,i)=>{
+    const pills = (o.values||[]).map((val,vi)=>
+      '<span class="optval-pill">'+escapeHtml(val)+
+        '<span class="x" onclick="removeOptionDefValue('+i+','+vi+')">✕</span>'+
+      '</span>'
+    ).join('');
     return '<div class="variant-row">'+
       '<div style="flex:1;display:flex;flex-direction:column;gap:6px">'+
-        '<input type="text" value="'+escapeHtml(o.name||'')+'" placeholder="'+t('option_name_ph')+'" oninput="setOptionDefName('+i+',this.value)">'+
-        '<input type="text" value="'+escapeHtml((o.values||[]).join(', '))+'" placeholder="'+t('option_values_ph')+'" oninput="setOptionDefValues('+i+',this.value)">'+
+        '<input type="text" data-def-idx="'+i+'" data-role="name" value="'+escapeHtml(o.name||'')+'" placeholder="'+t('option_name_ph')+'" oninput="setOptionDefName('+i+',this.value)">'+
+        '<div class="optval-pills">'+pills+
+          '<input type="text" class="optval-input" data-def-idx="'+i+'" data-role="value" placeholder="'+t('option_values_ph')+'" onkeydown="handleOptionValueKeydown(event,'+i+')">'+
+        '</div>'+
       '</div>'+
       '<button type="button" class="vbtn del" onclick="removeOptionDef('+i+')">✕</button>'+
     '</div>';
   }).join('');
+  if(focusRole && focusIndex!=null){
+    const el = wrap.querySelector('[data-role="'+focusRole+'"][data-def-idx="'+focusIndex+'"]');
+    if(el) el.focus();
+  }
 }
 /** Cartesian product of N arrays, e.g. [[a,b],[1,2]] -> [[a,1],[a,2],[b,1],[b,2]].
  *  Works for any number of dimensions (tested for 1, 2, and 3+ below). */
@@ -2359,37 +2418,145 @@ function setVariantSku(i,v){ if(editingVariants[i]) editingVariants[i].sku = v; 
  *  the real total BEFORE hitting save, not after. */
 function updateVariantStockTotal(){
   const el = document.getElementById('variantStockTotal');
-  if(!el) return;
-  const defined = editingVariants.filter(v=>v.stock!==null && v.stock!==undefined && v.stock!=='');
-  el.textContent = defined.length ? (t('variant_stock_total')+': '+defined.reduce((s,v)=>s+(Number(v.stock)||0),0)) : '';
+  if(el){
+    const defined = editingVariants.filter(v=>v.stock!==null && v.stock!==undefined && v.stock!=='');
+    el.textContent = defined.length ? (t('variant_stock_total')+': '+defined.reduce((s,v)=>s+(Number(v.stock)||0),0)) : '';
+  }
+  refreshGroupTotals();
+}
+/** Keeps each group header's own running total in sync as stock is typed,
+ *  WITHOUT rebuilding the group's row DOM — rebuilding via innerHTML would
+ *  steal focus away from whatever stock input the manager is actively
+ *  typing into (the same reason the option-value tag input re-focuses
+ *  itself after every keystroke). Only the small total badge text changes;
+ *  the number itself is recomputed with the exact same grouping logic a
+ *  full render would use, so the two can never drift apart. */
+function refreshGroupTotals(){
+  const wrap = document.getElementById('variantEditor');
+  if(!wrap) return;
+  const defs = editingOptionDefs.filter(o => (o.name||'').trim() && (o.values||[]).length);
+  if(defs.length < 2) return; // flat mode has no group badges
+  const { groups } = computeVariantGroups(defs);
+  wrap.querySelectorAll('.variant-group-header').forEach(header => {
+    const key = header.getAttribute('data-group-key');
+    const g = groups.find(gr => String(gr.key) === key);
+    const totalEl = header.querySelector('.variant-group-total');
+    if(!g){ if(totalEl) totalEl.remove(); return; }
+    const stocks = g.items.map(idx => editingVariants[idx].stock);
+    const anyDefined = stocks.some(s => s!==null && s!==undefined && s!=='');
+    const total = stocks.reduce((s,v)=>s+((v===null||v===undefined||v==='')?0:(Number(v)||0)),0);
+    if(anyDefined){
+      const text = t('group_total_label')+': '+total;
+      if(totalEl) totalEl.textContent = text;
+      else header.insertAdjacentHTML('beforeend', '<span class="variant-group-total">'+text+'</span>');
+    } else if(totalEl){
+      totalEl.remove();
+    }
+  });
+}
+function variantThumbHtml(v){ return v.image ? '<img class="variant-thumb" src="'+v.image+'" alt="">' : '<div class="variant-thumb ph">🖼️</div>'; }
+/** The SKU/stock/threshold/image/delete controls shared by both the flat
+ *  row and the grouped child row, so the two views can never drift apart
+ *  (e.g. one getting the alert/threshold field and the other not). */
+function variantRowControlsHtml(i){
+  const v = editingVariants[i];
+  const stkVal = (v.stock===null||v.stock===undefined)?'':v.stock;
+  const thrVal = (v.threshold===null||v.threshold===undefined)?'':v.threshold;
+  return '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+      '<input type="text" value="'+escapeHtml(v.sku||'')+'" placeholder="'+t('variant_sku_ph')+'" oninput="setVariantSku('+i+',this.value)" style="width:90px">'+
+      '<input type="number" value="'+stkVal+'" placeholder="'+t('inv_stock')+'" title="'+t('inv_stock')+'" oninput="setVariantStock('+i+',this.value)" style="width:80px">'+
+      '<input type="number" value="'+thrVal+'" placeholder="'+t('inv_threshold')+'" title="'+t('inv_threshold')+'" oninput="setVariantThreshold('+i+',this.value)" style="width:80px">'+
+      '<label class="vbtn">'+t('upload')+'<input type="file" accept="image/*" onchange="setVariantImage('+i+',this)"></label>'+
+      '<button type="button" class="vbtn del" onclick="removeVariantRow('+i+')">✕</button>'+
+    '</div>';
+}
+/** Simple/legacy view: used when there are fewer than 2 option axes, where
+ *  a grouped table has nothing meaningful to group BY. Name stays a free
+ *  text field (manual "+ Add variant" rows have no options at all), with
+ *  an options badge shown underneath for single-axis generated variants. */
+function renderFlatVariantRow(i){
+  const v = editingVariants[i];
+  const optsBadge = (v.options && Object.keys(v.options).length) ? ('<div style="font-size:10px;color:var(--text3)">'+escapeHtml(Object.entries(v.options).map(([k,val])=>k+': '+val).join(' · '))+'</div>') : '';
+  return '<div class="variant-row">'+
+    variantThumbHtml(v)+
+    '<div style="flex:1;display:flex;flex-direction:column;gap:6px">'+
+      '<input type="text" value="'+escapeHtml(v.name||'')+'" placeholder="'+t('variant_name')+'" oninput="setVariantName('+i+',this.value)">'+
+      optsBadge+
+      variantRowControlsHtml(i)+
+    '</div>'+
+  '</div>';
+}
+/** Buckets editingVariants by the FIRST option axis's value (e.g. Size),
+ *  in the order that axis's values were defined — matching Shopify's
+ *  default "Group by [first option]" behavior. Anything whose options
+ *  don't match a current axis value (stale after editing an option, or a
+ *  manually-added row) lands in a trailing "Other" bucket instead of
+ *  silently disappearing. */
+function computeVariantGroups(defs){
+  const outerDef = defs[0];
+  const innerDefs = defs.slice(1);
+  const buckets = {};
+  outerDef.values.forEach(val => { buckets[val] = { key: val, label: val, items: [] }; });
+  const other = { key:'__other__', label:t('other_variants'), items: [] };
+  editingVariants.forEach((v,idx) => {
+    const outerVal = v.options ? v.options[outerDef.name] : undefined;
+    if(outerVal!==undefined && buckets[outerVal]) buckets[outerVal].items.push(idx);
+    else other.items.push(idx);
+  });
+  const groups = outerDef.values.map(val => buckets[val]).filter(g => g.items.length);
+  if(other.items.length) groups.push(other);
+  return { groups, innerDefs };
+}
+function renderGroupedChildRow(i, innerDefs){
+  const v = editingVariants[i];
+  // Normal generated combo: join whichever inner-axis values this variant
+  // actually has. A row with no matching options at all (e.g. a manual
+  // "+ Add variant" row swept into the "Other" bucket) has nothing to join
+  // here — fall back to its own name so it's still identifiable instead of
+  // rendering a blank label.
+  const parts = innerDefs.map(d => (v.options && v.options[d.name])).filter(x => x!=null && x!=='');
+  const label = parts.length ? parts.join(' / ') : (v.name || '');
+  return '<div class="variant-row variant-row-child">'+
+    variantThumbHtml(v)+
+    '<div style="flex:1;display:flex;flex-direction:column;gap:6px">'+
+      '<div style="font-size:12px;color:var(--text);font-weight:600">'+escapeHtml(label)+'</div>'+
+      variantRowControlsHtml(i)+
+    '</div>'+
+  '</div>';
+}
+let collapsedVariantGroups = new Set(); // group keys the manager has manually collapsed
+function toggleVariantGroup(key){ if(collapsedVariantGroups.has(key)) collapsedVariantGroups.delete(key); else collapsedVariantGroups.add(key); renderVariantEditor(); }
+function toggleVariantGroupEl(el){ toggleVariantGroup(el.getAttribute('data-group-key')); } // reads the key back out of data-* so no key ever needs to be embedded inside inline JS — safe no matter what characters are in it
+function renderGroupedVariantsHtml(defs){
+  const { groups, innerDefs } = computeVariantGroups(defs);
+  if(!groups.length) return '<div style="font-size:12px;color:var(--text3);padding:10px 2px">'+t('t_click_generate_hint')+'</div>';
+  return groups.map(g => {
+    const collapsed = collapsedVariantGroups.has(g.key);
+    const stocks = g.items.map(idx => editingVariants[idx].stock);
+    const anyDefined = stocks.some(s => s!==null && s!==undefined && s!=='');
+    const total = stocks.reduce((s,v)=>s+((v===null||v===undefined||v==='')?0:(Number(v)||0)),0);
+    const countLabel = g.items.length===1 ? t('one_variant') : (g.items.length+' '+t('variants'));
+    const header = '<div class="variant-group-header" data-group-key="'+escapeHtml(g.key)+'" onclick="toggleVariantGroupEl(this)">'+
+        '<span class="variant-group-chevron">'+(collapsed?'▸':'▾')+'</span>'+
+        '<span class="variant-group-label">'+escapeHtml(g.label)+'</span>'+
+        '<span class="variant-group-count">'+countLabel+'</span>'+
+        (anyDefined ? ('<span class="variant-group-total">'+t('group_total_label')+': '+total+'</span>') : '')+
+      '</div>';
+    const rows = collapsed ? '' : g.items.map(idx => renderGroupedChildRow(idx, innerDefs)).join('');
+    return '<div class="variant-group">'+header+rows+'</div>';
+  }).join('');
 }
 function renderVariantEditor(){
   const wrap = document.getElementById('variantEditor');
   if(!wrap) return;
-  wrap.innerHTML = editingVariants.map((v,i)=>{
-    const thumb = v.image ? '<img class="variant-thumb" src="'+v.image+'" alt="">' : '<div class="variant-thumb ph">🖼️</div>';
-    const stkVal = (v.stock===null||v.stock===undefined)?'':v.stock;
-    const thrVal = (v.threshold===null||v.threshold===undefined)?'':v.threshold;
-    const optsBadge = (v.options && Object.keys(v.options).length) ? ('<div style="font-size:10px;color:var(--text3)">'+escapeHtml(Object.entries(v.options).map(([k,val])=>k+': '+val).join(' · '))+'</div>') : '';
-    return '<div class="variant-row">'+
-      thumb+
-      '<div style="flex:1;display:flex;flex-direction:column;gap:6px">'+
-        '<input type="text" value="'+escapeHtml(v.name||'')+'" placeholder="'+(t('variant_name')||'اسم التنويع')+'" oninput="setVariantName('+i+',this.value)">'+
-        optsBadge+
-        '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
-          '<input type="text" value="'+escapeHtml(v.sku||'')+'" placeholder="'+t('variant_sku_ph')+'" oninput="setVariantSku('+i+',this.value)" style="width:90px">'+
-          '<input type="number" value="'+stkVal+'" placeholder="'+t('inv_stock')+'" title="'+t('inv_stock')+'" oninput="setVariantStock('+i+',this.value)" style="width:80px">'+
-          '<input type="number" value="'+thrVal+'" placeholder="'+t('inv_threshold')+'" title="'+t('inv_threshold')+'" oninput="setVariantThreshold('+i+',this.value)" style="width:80px">'+
-          '<label class="vbtn">'+(t('upload')||'صورة')+'<input type="file" accept="image/*" onchange="setVariantImage('+i+',this)"></label>'+
-          '<button type="button" class="vbtn del" onclick="removeVariantRow('+i+')">✕</button>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
-  }).join('');
+  const defs = editingOptionDefs.filter(o => (o.name||'').trim() && (o.values||[]).length);
+  if(defs.length >= 2) wrap.innerHTML = renderGroupedVariantsHtml(defs);
+  else if(!editingVariants.length) wrap.innerHTML = '';
+  else wrap.innerHTML = editingVariants.map((_,i)=>renderFlatVariantRow(i)).join('');
   updateVariantStockTotal();
 }
-function openNewProduct(){ editingProductId=null; editingVariants=[]; editingOptionDefs=[]; editingProductImage=''; document.getElementById('productModalTitle').textContent=t('new_product'); ['p_name','p_sku','p_desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); document.getElementById('p_price').value=''; document.getElementById('p_stock').value=0; document.getElementById('p_threshold').value=24; document.getElementById('p_costPrice').value=0; document.getElementById('p_packagingCost').value=0; renderOptionDefsEditor(); renderVariantEditor(); renderProductImagePreview(); document.getElementById('productModal').classList.add('open'); }
-function openEditProduct(id){ editingProductId=id; const p=products.find(x=>x.id===id); if(!p)return; document.getElementById('productModalTitle').textContent=t('edit'); document.getElementById('p_name').value=p.name||''; document.getElementById('p_sku').value=p.sku||''; document.getElementById('p_price').value=p.price||''; document.getElementById('p_stock').value=p.stock||0; document.getElementById('p_threshold').value=(p.threshold===undefined||p.threshold===null)?24:p.threshold; document.getElementById('p_costPrice').value=p.costPrice||0; document.getElementById('p_packagingCost').value=p.packagingCost||0; document.getElementById('p_desc').value=p.description||''; editingProductImage=p.image||''; editingOptionDefs=(p.optionDefs||[]).map(o=>({name:o.name||'',values:Array.isArray(o.values)?o.values.slice():[]})); editingVariants=(p.variants||[]).map(v=>({name:(typeof v==='string'?v:v.name)||'',image:(typeof v==='string'?'':v.image)||'',stock:(typeof v==='string'?null:(v.stock===undefined?null:v.stock)),threshold:(typeof v==='string'?null:(v.threshold===undefined?null:v.threshold)),sku:(typeof v==='string'?'':(v.sku||'')),options:(typeof v==='string'?{}:(v.options||{}))})); renderOptionDefsEditor(); renderVariantEditor(); renderProductImagePreview(); document.getElementById('productModal').classList.add('open'); }
+function openNewProduct(){ editingProductId=null; editingVariants=[]; editingOptionDefs=[]; editingProductImage=''; collapsedVariantGroups=new Set(); document.getElementById('productModalTitle').textContent=t('new_product'); ['p_name','p_sku','p_desc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); document.getElementById('p_price').value=''; document.getElementById('p_stock').value=0; document.getElementById('p_threshold').value=24; document.getElementById('p_costPrice').value=0; document.getElementById('p_packagingCost').value=0; renderOptionDefsEditor(); renderVariantEditor(); renderProductImagePreview(); document.getElementById('productModal').classList.add('open'); }
+function openEditProduct(id){ editingProductId=id; const p=products.find(x=>x.id===id); if(!p)return; collapsedVariantGroups=new Set(); document.getElementById('productModalTitle').textContent=t('edit'); document.getElementById('p_name').value=p.name||''; document.getElementById('p_sku').value=p.sku||''; document.getElementById('p_price').value=p.price||''; document.getElementById('p_stock').value=p.stock||0; document.getElementById('p_threshold').value=(p.threshold===undefined||p.threshold===null)?24:p.threshold; document.getElementById('p_costPrice').value=p.costPrice||0; document.getElementById('p_packagingCost').value=p.packagingCost||0; document.getElementById('p_desc').value=p.description||''; editingProductImage=p.image||''; editingOptionDefs=(p.optionDefs||[]).map(o=>({name:o.name||'',values:Array.isArray(o.values)?o.values.slice():[]})); editingVariants=(p.variants||[]).map(v=>({name:(typeof v==='string'?v:v.name)||'',image:(typeof v==='string'?'':v.image)||'',stock:(typeof v==='string'?null:(v.stock===undefined?null:v.stock)),threshold:(typeof v==='string'?null:(v.threshold===undefined?null:v.threshold)),sku:(typeof v==='string'?'':(v.sku||'')),options:(typeof v==='string'?{}:(v.options||{}))})); renderOptionDefsEditor(); renderVariantEditor(); renderProductImagePreview(); document.getElementById('productModal').classList.add('open'); }
 async function saveProduct(){ const name=document.getElementById('p_name').value.trim(); if(!name){toast(t('t_name_prod_req'),'error');return;} const variants=editingVariants.filter(v=>(v.name||'').trim()).map(v=>({name:v.name.trim(),image:v.image||'',stock:(v.stock===undefined?undefined:v.stock),threshold:(v.threshold===undefined?undefined:v.threshold),sku:v.sku||'',options:v.options||{}})); const optionDefs=editingOptionDefs.filter(o=>(o.name||'').trim() && (o.values||[]).length); const body={name,sku:document.getElementById('p_sku').value.trim(),price:parseFloat(document.getElementById('p_price').value)||0,stock:parseInt(document.getElementById('p_stock').value)||0,threshold:parseInt(document.getElementById('p_threshold').value)||24,costPrice:parseFloat(document.getElementById('p_costPrice').value)||0,packagingCost:parseFloat(document.getElementById('p_packagingCost').value)||0,variants,optionDefs,image:editingProductImage||'',description:document.getElementById('p_desc').value.trim()}; try{ if(editingProductId) await api('PUT','/api/products/'+editingProductId,body); else await api('POST','/api/products',body); toast(editingProductId?t('t_updated'):t('t_added_product'),'success'); closeModal('productModal'); await fetchProducts(); renderProducts(); }catch(e){ toast(t('t_err'),'error'); } }
 async function deleteProduct(id){ if(!confirm(t('t_del_product_confirm')))return; try{ await api('DELETE','/api/products/'+id); toast(t('t_deleted'),'success'); await fetchProducts(); renderProducts(); }catch(e){ toast(t('t_err'),'error'); } }
 
