@@ -773,8 +773,12 @@
   }
 
   /** Fetches real delivered/returned/CA-réel for THIS product over the
-   *  selected date range and fills exactly those 3 fields — nothing else
-   *  is touched (buy price, ads, packaging etc. stay whatever you entered). */
+   *  selected date range — AND, now, the real blended buy/packaging price
+   *  actually paid for whichever units sold in that exact window (pulled
+   *  from the CRM's FIFO cost-lot tracking; falls back to the product's
+   *  flat cost price when nothing in the window was cost-tracked yet).
+   *  Ads and anything else manually entered stay untouched — only these
+   *  5 fields are ever overwritten by a sync. */
   async function syncProductFromCRM(pid){
     const crmId = productCrmId[pid];
     if(!crmId){ alert("Ce produit n'est pas lié au CRM (ajouté manuellement) — impossible de synchroniser."); return; }
@@ -785,6 +789,8 @@
       const u = document.getElementById('units_sold_' + pid); if(u) u.value = d.deliveredCount;
       const rc = document.getElementById('ret_count_' + pid); if(rc) rc.value = d.returnedCount;
       const ca = document.getElementById('real_ca_' + pid);   if(ca) ca.value = Math.round(d.realCA);
+      const buyEl  = document.getElementById('buy_price_' + pid);  if(buyEl  && d.avgBuyPrice       !== undefined) buyEl.value  = Math.round(d.avgBuyPrice);
+      const packEl = document.getElementById('pack_cost_' + pid);  if(packEl && d.avgPackagingCost  !== undefined) packEl.value = Math.round(d.avgPackagingCost);
       calcAll();
     } catch(e) { alert('Erreur de connexion au serveur CRM.'); }
   }

@@ -289,6 +289,24 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
 .variant-group-count{font-size:11px;color:var(--text3)}
 .variant-group-total{margin-inline-start:auto;font-size:11px;color:var(--purple2);font-weight:600;white-space:nowrap}
 .variant-row-child{margin-top:6px;margin-inline-start:20px;width:calc(100% - 20px)}
+.detail-toggle{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;padding:8px;border-radius:8px;border:1px dashed var(--border2);background:none;color:var(--text2);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s}
+.detail-toggle:hover{background:var(--bg3);color:var(--text)}
+.detail-toggle .chev{font-size:9px;transition:transform 0.15s}
+.product-detail{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.detail-group{background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.detail-group-head{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg4)}
+.detail-group-thumb{width:34px;height:34px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.detail-group-thumb.ph{display:flex;align-items:center;justify-content:center;background:var(--bg2);color:var(--text3);font-size:15px;border-radius:8px}
+.detail-group-label{font-size:14px;font-weight:700;color:var(--text)}
+.detail-group-total{margin-inline-start:auto;font-size:12px;color:var(--purple2);font-weight:600;white-space:nowrap}
+.detail-rows{display:flex;flex-direction:column}
+.detail-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid var(--border)}
+.detail-row-thumb{width:28px;height:28px;border-radius:7px;object-fit:cover;flex-shrink:0}
+.detail-row-thumb.ph{display:flex;align-items:center;justify-content:center;background:var(--bg2);color:var(--text3);font-size:13px;border-radius:7px;width:28px;height:28px;flex-shrink:0}
+.detail-row-label{font-size:13px;color:var(--text2);font-weight:500}
+.detail-row-stock{margin-inline-start:auto;font-size:13px;font-weight:700}
+.group-img-upload{width:26px;height:26px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:7px;flex-shrink:0;cursor:pointer}
+.group-img-upload input{display:none}
 .drop-zone:hover,.drop-zone.drag{border-color:var(--purple);background:var(--purple-bg)}
 .code-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:12px;color:var(--purple2);overflow-x:auto;white-space:pre;margin:6px 0;direction:ltr}
 
@@ -1334,7 +1352,7 @@ const I18N = {
     export_confirmed:'تصدير الطلبات المؤكدة',export_info:'يتم تصدير الطلبات بحالة "مؤكد" فقط',export_zr_desc:'ملف Excel جاهز لـ ZR Express',export_zr:'تصدير ZR Express',export_ecom_desc:'ملف Excel جاهز لـ Ecom Delivery',export_ecom:'تصدير Ecom Delivery',export_ecotrac_desc:'ملف Excel جاهز لـ Ecotrac',export_ecotrac:'تصدير Ecotrac',report_title:'تقرير الأداء الكامل',report_desc:'تقرير شامل بكل الطلبات وأداء المؤكدين',export_report:'تصدير التقرير',
     import_title:'استيراد من Shopify CSV',import_info:'من Shopify: Orders → Export → CSV',upload_csv:'رفع ملف CSV',drop_here:'اسحب ملف CSV هنا أو اضغط للاختيار',preview:'معاينة',import_btn:'استيراد',
     server_settings:'إعدادات السيرفر',server_url:'رابط السيرفر',save:'حفظ',webhook_url:'رابط الـ Webhook (للـ Shopify)',delivery_webhook:'رابط Webhook التوصيل (لـ Maystro/ZR)',alerts_settings:'إعدادات التنبيهات والتحكم',alert_minutes:'تنبيه إذا لم يُتصل بالطلب خلال (دقيقة)',min_call_sec:'الحد الأدنى لمدة المكالمة (ثانية) — ما دونه يُعتبر تلاعب ⚠️',auto_assign:'تعيين تلقائي للمؤكدين',auto_assign_help:'يوزع الطلبات الجديدة تلقائياً على المؤكدين بالتساوي — يمكنك تغييره يدوياً لاحقاً',enable_auto_assign:'تفعيل التعيين التلقائي',save_all:'حفظ كل الإعدادات',data_mgmt:'إدارة البيانات',backup:'نسخة احتياطية',restore:'استعادة',sound_settings:'إعدادات الأصوات',sound_enable:'تفعيل أصوات الإشعارات',sound_master:'تشغيل الأصوات',sound_volume:'مستوى الصوت',sound_test:'تجربة',sound_events:'أصوات منفصلة لكل حدث',
-    client_name:'اسم العميل *',phone:'الهاتف *',wilaya:'الولاية',commune:'البلدية / المدينة',product:'المنتج',variant:'التنويع (Variant)',quantity:'الكمية',unit_price:'سعر الوحدة (دج)',discount:'الخصم (دج)',shipping:'رسوم الشحن (دج)',total:'الإجمالي (دج)',agent:'المؤكد',delivery_platform:'منصة التوصيل',agent_note:'ملاحظة للمؤكد',manager_note:'ملاحظة المدير (داخلية)',cancel:'إلغاء',save_order:'حفظ الطلب',log_call:'تسجيل مكالمة',note:'ملاحظة',name:'الاسم',password:'كلمة المرور',add:'إضافة',new_product:'منتج جديد',product_name:'اسم المنتج *',sku:'SKU / الرمز',price:'السعر (دج)',stock:'المخزون الحالي',variants:'التنويعات',description:'وصف المنتج',close:'إغلاق',add_variant:'+ إضافة تنويع',variant_name:'اسم التنويع',upload:'صورة',cost_price:'سعر التكلفة (دج)',packaging_cost:'تكلفة التغليف (دج)',product_options:'خيارات المنتج (الأبعاد)',product_options_help:'عرّف أبعاداً مثل اللون والمقاس، ثم ولّد كل التوليفات تلقائياً بدل كتابتها يدوياً',add_option:'+ إضافة خيار',option_name_ph:'اسم الخيار (مثال: اللون)',option_values_ph:'القيم مفصولة بفاصلة (مثال: أسود, أبيض)',generate_variants:'⚡ توليد التنويعات',variant_sku_ph:'SKU',t_no_option_values:'أضف خياراً واحداً على الأقل مع قيمه أولاً',t_variants_generated:'تم توليد {n} تنويعة',variant_stock_total:'إجمالي مخزون التنويعات',one_variant:'تنويعة واحدة',other_variants:'أخرى',t_click_generate_hint:'حدد قيم كل خيار، ثم اضغط "توليد التنويعات" لإنشاء كل التوليفات أوتوماتيكياً',group_total_label:'المجموع',
+    client_name:'اسم العميل *',phone:'الهاتف *',wilaya:'الولاية',commune:'البلدية / المدينة',product:'المنتج',variant:'التنويع (Variant)',quantity:'الكمية',unit_price:'سعر الوحدة (دج)',discount:'الخصم (دج)',shipping:'رسوم الشحن (دج)',total:'الإجمالي (دج)',agent:'المؤكد',delivery_platform:'منصة التوصيل',agent_note:'ملاحظة للمؤكد',manager_note:'ملاحظة المدير (داخلية)',cancel:'إلغاء',save_order:'حفظ الطلب',log_call:'تسجيل مكالمة',note:'ملاحظة',name:'الاسم',password:'كلمة المرور',add:'إضافة',new_product:'منتج جديد',product_name:'اسم المنتج *',sku:'SKU / الرمز',price:'السعر (دج)',stock:'المخزون الحالي',variants:'التنويعات',description:'وصف المنتج',close:'إغلاق',add_variant:'+ إضافة تنويع',variant_name:'اسم التنويع',upload:'صورة',cost_price:'سعر التكلفة (دج)',packaging_cost:'تكلفة التغليف (دج)',product_options:'خيارات المنتج (الأبعاد)',product_options_help:'عرّف أبعاداً مثل اللون والمقاس، ثم ولّد كل التوليفات تلقائياً بدل كتابتها يدوياً',add_option:'+ إضافة خيار',option_name_ph:'اسم الخيار (مثال: اللون)',option_values_ph:'القيم مفصولة بفاصلة (مثال: أسود, أبيض)',generate_variants:'⚡ توليد التنويعات',variant_sku_ph:'SKU',t_no_option_values:'أضف خياراً واحداً على الأقل مع قيمه أولاً',t_variants_generated:'تم توليد {n} تنويعة',variant_stock_total:'إجمالي مخزون التنويعات',one_variant:'تنويعة واحدة',other_variants:'أخرى',t_click_generate_hint:'حدد قيم كل خيار، ثم اضغط "توليد التنويعات" لإنشاء كل التوليفات أوتوماتيكياً',group_total_label:'المجموع',show_variant_details:'عرض تفاصيل التنويعات',hide_variant_details:'إخفاء التفاصيل',pending_orders_label:'قيد الانتظار',
     s_pending:'في الانتظار',s_confirmed:'مؤكد',s_no_answer:'لم يرد',s_cancelled:'ملغي',s_callback:'إعادة الاتصال',s_tentative1:'مبدئي 1',s_tentative2:'مبدئي 2',s_tentative3:'مبدئي 3',s_unreachable:'العميل غير متاح',s_abandoned:'سلة مهجورة',
     f_all_status:'كل الحالات',f_all_agents:'كل المؤكدين',date_all:'كل التواريخ',date_today:'اليوم',date_yesterday:'أمس',date_week:'هذا الأسبوع',date_month:'هذا الشهر',date_custom:'مخصص...',th_id:'رقم الطلب',th_client:'العميل',th_phone:'الهاتف',th_product:'المنتج',th_total:'الإجمالي',th_agent:'المؤكد',th_status:'الحالة',th_date:'التاريخ',th_actions:'إجراء',
     no_agent:'—',calls:'مكالمة',not_called:'لم يُتصل بعد',latest_note:'آخر ملاحظة من المؤكد',call_btn:'اتصل',edit:'تعديل',delete:'حذف',more:'المزيد',audit:'عرض التحقيق',change_status:'تغيير الحالة يدوياً',bulk_selected:'محدد',bulk_set_status:'تغيير الحالة',bulk_assign:'تعيين مؤكد',apply:'تطبيق',
@@ -1347,7 +1365,7 @@ const I18N = {
     nav_ai:'الذكاء الاصطناعي',nav_ai_chat:'محادثة AI',nav_ai_insights:'رؤى AI',nav_ai_settings:'إعدادات AI',ai_platform:'منصة الذكاء الاصطناعي',ai_no_provider:'لا يوجد مزوّد AI مهيّأ — أضف مفتاحاً للبدء',ai_need_provider:'لتفعيل المحادثة، أضف مزوّد AI من الإعدادات.',ai_chat_title:'مساعد الذكاء الاصطناعي',ai_chat_sub:'اسأل عن طلباتك، الأداء، أو أفضل إجراء تالي',ai_agent_role:'المساعد',ai_send:'إرسال',ai_stop:'إيقاف',ai_thinking:'يفكّر…',ai_placeholder:'مثال: كم طلباً مؤكداً اليوم؟',ai_clear:'مسح المحادثة',ai_welcome:'مرحباً! كيف أساعدك؟',ai_error:'خطأ من المزوّد',ai_clear_confirm:'مسح كل المحادثة؟',ai_insights_title:'رؤى فورية',ai_insights_sub:'تحليل آلي لبياناتك — يُحدَّث لحظياً',ai_deep_analysis:'تحليل AI عميق',ai_deep_loading:'الذكاء الاصطناعي يحلّل…',ai_no_insights:'لا توجد رؤى بعد',ai_severity_warning:'تنبيه',ai_severity_ok:'جيد',ai_severity_info:'معلومة',ai_refresh_insights:'تحديث',ai_providers:'مزوّدو الذكاء الاصطناعي',ai_agents_cfg:'وكلاء الذكاء الاصطناعي',ai_add_provider:'إضافة مزوّد AI',ai_add_agent:'إضافة وكيل AI',ai_provider_name:'اسم المزوّد',ai_provider_type:'النوع',ai_base_url:'الرابط الأساسي (Base URL)',ai_api_key:'مفتاح API',ai_default_model:'النموذج الافتراضي',ai_temperature:'درجة الحرارة (Temperature)',ai_max_tokens:'أقصى رموز (Max Tokens)',ai_timeout:'المهلة (ms)',ai_apply_preset:'تعبئة افتراضات',ai_agent_name:'اسم الوكيل',ai_agent_desc:'الوصف',ai_agent_prompt:'التعليمات (System Prompt)',ai_agent_perms:'الصلاحيات',ai_agent_model:'النموذج (اختياري — يستخدم افتراضي المزوّد)',ai_role:'الدور',ai_enabled:'مفعّل',ai_no_agents_cfg:'لا يوجد وكلاء',ai_test_ok:'الاتصال ناجح',ai_test_fail:'فشل الاتصال',ai_perms_read_orders:'قراءة الطلبات',ai_perms_read_customers:'قراءة العملاء',ai_perms_read_products:'قراءة المنتجات',ai_perms_read_delivery:'قراءة التوصيل',ai_perms_read_analytics:'قراءة التحليلات',ai_perms_read_agent_notes:'قراءة ملاحظات المؤكدين',ai_perms_generate_reports:'إنشاء التقارير',ai_perms_suggest_actions:'اقتراح إجراءات',ai_perms_note:'لا توجد صلاحيات تدميرية — الذكاء الاصطناعي يحلّل ويوصي فقط.',ai_role_general:'عام',ai_role_manager:'مدير',ai_role_sales:'مبيعات',ai_role_confirmation:'تأكيد',ai_role_delivery:'توصيل',ai_role_analytics:'تحليلات',ai_role_support:'دعم',
     /* === Suivi / Follow-up / Inventory / Attempts / Fake / Bulk (req §1-§11) === */
     nav_suivi:'متابعة الطلبات',suivi_title:'متابعة الطلبات (Suivi)',suivi_bucket_waiting:'بانتظار المتابعة',suivi_bucket_delivery:'قيد التوصيل',suivi_bucket_contact:'تتطلب اتصال العميل',suivi_bucket_problems:'مشاكل التوصيل',suivi_bucket_escalation:'تتطلب تصعيد',suivi_assign:'تعيين وكيل متابعة',suivi_reassign:'إعادة التعيين',suivi_auto_assign:'التعيين التلقائي للمتابعة',suivi_auto_assign_help:'يعيّن الطلبات المؤكدة تلقائياً لوكلاء المتابعة بالتساوي',suivi_enable_auto:'تفعيل التعيين التلقائي للمتابعة',suivi_reminder_minutes:'مهلة تذكير الاتصال (دقيقة)',suivi_reminder_due:'التذكير بعد',suivi_reminder_overdue:'تذكير متأخر',suivi_reminder_done:'تم الاتصال',suivi_resolve:'تم الاتصال بالعميل',suivi_no_agent:'بدون متابعة',suivi_assigned:'موكل المتابعة',suivi_countdown:'متبقٍ',suivi_overdue_escalation:'🚨 تذكير متابعة متأخر',suivi_role:'دور المؤكد',suivi_role_confirmation:'تأكيد',suivi_role_followup:'متابعة',suivi_role_both:'تأكيد + متابعة',suivi_no_tasks:'لا توجد مهام متابعة',
-    inv_title:'إدارة المخزون',inv_per_variant:'المخزون لكل تنويع',inv_stock:'المخزون',inv_threshold:'حد التنبيه',inv_low_stock:'تنبيهات نقص المخزون',inv_low_stock_count:'منتج/تنويع منخفض المخزون',inv_history:'سجل حركات المخزون',inv_adjust:'تعديل المخزون',inv_delta:'التغيير (±)',inv_reason:'السبب',inv_no_movements:'لا توجد حركات بعد',inv_reason_confirm:'تأكيد طلب',inv_reason_cancel:'إلغاء تأكيد',inv_reason_reserve:'حجز',inv_reason_release:'تحرير',inv_reason_adjustment:'تعديل يدوي',inv_reason_import:'استيراد',inv_reservation_mode:'سياسة حجز المخزون',inv_reservation_immediate:'حجز فوري',inv_reservation_on_confirm:'عند التأكيد',inv_reservation_none:'بدون حجز',inv_reservation_help:'يحدد متى يُخصم/يُحجز المخزون تلقائياً',inv_prev:'السابق',inv_new:'الجديد',inv_movement_time:'الوقت',inv_movement_actor:'المستخدم',inv_movement_order:'الطلب',inv_set_threshold:'حد التنبيه لكل تنويع',
+    inv_title:'إدارة المخزون',inv_per_variant:'المخزون لكل تنويع',inv_stock:'المخزون',inv_threshold:'حد التنبيه',inv_low_stock:'تنبيهات نقص المخزون',inv_low_stock_count:'منتج/تنويع منخفض المخزون',inv_history:'سجل حركات المخزون',inv_adjust:'تعديل المخزون',inv_delta:'التغيير (±)',inv_reason:'السبب',inv_no_movements:'لا توجد حركات بعد',inv_reason_confirm:'تأكيد طلب',inv_reason_cancel:'إلغاء تأكيد',inv_reason_reserve:'حجز',inv_reason_release:'تحرير',inv_reason_adjustment:'تعديل يدوي',inv_reason_import:'استيراد',inv_reason_restock_purchase:'مخزون جديد (شراء)',inv_reason_restock_return:'مخزون مُرجع',add_stock_title:'إضافة مخزون',add_stock_return:'مرتجع',add_stock_purchase:'مخزون جديد',add_stock_qty:'الكمية',add_stock_confirm:'تأكيد',add_stock_return_help:'المرتجع بلا سعر جديد — يرجع لأقدم دفعة موجودة بسعرها الأصلي',inv_reservation_mode:'سياسة حجز المخزون',inv_reservation_immediate:'حجز فوري',inv_reservation_on_confirm:'عند التأكيد',inv_reservation_none:'بدون حجز',inv_reservation_help:'يحدد متى يُخصم/يُحجز المخزون تلقائياً',inv_prev:'السابق',inv_new:'الجديد',inv_movement_time:'الوقت',inv_movement_actor:'المستخدم',inv_movement_order:'الطلب',inv_set_threshold:'حد التنبيه لكل تنويع',
     attempts_title:'محاولات التأكيد',attempts_day:'اليوم',attempts_t1:'مبدئي 1',attempts_t2:'مبدئي 2',attempts_t3:'مبدئي 3',attempts_empty:'لم تُسجَّل محاولة بعد',attempts_date:'التاريخ',attempts_time:'الوقت',attempts_duration:'المدة',attempts_result:'النتيجة',attempts_agent:'المؤكد',attempts_note:'ملاحظة',attempts_matrix:'مصفوفة المحاولات',attempts_view:'عرض المحاولات',
     fake_title:'طلب وهمي',fake_classify:'تصنيف كطلب وهمي',fake_unclassify:'إلغاء التصنيف',fake_reason:'سبب الوهم',fake_responsible:'المؤكد المسؤول',fake_count:'طلبات وهمية',fake_filter:'وهمي',fake_marked:'تم التصنيف كوهمي',fake_yes:'نعم',fake_no:'لا',
     bulk_select_page:'تحديد الصفحة',bulk_select_all:'تحديد كل المُصفّى',bulk_clear:'إلغاء التحديد',bulk_create_shipments:'إنشاء شحنات',bulk_send_delivery:'إرسال للتوصيل',bulk_print:'طباعة',bulk_export:'تصدير',bulk_action:'إجراء جماعي',bulk_done:'اكتمل',bulk_of:'من',
@@ -1364,7 +1382,7 @@ const I18N = {
     export_confirmed:'Exporter commandes confirmées',export_info:'Seules les commandes "Confirmées" sont exportées',export_zr_desc:'Fichier Excel prêt pour ZR Express',export_zr:'Exporter ZR Express',export_ecom_desc:'Fichier Excel prêt pour Ecom Delivery',export_ecom:'Exporter Ecom Delivery',export_ecotrac_desc:'Fichier Excel prêt pour Ecotrac',export_ecotrac:'Exporter Ecotrac',report_title:'Rapport complet',report_desc:'Rapport global des commandes et performances agents',export_report:'Exporter le rapport',
     import_title:'Importer depuis Shopify CSV',import_info:'Depuis Shopify : Orders → Export → CSV',upload_csv:'Téléverser un CSV',drop_here:'Glissez le CSV ici ou cliquez',preview:'Aperçu',import_btn:'Importer',
     server_settings:'Paramètres serveur',server_url:'URL du serveur',save:'Enregistrer',webhook_url:'URL Webhook (Shopify)',delivery_webhook:'URL Webhook livraison (Maystro/ZR)',alerts_settings:'Alertes & contrôle',alert_minutes:'Alerte si non appelé depuis (minutes)',min_call_sec:"Durée minimale d'appel (s) — en dessous = manipulation ⚠️",auto_assign:'Assignation auto des agents',auto_assign_help:'Répartit les nouvelles commandes entre agents équitablement — modifiable ensuite',enable_auto_assign:"Activer l'assignation auto",save_all:'Tout enregistrer',data_mgmt:'Gestion des données',backup:'Sauvegarde',restore:'Restaurer',sound_settings:'Sons',sound_enable:'Activer les sons',sound_master:'Sons activés',sound_volume:'Volume',sound_test:'Tester',sound_events:'Sons séparés par événement',
-    client_name:'Client *',phone:'Téléphone *',wilaya:'Wilaya',commune:'Commune / Ville',product:'Produit',variant:'Variante',quantity:'Quantité',unit_price:'Prix unitaire (DA)',discount:'Remise (DA)',shipping:'Frais de livraison (DA)',total:'Total (DA)',agent:'Agent',delivery_platform:'Plateforme de livraison',agent_note:"Note pour l'agent",manager_note:'Note manager (interne)',cancel:'Annuler',save_order:'Enregistrer',log_call:'Enregistrer appel',note:'Note',name:'Nom',password:'Mot de passe',add:'Ajouter',new_product:'Nouveau produit',product_name:'Nom du produit *',sku:'SKU / Code',price:'Prix (DA)',stock:'Stock actuel',variants:'Variantes',description:'Description',close:'Fermer',add_variant:'+ Ajouter variante',variant_name:'Nom variante',upload:'Image',cost_price:'Prix de revient (DA)',packaging_cost:'Coût emballage (DA)',product_options:'Options du produit (dimensions)',product_options_help:'Définissez des dimensions comme Couleur et Taille, puis générez toutes les combinaisons automatiquement',add_option:'+ Ajouter une option',option_name_ph:'Nom de l\'option (ex: Couleur)',option_values_ph:'Valeurs séparées par une virgule (ex: Noir, Blanc)',generate_variants:'⚡ Générer les variantes',variant_sku_ph:'SKU',t_no_option_values:'Ajoutez au moins une option avec ses valeurs d\'abord',t_variants_generated:'{n} variantes générées',variant_stock_total:'Stock total des variantes',one_variant:'1 variante',other_variants:'Autres',t_click_generate_hint:'Définissez les valeurs de chaque option, puis cliquez sur "Générer les variantes"',group_total_label:'Total',
+    client_name:'Client *',phone:'Téléphone *',wilaya:'Wilaya',commune:'Commune / Ville',product:'Produit',variant:'Variante',quantity:'Quantité',unit_price:'Prix unitaire (DA)',discount:'Remise (DA)',shipping:'Frais de livraison (DA)',total:'Total (DA)',agent:'Agent',delivery_platform:'Plateforme de livraison',agent_note:"Note pour l'agent",manager_note:'Note manager (interne)',cancel:'Annuler',save_order:'Enregistrer',log_call:'Enregistrer appel',note:'Note',name:'Nom',password:'Mot de passe',add:'Ajouter',new_product:'Nouveau produit',product_name:'Nom du produit *',sku:'SKU / Code',price:'Prix (DA)',stock:'Stock actuel',variants:'Variantes',description:'Description',close:'Fermer',add_variant:'+ Ajouter variante',variant_name:'Nom variante',upload:'Image',cost_price:'Prix de revient (DA)',packaging_cost:'Coût emballage (DA)',product_options:'Options du produit (dimensions)',product_options_help:'Définissez des dimensions comme Couleur et Taille, puis générez toutes les combinaisons automatiquement',add_option:'+ Ajouter une option',option_name_ph:'Nom de l\'option (ex: Couleur)',option_values_ph:'Valeurs séparées par une virgule (ex: Noir, Blanc)',generate_variants:'⚡ Générer les variantes',variant_sku_ph:'SKU',t_no_option_values:'Ajoutez au moins une option avec ses valeurs d\'abord',t_variants_generated:'{n} variantes générées',variant_stock_total:'Stock total des variantes',one_variant:'1 variante',other_variants:'Autres',t_click_generate_hint:'Définissez les valeurs de chaque option, puis cliquez sur "Générer les variantes"',group_total_label:'Total',show_variant_details:'Voir détails des variantes',hide_variant_details:'Masquer les détails',pending_orders_label:'en attente',
     s_pending:'En attente',s_confirmed:'Confirmé',s_no_answer:'Pas de réponse',s_cancelled:'Annulé',s_callback:'Rappel',s_tentative1:'Tentative 1',s_tentative2:'Tentative 2',s_tentative3:'Tentative 3',s_unreachable:'Client injoignable',s_abandoned:'Panier abandonné',
     f_all_status:'Tous statuts',f_all_agents:'Tous agents',date_all:'Toutes dates',date_today:"Aujourd'hui",date_yesterday:'Hier',date_week:'Cette semaine',date_month:'Ce mois-ci',date_custom:'Personnalisé...',th_id:'N° commande',th_client:'Client',th_phone:'Téléphone',th_product:'Produit',th_total:'Total',th_agent:'Agent',th_status:'Statut',th_date:'Date',th_actions:'Action',
     no_agent:'—',calls:'appels',not_called:'Pas encore appelé',latest_note:'Dernière note agent',call_btn:'Appeler',edit:'Modifier',delete:'Supprimer',more:'Plus',audit:"Voir l'audit",change_status:'Changer le statut',bulk_selected:'sélectionné(s)',bulk_set_status:'Changer statut',bulk_assign:'Assigner agent',apply:'Appliquer',
@@ -1377,7 +1395,7 @@ const I18N = {
     nav_ai:'IA',nav_ai_chat:'Chat IA',nav_ai_insights:'Insights IA',nav_ai_settings:'Paramètres IA',ai_platform:'Plateforme IA',ai_no_provider:'Aucun fournisseur IA configuré — ajoutez une clé pour commencer',ai_need_provider:'Pour activer le chat, ajoutez un fournisseur IA dans les paramètres.',ai_chat_title:'Assistant IA',ai_chat_sub:'Posez vos questions : commandes, performance, meilleure action',ai_agent_role:'Assistant',ai_send:'Envoyer',ai_stop:'Stop',ai_thinking:'Réflexion…',ai_placeholder:'Ex : combien de commandes confirmées aujourd\'hui ?',ai_clear:'Effacer',ai_welcome:'Bonjour ! Comment puis-je aider ?',ai_error:'Erreur fournisseur',ai_clear_confirm:'Effacer toute la conversation ?',ai_insights_title:'Insights instantanés',ai_insights_sub:'Analyse automatique — mise à jour en direct',ai_deep_analysis:'Analyse IA approfondie',ai_deep_loading:'L\'IA analyse…',ai_no_insights:'Aucun insight',ai_severity_warning:'Alerte',ai_severity_ok:'OK',ai_severity_info:'Info',ai_refresh_insights:'Rafraîchir',ai_providers:'Fournisseurs IA',ai_agents_cfg:'Agents IA',ai_add_provider:'Ajouter fournisseur IA',ai_add_agent:'Ajouter agent IA',ai_provider_name:'Nom',ai_provider_type:'Type',ai_base_url:'URL de base',ai_api_key:'Clé API',ai_default_model:'Modèle par défaut',ai_temperature:'Température',ai_max_tokens:'Tokens max',ai_timeout:'Délai (ms)',ai_apply_preset:'Préremplir',ai_agent_name:'Nom',ai_agent_desc:'Description',ai_agent_prompt:'Instructions (System Prompt)',ai_agent_perms:'Permissions',ai_agent_model:'Modèle (optionnel — sinon défaut du fournisseur)',ai_role:'Rôle',ai_enabled:'Activé',ai_no_agents_cfg:'Aucun agent',ai_test_ok:'Connexion OK',ai_test_fail:'Échec connexion',ai_perms_read_orders:'Lire commandes',ai_perms_read_customers:'Lire clients',ai_perms_read_products:'Lire produits',ai_perms_read_delivery:'Lire livraison',ai_perms_read_analytics:'Lire statistiques',ai_perms_read_agent_notes:'Lire notes agents',ai_perms_generate_reports:'Générer rapports',ai_perms_suggest_actions:'Suggérer actions',ai_perms_note:'Aucune permission destructive — l\'IA analyse et recommande seulement.',ai_role_general:'Général',ai_role_manager:'Manager',ai_role_sales:'Ventes',ai_role_confirmation:'Confirmation',ai_role_delivery:'Livraison',ai_role_analytics:'Analystes',ai_role_support:'Support',
     /* === Suivi / Follow-up / Inventory / Attempts / Fake / Bulk (req §1-§11) === */
     nav_suivi:'Suivi des Commandes',suivi_title:'Suivi des Commandes',suivi_bucket_waiting:'En attente de suivi',suivi_bucket_delivery:'En cours de livraison',suivi_bucket_contact:'Contact client requis',suivi_bucket_problems:'Problèmes de livraison',suivi_bucket_escalation:'À escalader',suivi_assign:'Assigner agent de suivi',suivi_reassign:'Réassigner',suivi_auto_assign:'Assignation auto du suivi',suivi_auto_assign_help:'Assigne les commandes confirmées aux agents de suivi équitablement',suivi_enable_auto:"Activer l'assignation auto du suivi",suivi_reminder_minutes:'Délai de rappel (minutes)',suivi_reminder_due:'Rappel dans',suivi_reminder_overdue:'Rappel en retard',suivi_reminder_done:'Client contacté',suivi_resolve:'Client contacté',suivi_no_agent:'Sans suivi',suivi_assigned:'Suivi assigné',suivi_countdown:'restant',suivi_overdue_escalation:'🚨 Rappel de suivi en retard',suivi_role:"Rôle de l'agent",suivi_role_confirmation:'Confirmation',suivi_role_followup:'Suivi',suivi_role_both:'Confirmation + Suivi',suivi_no_tasks:'Aucune tâche de suivi',
-    inv_title:'Gestion du stock',inv_per_variant:'Stock par variante',inv_stock:'Stock',inv_threshold:'Seuil d\'alerte',inv_low_stock:'Alertes de stock bas',inv_low_stock_count:'produit/variante en stock bas',inv_history:'Historique des mouvements',inv_adjust:'Ajuster le stock',inv_delta:'Variation (±)',inv_reason:'Raison',inv_no_movements:'Aucun mouvement',inv_reason_confirm:'Confirmation',inv_reason_cancel:'Annulation',inv_reason_reserve:'Réservation',inv_reason_release:'Libération',inv_reason_adjustment:'Ajustement manuel',inv_reason_import:'Import',inv_reservation_mode:'Politique de réservation',inv_reservation_immediate:'Immédiat',inv_reservation_on_confirm:'À la confirmation',inv_reservation_none:'Aucune',inv_reservation_help:'Détermine quand le stock est réservé/déduit',inv_prev:'Précédent',inv_new:'Nouveau',inv_movement_time:'Heure',inv_movement_actor:'Utilisateur',inv_movement_order:'Commande',inv_set_threshold:'Seuil par variante',
+    inv_title:'Gestion du stock',inv_per_variant:'Stock par variante',inv_stock:'Stock',inv_threshold:'Seuil d\'alerte',inv_low_stock:'Alertes de stock bas',inv_low_stock_count:'produit/variante en stock bas',inv_history:'Historique des mouvements',inv_adjust:'Ajuster le stock',inv_delta:'Variation (±)',inv_reason:'Raison',inv_no_movements:'Aucun mouvement',inv_reason_confirm:'Confirmation',inv_reason_cancel:'Annulation',inv_reason_reserve:'Réservation',inv_reason_release:'Libération',inv_reason_adjustment:'Ajustement manuel',inv_reason_import:'Import',inv_reason_restock_purchase:'Nouveau stock (achat)',inv_reason_restock_return:'Stock retourné',add_stock_title:'Ajouter du stock',add_stock_return:'Retour',add_stock_purchase:'Nouvel achat',add_stock_qty:'Quantité',add_stock_confirm:'Confirmer',add_stock_return_help:'Un retour ne comporte aucun nouveau prix — il rejoint le lot le plus ancien, à son prix initial',inv_reservation_mode:'Politique de réservation',inv_reservation_immediate:'Immédiat',inv_reservation_on_confirm:'À la confirmation',inv_reservation_none:'Aucune',inv_reservation_help:'Détermine quand le stock est réservé/déduit',inv_prev:'Précédent',inv_new:'Nouveau',inv_movement_time:'Heure',inv_movement_actor:'Utilisateur',inv_movement_order:'Commande',inv_set_threshold:'Seuil par variante',
     attempts_title:'Tentatives de confirmation',attempts_day:'Jour',attempts_t1:'Tentative 1',attempts_t2:'Tentative 2',attempts_t3:'Tentative 3',attempts_empty:'Aucune tentative enregistrée',attempts_date:'Date',attempts_time:'Heure',attempts_duration:'Durée',attempts_result:'Résultat',attempts_agent:'Agent',attempts_note:'Note',attempts_matrix:'Matrice des tentatives',attempts_view:'Voir les tentatives',
     fake_title:'Fausse commande',fake_classify:'Classer comme fausse',fake_unclassify:'Annuler la classification',fake_reason:'Raison',fake_responsible:'Agent responsable',fake_count:'fausse(s)',fake_filter:'Fausse',fake_marked:'Classée comme fausse',fake_yes:'Oui',fake_no:'Non',
     bulk_select_page:'Sélectionner la page',bulk_select_all:'Tout sélectionner (filtré)',bulk_clear:'Effacer la sélection',bulk_create_shipments:'Créer les colis',bulk_send_delivery:'Envoyer au transporteur',bulk_print:'Imprimer',bulk_export:'Exporter',bulk_action:'Action groupée',bulk_done:'terminé',bulk_of:'sur',
@@ -1394,7 +1412,7 @@ const I18N = {
     export_confirmed:'Export Confirmed Orders',export_info:'Only "Confirmed" orders are exported',export_zr_desc:'Excel file ready for ZR Express',export_zr:'Export ZR Express',export_ecom_desc:'Excel file ready for Ecom Delivery',export_ecom:'Export Ecom Delivery',export_ecotrac_desc:'Excel file ready for Ecotrac',export_ecotrac:'Export Ecotrac',report_title:'Full Performance Report',report_desc:'Comprehensive report of all orders and agent performance',export_report:'Export Report',
     import_title:'Import from Shopify CSV',import_info:'From Shopify: Orders → Export → CSV',upload_csv:'Upload CSV file',drop_here:'Drag CSV here or click to choose',preview:'Preview',import_btn:'Import',
     server_settings:'Server settings',server_url:'Server URL',save:'Save',webhook_url:'Webhook URL (Shopify)',delivery_webhook:'Delivery Webhook URL (Maystro/ZR)',alerts_settings:'Alerts & Control',alert_minutes:'Alert if not called within (minutes)',min_call_sec:'Minimum call duration (sec) — below is manipulation ⚠️',auto_assign:'Automatic agent assignment',auto_assign_help:'Distributes new orders evenly among agents — you can change it manually later',enable_auto_assign:'Enable auto-assignment',save_all:'Save all settings',data_mgmt:'Data management',backup:'Backup',restore:'Restore',sound_settings:'Sounds',sound_enable:'Enable notification sounds',sound_master:'Sounds on',sound_volume:'Volume',sound_test:'Test',sound_events:'Separate sound per event',
-    client_name:'Client name *',phone:'Phone *',wilaya:'Wilaya',commune:'Commune / City',product:'Product',variant:'Variant',quantity:'Quantity',unit_price:'Unit price (DA)',discount:'Discount (DA)',shipping:'Shipping (DA)',total:'Total (DA)',agent:'Agent',delivery_platform:'Delivery platform',agent_note:'Note for agent',manager_note:'Manager note (internal)',cancel:'Cancel',save_order:'Save order',log_call:'Log Call',note:'Note',name:'Name',password:'Password',add:'Add',new_product:'New product',product_name:'Product name *',sku:'SKU / Code',price:'Price (DA)',stock:'Current stock',variants:'Variants',description:'Description',close:'Close',add_variant:'+ Add variant',variant_name:'Variant name',upload:'Image',cost_price:'Cost price (DA)',packaging_cost:'Packaging cost (DA)',product_options:'Product options (dimensions)',product_options_help:'Define dimensions like Color and Size, then generate every combination automatically',add_option:'+ Add option',option_name_ph:'Option name (e.g. Color)',option_values_ph:'Values, comma-separated (e.g. Black, White)',generate_variants:'⚡ Generate variants',variant_sku_ph:'SKU',t_no_option_values:'Add at least one option with its values first',t_variants_generated:'{n} variants generated',variant_stock_total:'Total variant stock',one_variant:'1 variant',other_variants:'Other',t_click_generate_hint:'Set values for each option, then click "Generate variants"',group_total_label:'Total',
+    client_name:'Client name *',phone:'Phone *',wilaya:'Wilaya',commune:'Commune / City',product:'Product',variant:'Variant',quantity:'Quantity',unit_price:'Unit price (DA)',discount:'Discount (DA)',shipping:'Shipping (DA)',total:'Total (DA)',agent:'Agent',delivery_platform:'Delivery platform',agent_note:'Note for agent',manager_note:'Manager note (internal)',cancel:'Cancel',save_order:'Save order',log_call:'Log Call',note:'Note',name:'Name',password:'Password',add:'Add',new_product:'New product',product_name:'Product name *',sku:'SKU / Code',price:'Price (DA)',stock:'Current stock',variants:'Variants',description:'Description',close:'Close',add_variant:'+ Add variant',variant_name:'Variant name',upload:'Image',cost_price:'Cost price (DA)',packaging_cost:'Packaging cost (DA)',product_options:'Product options (dimensions)',product_options_help:'Define dimensions like Color and Size, then generate every combination automatically',add_option:'+ Add option',option_name_ph:'Option name (e.g. Color)',option_values_ph:'Values, comma-separated (e.g. Black, White)',generate_variants:'⚡ Generate variants',variant_sku_ph:'SKU',t_no_option_values:'Add at least one option with its values first',t_variants_generated:'{n} variants generated',variant_stock_total:'Total variant stock',one_variant:'1 variant',other_variants:'Other',t_click_generate_hint:'Set values for each option, then click "Generate variants"',group_total_label:'Total',show_variant_details:'Show variant details',hide_variant_details:'Hide details',pending_orders_label:'pending',
     s_pending:'Pending',s_confirmed:'Confirmed',s_no_answer:'No Answer',s_cancelled:'Cancelled',s_callback:'Call Back',s_tentative1:'Tentative 1',s_tentative2:'Tentative 2',s_tentative3:'Tentative 3',s_unreachable:'Client Unreachable',s_abandoned:'Abandoned cart',
     f_all_status:'All statuses',f_all_agents:'All agents',date_all:'All dates',date_today:'Today',date_yesterday:'Yesterday',date_week:'This week',date_month:'This month',date_custom:'Custom...',th_id:'Order #',th_client:'Client',th_phone:'Phone',th_product:'Product',th_total:'Total',th_agent:'Agent',th_status:'Status',th_date:'Date',th_actions:'Action',
     no_agent:'—',calls:'calls',not_called:'Not called yet',latest_note:'Latest agent note',call_btn:'Call',edit:'Edit',delete:'Delete',more:'More',audit:'View audit',change_status:'Change status',bulk_selected:'selected',bulk_set_status:'Set status',bulk_assign:'Assign agent',apply:'Apply',
@@ -1407,7 +1425,7 @@ const I18N = {
     nav_ai:'AI',nav_ai_chat:'AI Chat',nav_ai_insights:'AI Insights',nav_ai_settings:'AI Settings',ai_platform:'AI Platform',ai_no_provider:'No AI provider configured — add a key to start',ai_need_provider:'To enable chat, add an AI provider in Settings.',ai_chat_title:'AI Assistant',ai_chat_sub:'Ask about orders, performance, or the best next action',ai_agent_role:'Assistant',ai_send:'Send',ai_stop:'Stop',ai_thinking:'Thinking…',ai_placeholder:'e.g. how many confirmed orders today?',ai_clear:'Clear chat',ai_welcome:'Hi! How can I help?',ai_error:'Provider error',ai_clear_confirm:'Clear the whole conversation?',ai_insights_title:'Instant insights',ai_insights_sub:'Automatic analysis of your data — live',ai_deep_analysis:'Deep AI analysis',ai_deep_loading:'AI is analyzing…',ai_no_insights:'No insights yet',ai_severity_warning:'Warning',ai_severity_ok:'OK',ai_severity_info:'Info',ai_refresh_insights:'Refresh',ai_providers:'AI Providers',ai_agents_cfg:'AI Agents',ai_add_provider:'Add AI Provider',ai_add_agent:'Add AI Agent',ai_provider_name:'Provider Name',ai_provider_type:'Type',ai_base_url:'Base URL',ai_api_key:'API Key',ai_default_model:'Default Model',ai_temperature:'Temperature',ai_max_tokens:'Max Tokens',ai_timeout:'Timeout (ms)',ai_apply_preset:'Fill defaults',ai_agent_name:'Agent Name',ai_agent_desc:'Description',ai_agent_prompt:'Instructions (System Prompt)',ai_agent_perms:'Permissions',ai_agent_model:'Model (optional — uses provider default)',ai_role:'Role',ai_enabled:'Enabled',ai_no_agents_cfg:'No agents',ai_test_ok:'Connection OK',ai_test_fail:'Connection failed',ai_perms_read_orders:'Read Orders',ai_perms_read_customers:'Read Customers',ai_perms_read_products:'Read Products',ai_perms_read_delivery:'Read Delivery',ai_perms_read_analytics:'Read Analytics',ai_perms_read_agent_notes:'Read Agent Notes',ai_perms_generate_reports:'Generate Reports',ai_perms_suggest_actions:'Suggest Actions',ai_perms_note:'No destructive permissions — the AI only analyzes and recommends.',ai_role_general:'General',ai_role_manager:'Manager',ai_role_sales:'Sales',ai_role_confirmation:'Confirmation',ai_role_delivery:'Delivery',ai_role_analytics:'Analytics',ai_role_support:'Support',
     /* === Suivi / Follow-up / Inventory / Attempts / Fake / Bulk (req §1-§11) === */
     nav_suivi:'Order Follow-up',suivi_title:'Order Follow-up (Suivi)',suivi_bucket_waiting:'Waiting for follow-up',suivi_bucket_delivery:'In delivery',suivi_bucket_contact:'Needs customer contact',suivi_bucket_problems:'Delivery problems',suivi_bucket_escalation:'Requires escalation',suivi_assign:'Assign follow-up agent',suivi_reassign:'Reassign',suivi_auto_assign:'Automatic follow-up assignment',suivi_auto_assign_help:'Auto-assigns confirmed orders to follow-up agents evenly',suivi_enable_auto:'Enable auto follow-up assignment',suivi_reminder_minutes:'Call reminder delay (minutes)',suivi_reminder_due:'Reminder in',suivi_reminder_overdue:'Reminder overdue',suivi_reminder_done:'Customer contacted',suivi_resolve:'Customer contacted',suivi_no_agent:'No follow-up',suivi_assigned:'Follow-up assigned',suivi_countdown:'left',suivi_overdue_escalation:'🚨 Overdue follow-up reminder',suivi_role:'Agent role',suivi_role_confirmation:'Confirmation',suivi_role_followup:'Follow-up',suivi_role_both:'Confirmation + Follow-up',suivi_no_tasks:'No follow-up tasks',
-    inv_title:'Inventory Management',inv_per_variant:'Stock per variant',inv_stock:'Stock',inv_threshold:'Alert threshold',inv_low_stock:'Low-stock alerts',inv_low_stock_count:'product/variant low on stock',inv_history:'Stock movement history',inv_adjust:'Adjust stock',inv_delta:'Change (±)',inv_reason:'Reason',inv_no_movements:'No movements yet',inv_reason_confirm:'Order confirmed',inv_reason_cancel:'Confirmation cancelled',inv_reason_reserve:'Reserved',inv_reason_release:'Released',inv_reason_adjustment:'Manual adjustment',inv_reason_import:'Import',inv_reservation_mode:'Stock reservation policy',inv_reservation_immediate:'Reserve immediately',inv_reservation_on_confirm:'Reserve on confirmation',inv_reservation_none:'No reservation',inv_reservation_help:'Controls when stock is auto-reserved/deducted',inv_prev:'Previous',inv_new:'New',inv_movement_time:'Time',inv_movement_actor:'User',inv_movement_order:'Order',inv_set_threshold:'Per-variant threshold',
+    inv_title:'Inventory Management',inv_per_variant:'Stock per variant',inv_stock:'Stock',inv_threshold:'Alert threshold',inv_low_stock:'Low-stock alerts',inv_low_stock_count:'product/variant low on stock',inv_history:'Stock movement history',inv_adjust:'Adjust stock',inv_delta:'Change (±)',inv_reason:'Reason',inv_no_movements:'No movements yet',inv_reason_confirm:'Order confirmed',inv_reason_cancel:'Confirmation cancelled',inv_reason_reserve:'Reserved',inv_reason_release:'Released',inv_reason_adjustment:'Manual adjustment',inv_reason_import:'Import',inv_reason_restock_purchase:'New stock (purchase)',inv_reason_restock_return:'Returned stock',add_stock_title:'Add stock',add_stock_return:'Return',add_stock_purchase:'New purchase',add_stock_qty:'Quantity',add_stock_confirm:'Confirm',add_stock_return_help:'A return has no new price — it rejoins the oldest existing batch at its original cost',inv_reservation_mode:'Stock reservation policy',inv_reservation_immediate:'Reserve immediately',inv_reservation_on_confirm:'Reserve on confirmation',inv_reservation_none:'No reservation',inv_reservation_help:'Controls when stock is auto-reserved/deducted',inv_prev:'Previous',inv_new:'New',inv_movement_time:'Time',inv_movement_actor:'User',inv_movement_order:'Order',inv_set_threshold:'Per-variant threshold',
     attempts_title:'Confirmation Attempts',attempts_day:'Day',attempts_t1:'Tentative 1',attempts_t2:'Tentative 2',attempts_t3:'Tentative 3',attempts_empty:'No attempt recorded',attempts_date:'Date',attempts_time:'Time',attempts_duration:'Duration',attempts_result:'Result',attempts_agent:'Agent',attempts_note:'Note',attempts_matrix:'Attempts matrix',attempts_view:'View attempts',
     fake_title:'Fake Order',fake_classify:'Classify as fake',fake_unclassify:'Remove classification',fake_reason:'Reason',fake_responsible:'Responsible agent',fake_count:'fake order(s)',fake_filter:'Fake',fake_marked:'Classified as fake',fake_yes:'Yes',fake_no:'No',
     bulk_select_page:'Select page',bulk_select_all:'Select all (filtered)',bulk_clear:'Clear selection',bulk_create_shipments:'Create shipments',bulk_send_delivery:'Send to delivery',bulk_print:'Print',bulk_export:'Export',bulk_action:'Bulk action',bulk_done:'done',bulk_of:'of',
@@ -2234,16 +2252,28 @@ async function reactivateAgentUi(name){ try{ await api('POST','/api/agents/'+enc
 async function saveAgent(){ const name=document.getElementById('a_name').value.trim(); const pass=document.getElementById('a_pass').value.trim(); if(!name)return; try{ await api('POST','/api/agents',{name,pass}); toast(t('t_added_agent'),'success'); closeModal('agentModal'); document.getElementById('a_name').value=''; document.getElementById('a_pass').value=''; await fetchAgents(); updateAgentFilter(); renderAgents(); }catch(e){ toast(e.message,'error'); } }
 async function removeAgent(name){ if(!confirm(t('t_del_agent_confirm')+' '+name+'؟'))return; try{ await api('DELETE','/api/agents/'+encodeURIComponent(name)); await fetchAgents(); updateAgentFilter(); renderAgents(); }catch(e){ toast(t('t_err'),'error'); } }
 
+let expandedProducts = new Set(); // product IDs the manager has expanded to see full variant detail
 function renderProducts(){
   if(!products.length){document.getElementById('productsGrid').innerHTML='<div class="empty"><p>'+t('t_no_products')+'</p></div>';return;}
   // Low-stock banner (req §8): show how many variants are below threshold.
   api('GET','/api/inventory/low-stock').then(r=>{const b=document.getElementById('lowStockBanner');const n=r.items?r.items.length:0;updateStockNavBadge(n);if(!b)return;if(n){b.style.display='flex';b.innerHTML='⚠️ '+n+' '+t('inv_low_stock_count')+' · '+r.items.slice(0,5).map(i=>escapeHtml(i.productName+(i.variantName?'/'+i.variantName:''))).join(', ')+(n>5?'…':'');}else{b.style.display='none';}}).catch(()=>{});
   document.getElementById('productsGrid').innerHTML=products.map(p=>{
-    const sold=orders.filter(o=>normalizeProductName(o.product)===normalizeProductName(p.name)).reduce((s,o)=>s+(o.quantity||1),0);
+    // BUGFIX: this used to count EVERY order mentioning this product as
+    // "vendu" (sold) regardless of status — a brand-new, unconfirmed order
+    // moved the number and shrank the bar exactly as if a real sale had
+    // happened. The backend already only decrements real stock on
+    // confirmation (see inventory.js reservationMode), so the display must
+    // match that: confirmed orders drive "vendus" + the bar; anything else
+    // still open (not confirmed, not cancelled) is shown separately as
+    // "commande" so the manager can see BOTH without either one lying.
+    const matchingOrders=orders.filter(o=>normalizeProductName(o.product)===normalizeProductName(p.name));
+    const sold=matchingOrders.filter(o=>o.status==='confirmed').reduce((s,o)=>s+(o.quantity||1),0);
+    const pending=matchingOrders.filter(o=>o.status!=='confirmed'&&o.status!=='cancelled').reduce((s,o)=>s+(o.quantity||1),0);
     const stockPct=p.stock>0?Math.min(100,Math.round(p.stock/(p.stock+sold)*100)):0;
     const isLow=p.stock<10;
     const variants=(p.variants||[]);
     const lowVariants=variants.filter(v=>v.stock!==null&&v.stock!==undefined&&v.threshold!==null&&v.threshold!==undefined&&Number(v.stock)<=Number(v.threshold));
+    const expanded=expandedProducts.has(p.id);
     return '<div class="product-card">'+
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">'+
         '<div><div class="product-name">'+escapeHtml(p.name)+'</div><div class="product-sku">'+escapeHtml(p.sku||'—')+'</div></div>'+
@@ -2257,23 +2287,89 @@ function renderProducts(){
         '<span style="color:var(--purple2);font-weight:600">'+(p.price||0).toLocaleString()+' DA</span>'+
         '<span style="color:'+(isLow?'var(--red)':'var(--green)')+';font-weight:500">'+t('stock')+': '+p.stock+'</span>'+
       '</div>'+
-      '<div class="product-stock"><div class="stock-bar"><div class="stock-fill '+(isLow?'stock-low':'stock-ok')+'" style="width:'+stockPct+'%"></div></div><span style="font-size:10px;color:var(--text3);white-space:nowrap">'+sold+' '+t('sold')+'</span></div>'+
-      (variants.length?('<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">'+variants.map(function(v){
-        const nm=(typeof v==='string'?v:v.name)||'';
-        const img=(typeof v==='string'?'':v.image)||'';
-        const stk=(typeof v==='string'?null:v.stock);
-        const thr=(typeof v==='string'?null:v.threshold);
-        const vlow=(stk!==null&&stk!==undefined&&thr!==null&&thr!==undefined&&Number(stk)<=Number(thr));
-        return '<div style="display:flex;align-items:center;gap:4px;background:var(--bg3);border:1px solid '+(vlow?'var(--red)':'var(--border)')+';border-radius:6px;padding:3px 6px 3px 3px" title="'+(thr!==null&&thr!==undefined?(t('inv_threshold')+': '+thr):'')+'">'+
-          (img?'<img src="'+img+'" style="width:20px;height:20px;border-radius:4px;object-fit:cover">':'<span style="width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px">📦</span>')+
-          '<span style="font-size:11px;color:var(--text2)">'+escapeHtml(nm)+'</span>'+
-          (stk!==null&&stk!==undefined?'<span style="font-size:10px;font-weight:600;color:'+(vlow?'var(--red)':'var(--green)')+'">'+stk+'</span>':'')+
-        '</div>';
-      }).join('')+'</div>'):'')+
+      '<div class="product-stock"><div class="stock-bar"><div class="stock-fill '+(isLow?'stock-low':'stock-ok')+'" style="width:'+stockPct+'%"></div></div><span style="font-size:10px;color:var(--text3);white-space:nowrap">'+sold+' '+t('sold')+(pending?(' · <span style="color:var(--purple2)">+'+pending+' '+t('pending_orders_label')+'</span>'):'')+'</span></div>'+
       (lowVariants.length?'<div style="font-size:11px;color:var(--red);margin-top:6px">⚠️ '+lowVariants.length+' '+t('inv_low_stock_count')+'</div>':'')+
       (p.description?'<div style="font-size:11px;color:var(--text3);margin-top:6px">'+escapeHtml(p.description)+'</div>':'')+
+      (variants.length?(
+        '<button type="button" class="detail-toggle" data-id="'+p.id+'" onclick="toggleProductExpand(this.dataset.id)">'+
+          '<span class="chev" style="transform:rotate('+(expanded?'180deg':'0deg')+')">▾</span>'+
+          '<span>'+(expanded?t('hide_variant_details'):t('show_variant_details'))+' ('+variants.length+')</span>'+
+        '</button>'+
+        (expanded?renderProductDetailBlock(p):'')
+      ):'')+
     '</div>';
   }).join('');
+}
+function toggleProductExpand(id){
+  if(expandedProducts.has(id)) expandedProducts.delete(id);
+  else expandedProducts.add(id);
+  renderProducts();
+}
+/** Same grouping the edit-modal uses (bucket by the first option axis),
+ *  but read-only and operating directly on a saved product's own
+ *  optionDefs/variants instead of the draft editingOptionDefs/editingVariants
+ *  — this is for DISPLAY in the product list card, not for editing.
+ *  Returns null when there aren't 2+ real axes (nothing meaningful to
+ *  group), so the caller can fall back to a flat list. */
+function computeProductVariantGroups(p){
+  const defs = (p.optionDefs||[]).filter(o => (o.name||'').trim() && (o.values||[]).length);
+  if(defs.length < 2) return null;
+  const variants = (p.variants||[]).map(v => typeof v==='string' ? {name:v, options:{}} : v);
+  const outerDef = defs[0];
+  const innerDefs = defs.slice(1);
+  const buckets = {};
+  outerDef.values.forEach(val => { buckets[val] = { key:val, label:val, items:[] }; });
+  const other = { key:'__other__', label:t('other_variants'), items:[] };
+  variants.forEach(v => {
+    const outerVal = v.options ? v.options[outerDef.name] : undefined;
+    if(outerVal!==undefined && buckets[outerVal]) buckets[outerVal].items.push(v);
+    else other.items.push(v);
+  });
+  const groups = outerDef.values.map(val => buckets[val]).filter(g => g.items.length);
+  if(other.items.length) groups.push(other);
+  return { groups, innerDefs };
+}
+/** The polished, "big-brand ERP" detail view shown when a product card is
+ *  expanded — bigger thumbnails and clearer per-group sections than the
+ *  small inline chips this replaced. Falls back to a flat row list for
+ *  simple/legacy products that don't have 2+ option axes to group by. */
+function renderProductDetailBlock(p){
+  const variants=(p.variants||[]);
+  if(!variants.length) return '';
+  const grouped=computeProductVariantGroups(p);
+  function stockRow(label, img, stk, thr){
+    const vlow=(stk!==null&&stk!==undefined&&thr!==null&&thr!==undefined&&Number(stk)<=Number(thr));
+    const thumb=img?('<img class="detail-row-thumb" src="'+img+'" alt="">'):'<div class="detail-row-thumb ph">🖼️</div>';
+    const stockTxt=(stk!==null&&stk!==undefined)?('<span class="detail-row-stock" style="color:'+(vlow?'var(--red)':'var(--green)')+'">'+stk+'</span>'):'<span class="detail-row-stock" style="color:var(--text3)">—</span>';
+    return '<div class="detail-row" title="'+(thr!==null&&thr!==undefined?(t('inv_threshold')+': '+thr):'')+'">'+thumb+'<span class="detail-row-label">'+escapeHtml(label||'—')+'</span>'+stockTxt+'</div>';
+  }
+  if(grouped){
+    return '<div class="product-detail">'+grouped.groups.map(g=>{
+      const repImg=(g.items.find(v=>v.image)||{}).image||'';
+      const totalDefined=g.items.some(v=>v.stock!==null&&v.stock!==undefined);
+      const total=g.items.reduce((s,v)=>s+((v.stock===null||v.stock===undefined)?0:(Number(v.stock)||0)),0);
+      const rows=g.items.map(v=>{
+        const label=grouped.innerDefs.length?grouped.innerDefs.map(d=>(v.options&&v.options[d.name])||'').join(' / '):(v.name||'');
+        return stockRow(label, v.image, (v.stock===null||v.stock===undefined)?null:Number(v.stock), (v.threshold===null||v.threshold===undefined)?null:Number(v.threshold));
+      }).join('');
+      return '<div class="detail-group">'+
+        '<div class="detail-group-head">'+
+          (repImg?'<img class="detail-group-thumb" src="'+repImg+'" alt="">':'<div class="detail-group-thumb ph">🖼️</div>')+
+          '<span class="detail-group-label">'+escapeHtml(g.label)+'</span>'+
+          (totalDefined?('<span class="detail-group-total">'+total+' '+t('stock')+'</span>'):'')+
+        '</div>'+
+        '<div class="detail-rows">'+rows+'</div>'+
+      '</div>';
+    }).join('')+'</div>';
+  }
+  const rows=variants.map(v=>{
+    const nm=(typeof v==='string'?v:v.name)||'';
+    const img=(typeof v==='string'?'':v.image)||'';
+    const stk=(typeof v==='string'?null:v.stock);
+    const thr=(typeof v==='string'?null:v.threshold);
+    return stockRow(nm, img, (stk===null||stk===undefined)?null:Number(stk), (thr===null||thr===undefined)?null:Number(thr));
+  }).join('');
+  return '<div class="product-detail"><div class="detail-group"><div class="detail-rows">'+rows+'</div></div></div>';
 }
 /* ---------- Variant editor (per-variant image) ---------- */
 let editingVariants = []; // [{name, image, stock, threshold, sku, options:{axisName:value}}]
@@ -2536,15 +2632,48 @@ function renderGroupedVariantsHtml(defs){
     const anyDefined = stocks.some(s => s!==null && s!==undefined && s!=='');
     const total = stocks.reduce((s,v)=>s+((v===null||v===undefined||v==='')?0:(Number(v)||0)),0);
     const countLabel = g.items.length===1 ? t('one_variant') : (g.items.length+' '+t('variants'));
+    // Representative thumbnail = the first child that already has an image
+    // (e.g. after a bulk group-image upload, or a manually-set leaf image).
+    const repImg = g.items.map(idx => editingVariants[idx].image).find(Boolean) || '';
+    const thumb = repImg ? ('<img class="variant-thumb" style="width:26px;height:26px" src="'+repImg+'" alt="">') : '<div class="variant-thumb ph" style="width:26px;height:26px">🖼️</div>';
     const header = '<div class="variant-group-header" data-group-key="'+escapeHtml(g.key)+'" onclick="toggleVariantGroupEl(this)">'+
         '<span class="variant-group-chevron">'+(collapsed?'▸':'▾')+'</span>'+
+        thumb+
         '<span class="variant-group-label">'+escapeHtml(g.label)+'</span>'+
         '<span class="variant-group-count">'+countLabel+'</span>'+
         (anyDefined ? ('<span class="variant-group-total">'+t('group_total_label')+': '+total+'</span>') : '')+
+        '<label class="vbtn group-img-upload" onclick="event.stopPropagation()" title="'+t('upload')+'">🖼️'+
+          '<input type="file" accept="image/*" data-group-key="'+escapeHtml(g.key)+'" onchange="setGroupImageFromInput(this)">'+
+        '</label>'+
       '</div>';
     const rows = collapsed ? '' : g.items.map(idx => renderGroupedChildRow(idx, innerDefs)).join('');
     return '<div class="variant-group">'+header+rows+'</div>';
   }).join('');
+}
+/** Sets ONE image on EVERY variant currently inside a group (e.g. upload
+ *  once on "blue" and every size under blue gets it) — the manager no
+ *  longer has to upload the same photo once per size. Reads the group key
+ *  off the input's own data-* attribute rather than an inline JS-string
+ *  argument, so it stays safe no matter what characters are in the value
+ *  (same reasoning as toggleVariantGroupEl above). */
+function setGroupImageFromInput(input){
+  setGroupImage(input.getAttribute('data-group-key'), input);
+}
+function setGroupImage(key, input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  if(file.size > 20*1024*1024){ toast((t('t_err')||'Error')+': >20MB','error'); input.value=''; return; }
+  const defs = editingOptionDefs.filter(o => (o.name||'').trim() && (o.values||[]).length);
+  if(defs.length < 2) return;
+  const { groups } = computeVariantGroups(defs);
+  const g = groups.find(gr => String(gr.key) === key);
+  if(!g) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    g.items.forEach(idx => { if(editingVariants[idx]) editingVariants[idx].image = e.target.result; });
+    renderVariantEditor();
+  };
+  reader.readAsDataURL(file);
 }
 function renderVariantEditor(){
   const wrap = document.getElementById('variantEditor');
@@ -2792,8 +2921,11 @@ async function saveFakeClassification(){
  * ======================================================================== */
 let inventoryProductId = null; // current product shown in the inventory modal
 let inventoryHasVariants = false; // whether that product has any variants
+let addStockMode = null; // null | 'purchase' | 'return'
+let lastInventoryInv = null, lastInventoryMovements = []; // cached so toggling addStockMode can re-render without a re-fetch
 async function openInventoryModal(productId){
   inventoryProductId = productId;
+  addStockMode = null;
   document.getElementById('inventoryModalTitle').textContent=t('inv_history');
   document.getElementById('inventoryContent').innerHTML='<div class="tracking-empty">'+t('t_loading')+'</div>';
   document.getElementById('inventoryModal').classList.add('open');
@@ -2806,6 +2938,7 @@ async function openInventoryModal(productId){
   }
 }
 function renderInventoryModal(inv,movements){
+  lastInventoryInv = inv; lastInventoryMovements = movements;
   const el=document.getElementById('inventoryContent');
   inventoryHasVariants = !!(inv.variants && inv.variants.length); // used by submitInventoryAdjust to allow no-variant products
   // Variant summary
@@ -2845,10 +2978,57 @@ function renderInventoryModal(inv,movements){
     '<div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:140px"><label style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.3px">'+t('inv_reason')+'</label><input id="invAdjReason" type="text" placeholder="'+t('inv_reason_adjustment')+'"></div>'+
     '<button class="btn btn-sm btn-green" onclick="submitInventoryAdjust()">'+t('inv_adjust')+'</button>'+
   '</div>';
+  const addStockHtml=renderAddStockSection(inv, variantOpts);
   el.innerHTML=
     '<div style="margin-bottom:16px"><h4 style="font-size:12px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px">'+escapeHtml(inv.productName)+' — '+t('inv_per_variant')+'</h4>'+variantsHtml+'</div>'+
+    '<div style="margin-bottom:16px"><h4 style="font-size:12px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px">'+t('add_stock_title')+'</h4>'+addStockHtml+'</div>'+
     '<div style="margin-bottom:16px"><h4 style="font-size:12px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px">'+t('inv_adjust')+'</h4>'+adjustHtml+'</div>'+
     '<div><h4 style="font-size:12px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px">'+t('inv_history')+'</h4><div style="max-height:300px;overflow:auto">'+movHtml+'</div></div>';
+}
+/* Two-mode "Add stock" (req #4): a Return has no price to enter (rejoins
+ * the oldest cost lot); a New purchase asks for qty + buy price + packaging
+ * price and opens its OWN lot, so later profit numbers reflect whichever
+ * price was actually true when THOSE units sold — not today's price
+ * applied retroactively to stock bought weeks ago at a different cost. */
+function renderAddStockSection(inv, variantOpts){
+  const modeBtns='<div style="display:flex;gap:8px">'+
+      '<button type="button" class="btn btn-sm'+(addStockMode==='return'?' btn-primary':'')+'" onclick="setAddStockMode(\'return\')">'+t('add_stock_return')+'</button>'+
+      '<button type="button" class="btn btn-sm'+(addStockMode==='purchase'?' btn-primary':'')+'" onclick="setAddStockMode(\'purchase\')">'+t('add_stock_purchase')+'</button>'+
+    '</div>';
+  if(!addStockMode) return modeBtns;
+  const fields='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin-top:10px">'+
+      (inv.variants&&inv.variants.length?('<div style="display:flex;flex-direction:column;gap:3px"><label style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.3px">'+t('variant')+'</label><select id="addStockVariantSel" style="min-width:130px">'+variantOpts+'</select></div>'):'')+
+      '<div style="display:flex;flex-direction:column;gap:3px"><label style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.3px">'+t('add_stock_qty')+'</label><input id="addStockQty" type="number" min="1" style="width:80px" placeholder="N"></div>'+
+      (addStockMode==='purchase'?(
+        '<div style="display:flex;flex-direction:column;gap:3px"><label style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.3px">'+t('cost_price')+'</label><input id="addStockUnitCost" type="number" min="0" style="width:100px"></div>'+
+        '<div style="display:flex;flex-direction:column;gap:3px"><label style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.3px">'+t('packaging_cost')+'</label><input id="addStockPackCost" type="number" min="0" style="width:100px"></div>'
+      ):'')+
+      '<button class="btn btn-sm btn-green" onclick="submitAddStock()">'+t('add_stock_confirm')+'</button>'+
+    '</div>'+
+    (addStockMode==='return'?('<div style="font-size:11px;color:var(--text3);margin-top:6px">'+t('add_stock_return_help')+'</div>'):'');
+  return modeBtns+fields;
+}
+function setAddStockMode(mode){
+  addStockMode = (addStockMode===mode) ? null : mode; // clicking the active mode again closes the form
+  if(lastInventoryInv) renderInventoryModal(lastInventoryInv, lastInventoryMovements);
+}
+async function submitAddStock(){
+  if(!inventoryProductId || !addStockMode) return;
+  const variantName = inventoryHasVariants ? (document.getElementById('addStockVariantSel')?.value||'') : '';
+  const qty = Number(document.getElementById('addStockQty')?.value);
+  if(!qty || qty<=0){ toast(t('add_stock_qty'),'error'); return; }
+  const body = { variantName, mode: addStockMode, qty };
+  if(addStockMode==='purchase'){
+    body.unitCost = Number(document.getElementById('addStockUnitCost')?.value)||0;
+    body.packagingCost = Number(document.getElementById('addStockPackCost')?.value)||0;
+  }
+  try{
+    await api('POST','/api/products/'+inventoryProductId+'/stock-lots', body);
+    toast(t('t_updated'),'success');
+    addStockMode = null;
+    await fetchProducts();
+    await openInventoryModal(inventoryProductId);
+  }catch(e){ toast(t('t_err'),'error'); }
 }
 /* Manual stock adjustment via /api/products/:id/inventory/adjust — appends to
  * the ledger and refreshes the modal so the new movement shows immediately. */
@@ -2870,7 +3050,7 @@ async function submitInventoryAdjust(){
     document.getElementById('invAdjDelta').value='';
     document.getElementById('invAdjReason').value='';
     await fetchProducts(); // keep the grid in sync
-    openInventoryModal(inventoryProductId);
+    await openInventoryModal(inventoryProductId);
   }catch(e){ toast(t('t_err'),'error'); }
 }
 
