@@ -201,7 +201,7 @@
   .card.green-border .card-header { background: rgba(34, 197, 94,.08); }
   .card.teal-border  .card-header { background: rgba(20, 184,166,.08); }
 
-  footer { text-align:center; margin-top:40px; color:var(--muted); font-size:12px; }
+  footer { text-align:center; margin-top:40px; color:var(--muted); font-size:12px; }.range-btn-active{border-color:var(--accent)!important;background:rgba(79,142,247,.2)!important;color:var(--accent)!important;font-weight:700;}
 </style>
 </head>
 <body>
@@ -241,17 +241,20 @@
             <span class="computed-label">Total charges fixes / mois</span>
             <span class="computed-value neg" id="fixed_total">0 DA</span>
           </div>
+          <div id="fixed_prorate_note" style="font-size:10px;color:var(--muted);text-align:end;margin-top:-4px;"></div>
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div style="font-size:11px;font-weight:700;color:#f472b6;text-transform:uppercase;letter-spacing:.5px;">⚠️ Charges Imprévues</div>
           <div style="display:flex;gap:6px;">
             <input type="text" id="unexp_label" placeholder="Ex: Réparation moto" style="flex:2;padding:7px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;">
             <input type="number" id="unexp_amount" placeholder="DA" style="flex:1;padding:7px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;">
+            <input type="date" id="unexp_date" title="Date de la charge (aujourd'hui par défaut)" style="flex:1;padding:7px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;">
           </div>
           <button onclick="addUnexpectedCharge()" style="background:rgba(244,114,182,.12);border:1px dashed rgba(244,114,182,.4);color:#f472b6;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;width:100%;">+ Ajouter une charge imprévue</button>
+          <div style="font-size:10px;color:var(--muted)">La liste ci-dessous montre seulement les charges de la période actuellement sélectionnée (<span id="unexp_period_label"></span>) — changez de période pour voir/gérer les autres.</div>
           <div id="unexp-list" style="display:flex;flex-direction:column;gap:6px;max-height:160px;overflow-y:auto;"></div>
           <div class="computed">
-            <span class="computed-label">Total charges imprévues</span>
+            <span class="computed-label">Total charges imprévues (période actuelle)</span>
             <span class="computed-value neg" id="unexp_total">0 DA</span>
           </div>
         </div>
@@ -270,8 +273,11 @@
         <span class="card-title">Période pour les données CRM (Unités Vendues, Retours, CA Réel)</span>
       </div>
       <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button onclick="setRange('day')" class="range-btn" id="range-day" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);cursor:pointer;font-size:12px;">Aujourd'hui</button>
         <button onclick="setRange('week')" class="range-btn" id="range-week" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);cursor:pointer;font-size:12px;">Cette semaine</button>
         <button onclick="setRange('month')" class="range-btn" id="range-month" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);cursor:pointer;font-size:12px;">Ce mois-ci</button>
+        <button onclick="setRange('quarter')" class="range-btn" id="range-quarter" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);cursor:pointer;font-size:12px;">Ce trimestre</button>
+        <button onclick="setRange('year')" class="range-btn" id="range-year" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text);cursor:pointer;font-size:12px;">Cette année</button>
         <input type="date" id="range_since" style="padding:7px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;">
         <span style="color:var(--muted);font-size:12px;">à</span>
         <input type="date" id="range_until" style="padding:7px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;">
@@ -302,6 +308,24 @@
           <span class="s-label" style="font-size:15px;font-weight:800;">PROFIT NET DU BUSINESS</span>
           <span class="s-val" id="grand-total" style="font-size:19px;">—</span>
         </div>
+      </div>
+    </div>
+
+    <div class="card full" style="border-color:rgba(168,85,247,.5);margin-top:8px;">
+      <div class="card-header" style="background:linear-gradient(90deg,rgba(168,85,247,.15),transparent);">
+        <span class="card-icon">💾</span>
+        <span class="card-title" style="color:#a855f7;">Historique Financier Permanent</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Chaque sauvegarde crée un nouveau dossier permanent — rien n'est jamais écrasé. Les mois/trimestres/années peuvent être calculés automatiquement à partir des semaines/mois déjà sauvegardés, sans recalcul.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+          <input type="text" id="fin_notes" placeholder="Note (optionnel)..." style="flex:1;min-width:200px;padding:8px 10px;background:var(--input-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;">
+          <button onclick="saveCurrentAsFinancialRecord()" style="background:linear-gradient(135deg,#a855f7,#7c3aed);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;">💾 Sauvegarder ce calcul</button>
+          <button onclick="aggregateCurrentPeriod()" style="background:var(--input-bg);border:1px solid #a855f7;color:#a855f7;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;">⚡ Agréger depuis l'historique</button>
+          <button onclick="openFinancialHistory()" style="background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;">📜 Voir l'historique</button>
+        </div>
+        <div id="fin_aggregate_panel" style="display:none;margin-top:10px;padding:10px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3);border-radius:8px;"></div>
+        <div id="fin_history_panel" style="display:none;margin-top:10px;max-height:320px;overflow:auto;"></div>
       </div>
     </div>
 
@@ -377,9 +401,17 @@
           style="background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#ef4444;border-radius:6px;width:22px;height:22px;font-size:12px;cursor:pointer;flex-shrink:0;">×</button>
       </div>`).join('');
   }
+  /** BUGFIX: this used to call /api/unexpected-charges with NO since/until
+   *  at all, which — per the backend's own documented behavior — returns
+   *  EVERY unexpected charge ever entered, completely unscoped from
+   *  whatever period is selected. That meant a one-time 5,000 DA charge
+   *  entered once would count in EVERY week's calculation, EVERY month's,
+   *  EVERY year's — and get summed again on top of itself every time a
+   *  month aggregated 4 weeks together. Now it's scoped to the exact same
+   *  [globalSince, globalUntil] window everything else on this page uses. */
   async function loadUnexpectedCharges(){
     try {
-      const r = await fetch(API_BASE + '/api/unexpected-charges');
+      const r = await fetch(API_BASE + '/api/unexpected-charges?since=' + globalSince + '&until=' + globalUntil);
       const d = await r.json();
       unexpectedChargesList = d.items || [];
     } catch(e) { unexpectedChargesList = []; }
@@ -388,14 +420,21 @@
   async function addUnexpectedCharge(){
     const label = document.getElementById('unexp_label').value.trim();
     const amount = +document.getElementById('unexp_amount').value || 0;
+    const dateInput = document.getElementById('unexp_date').value;
+    // Defaults to today when left blank — but now EDITABLE, so a charge
+    // that actually happened last week can be logged against last week
+    // instead of always landing in "today" regardless of which period the
+    // manager is currently looking at.
+    const date = dateInput ? new Date(dateInput).getTime() : Date.now();
     if(!label || !amount){ alert('Entrez une description et un montant.'); return; }
     try {
       await fetch(API_BASE + '/api/unexpected-charges', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ label, amount })
+        body: JSON.stringify({ label, amount, date })
       });
       document.getElementById('unexp_label').value = '';
       document.getElementById('unexp_amount').value = '';
+      document.getElementById('unexp_date').value = '';
       await loadUnexpectedCharges();
     } catch(e) { alert('Erreur de connexion au serveur.'); }
   }
@@ -713,20 +752,75 @@
   // ── Date range for CRM data (Unités Vendues, Retours, CA Réel) ──
   let globalSince = Date.now() - 7*24*3600*1000;
   let globalUntil = Date.now();
+  let currentPeriodType = 'custom'; // day | week | month | quarter | year | custom — drives proration + what gets saved
+  let proratedFixedCostsAmount = null; // fetched from the server; null until resolved once
+  let lastCalcBreakdown = [];  // per-product {name, profit, revenue} from the most recent calcAll()
+  let lastCalcTotals = { revenue:0, productCosts:0, shipping:0, advertising:0, incidents:0 };
+  const PERIOD_LABELS = { day:'Jour', week:'Semaine', month:'Mois', quarter:'Trimestre', year:'Année', custom:'Période personnalisée' };
+
+  /** Aligned calendar boundaries for each period type — "this week" means
+   *  the actual Monday→Sunday week, not a rolling "last 7 days", so that
+   *  4 saved weeks cleanly tile into a month for the aggregation feature
+   *  (req §6) instead of overlapping or leaving gaps. */
+  function computeAlignedRange(mode){
+    const now = new Date();
+    if(mode==='day'){
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      return [d.getTime(), d.getTime()+24*3600*1000-1];
+    }
+    if(mode==='week'){
+      const day = now.getDay(); // 0=Sun..6=Sat
+      const diffToMonday = (day===0? -6 : 1-day);
+      const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate()+diffToMonday);
+      return [monday.getTime(), monday.getTime()+7*24*3600*1000-1];
+    }
+    if(mode==='month'){
+      return [new Date(now.getFullYear(), now.getMonth(), 1).getTime(), new Date(now.getFullYear(), now.getMonth()+1, 1).getTime()-1];
+    }
+    if(mode==='quarter'){
+      const q = Math.floor(now.getMonth()/3);
+      return [new Date(now.getFullYear(), q*3, 1).getTime(), new Date(now.getFullYear(), q*3+3, 1).getTime()-1];
+    }
+    if(mode==='year'){
+      return [new Date(now.getFullYear(),0,1).getTime(), new Date(now.getFullYear()+1,0,1).getTime()-1];
+    }
+    return null;
+  }
 
   function setRange(mode){
-    const now = Date.now();
-    if(mode === 'week'){ globalSince = now - 7*24*3600*1000; globalUntil = now; }
-    else if(mode === 'month'){ globalSince = now - 30*24*3600*1000; globalUntil = now; }
-    else {
+    currentPeriodType = mode;
+    if(mode==='custom'){
       const sv = document.getElementById('range_since').value;
       const uv = document.getElementById('range_until').value;
       if(!sv || !uv){ alert('Choisissez les deux dates.'); return; }
       globalSince = new Date(sv).getTime();
       globalUntil = new Date(uv).getTime() + 24*3600*1000 - 1; // fin de journée incluse
+    } else {
+      const range = computeAlignedRange(mode);
+      globalSince = range[0]; globalUntil = range[1];
     }
     document.getElementById('range_label').textContent =
-      new Date(globalSince).toLocaleDateString('fr-DZ') + ' → ' + new Date(globalUntil).toLocaleDateString('fr-DZ');
+      new Date(globalSince).toLocaleDateString('fr-DZ') + ' → ' + new Date(globalUntil).toLocaleDateString('fr-DZ') + ' (' + PERIOD_LABELS[mode] + ')';
+    const unexpLabel = document.getElementById('unexp_period_label'); if(unexpLabel) unexpLabel.textContent = PERIOD_LABELS[mode];
+    document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('range-btn-active'));
+    const activeBtn = document.getElementById('range-'+mode); if(activeBtn) activeBtn.classList.add('range-btn-active');
+    refreshProratedFixedCosts();
+    // BUGFIX: unexpected charges must reload for the NEW period too — see
+    // loadUnexpectedCharges()'s own comment for why this was silently
+    // pulling every charge ever entered instead of just this period's.
+    loadUnexpectedCharges();
+  }
+  /** Pulls the auto-prorated fixed-expense figure for whatever period is
+   *  currently selected (req §7 — the ÷4/×N/day-count rule lives in ONE
+   *  place on the server, see db.js's prorateFixedExpenses()) and
+   *  refreshes the displayed totals with it. */
+  async function refreshProratedFixedCosts(){
+    try{
+      const r = await fetch(API_BASE + '/api/financial-records/prorate-fixed?periodType=' + currentPeriodType + '&startDate=' + globalSince + '&endDate=' + globalUntil);
+      const d = await r.json();
+      proratedFixedCostsAmount = d.prorated;
+    }catch(e){ proratedFixedCostsAmount = null; }
+    calcAll();
   }
 
   // ── Real CRM products ──────────────────────────────────
@@ -908,7 +1002,10 @@
     const summaryEl = document.getElementById('product_summary_' + pid);
     if(summaryEl){ summaryEl.textContent = fmt(profit); summaryEl.className = 's-val ' + (profit>0?'pos':profit<0?'neg':''); }
 
-    return profit;
+    // Returns every component, not just profit — the financial-record save
+    // (phase D) needs Revenue/Product costs/Shipping/Advertising as
+    // SEPARATE totals across every product, not just their sum.
+    return { profit, real_ca, buy_total, pack_total, ship_total, ads_da, incidents };
   }
 
   /** Recomputes every product, then the ONE aggregate business summary AND
@@ -918,15 +1015,28 @@
   function calcAll(){
     const breakdown = [];
     let sumProfit = 0;
+    // Aggregate totals across every product — this is exactly what a saved
+    // financial record needs (Revenue/Product costs/Shipping/Advertising),
+    // computed fresh every time the inputs change, never stored mid-way.
+    let totalRevenue = 0, totalProductCosts = 0, totalShipping = 0, totalAdvertising = 0, totalIncidents = 0;
     activeProducts.forEach(pid => {
       const p = calcProduct(pid);
-      sumProfit += p;
+      sumProfit += p.profit;
+      totalRevenue += p.real_ca; totalProductCosts += p.buy_total + p.pack_total;
+      totalShipping += p.ship_total; totalAdvertising += p.ads_da; totalIncidents += p.incidents;
       const nameEl = document.getElementById('product_name_' + pid);
-      breakdown.push({ name: (nameEl ? nameEl.value : pid) || pid, profit: p });
+      breakdown.push({ name: (nameEl ? nameEl.value : pid) || pid, profit: p.profit, revenue: p.real_ca });
     });
+    lastCalcBreakdown = breakdown;
+    lastCalcTotals = { revenue: totalRevenue, productCosts: totalProductCosts, shipping: totalShipping, advertising: totalAdvertising, incidents: totalIncidents };
 
-    const other = fixedCostsTotal() + unexpectedTotal();
-    const grandTotal = sumProfit - other;
+    // Fixed costs: use the auto-prorated figure for the CURRENTLY selected
+    // period type (req §7 — ÷4 for a week, full for a month, day-count for
+    // a day) when we have one from the server; fall back to the raw flat
+    // monthly sum only if that call hasn't resolved yet.
+    const fixedPortion = (proratedFixedCostsAmount !== null && proratedFixedCostsAmount !== undefined) ? proratedFixedCostsAmount : fixedCostsTotal();
+    const other = fixedPortion + unexpectedTotal();
+    const grandTotalFinal = sumProfit - other;
 
     const bEl = document.getElementById('grand-breakdown');
     if(bEl){
@@ -939,23 +1049,130 @@
     const gp = document.getElementById('grand-sum-profit'); if(gp) gp.textContent = fmt(sumProfit);
     const go = document.getElementById('grand-other-costs'); if(go) go.textContent = fmt(other);
     const gt = document.getElementById('grand-total');
-    if(gt){ gt.textContent = fmt(grandTotal); gt.className = 's-val ' + (grandTotal>0?'pos':grandTotal<0?'neg':''); }
+    if(gt){ gt.textContent = fmt(grandTotalFinal); gt.className = 's-val ' + (grandTotalFinal>0?'pos':grandTotalFinal<0?'neg':''); }
 
     // Top banner = the WHOLE BUSINESS's net profit (sum of every product,
     // minus fixed + unexpected costs once) — NOT any single product's profit.
     const fixedTotalEl = document.getElementById('fixed_total'); if(fixedTotalEl) fixedTotalEl.textContent = fmt(fixedCostsTotal());
     const unexpTotalEl = document.getElementById('unexp_total'); if(unexpTotalEl) unexpTotalEl.textContent = fmt(unexpectedTotal());
     const otherTotalEl = document.getElementById('other_costs_total'); if(otherTotalEl) otherTotalEl.textContent = fmt(other);
+    const fixedProrateNote = document.getElementById('fixed_prorate_note');
+    if(fixedProrateNote){
+      fixedProrateNote.textContent = (proratedFixedCostsAmount !== null && proratedFixedCostsAmount !== undefined && Math.abs(fixedPortion-fixedCostsTotal())>0.5)
+        ? '→ Montant réellement déduit pour "' + PERIOD_LABELS[currentPeriodType] + '": ' + fmt(fixedPortion)
+        : '';
+    }
 
     const bv = document.getElementById('b-value');
     const bverd = document.getElementById('b-verdict');
     const banner = document.getElementById('banner');
     if(bv && bverd && banner){
-      bv.textContent = fmt(grandTotal);
-      banner.className = 'banner-inner ' + (grandTotal>0?'win':grandTotal<0?'lose':'zero');
-      bv.className = 'banner-value ' + (grandTotal>0?'win':grandTotal<0?'lose':'');
-      bverd.textContent = grandTotal>0 ? '✅ Votre business est rentable !' : grandTotal<0 ? '❌ Votre business est en perte' : '⚖️ Équilibre';
+      bv.textContent = fmt(grandTotalFinal);
+      banner.className = 'banner-inner ' + (grandTotalFinal>0?'win':grandTotalFinal<0?'lose':'zero');
+      bv.className = 'banner-value ' + (grandTotalFinal>0?'win':grandTotalFinal<0?'lose':'');
+      bverd.textContent = grandTotalFinal>0 ? '✅ Votre business est rentable !' : grandTotalFinal<0 ? '❌ Votre business est en perte' : '⚖️ Équilibre';
     }
+  }
+
+  /** Persists the CURRENT calculator state (whatever period is selected,
+   *  whatever the manager has typed/synced) as one immutable financial
+   *  record. Custom (non-aligned) ranges still save fine, they just can't
+   *  later be picked up by the week→month/month→year aggregation, which
+   *  only looks at records whose periodType matches a clean calendar unit
+   *  — the manager is warned about that up front rather than discovering
+   *  it silently later. */
+  async function saveCurrentAsFinancialRecord(){
+    if(currentPeriodType==='custom' && !confirm('Cette période personnalisée ne pourra pas être utilisée pour l\'agrégation automatique (Semaine→Mois→Année). Sauvegarder quand même ?')) return;
+    const notes = document.getElementById('fin_notes').value.trim();
+    const body = {
+      periodType: currentPeriodType, startDate: globalSince, endDate: globalUntil,
+      revenue: lastCalcTotals.revenue, productCosts: lastCalcTotals.productCosts,
+      shippingCosts: lastCalcTotals.shipping, advertisingCosts: lastCalcTotals.advertising,
+      fixedExpenses: (proratedFixedCostsAmount!==null && proratedFixedCostsAmount!==undefined) ? proratedFixedCostsAmount : fixedCostsTotal(),
+      unexpectedExpenses: unexpectedTotal(),
+      notes, source: 'manual', productBreakdown: lastCalcBreakdown, actor: 'manager',
+    };
+    try{
+      const r = await fetch(API_BASE + '/api/financial-records', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const saved = await r.json();
+      alert('✅ Dossier permanent enregistré.\nProfit net: ' + fmt(saved.netProfit) + '\nMarge: ' + saved.margin.toFixed(1) + '%');
+      document.getElementById('fin_notes').value = '';
+    }catch(e){ alert('❌ Erreur de sauvegarde: '+e.message); }
+  }
+
+  async function openFinancialHistory(){
+    const panel = document.getElementById('fin_history_panel');
+    document.getElementById('fin_aggregate_panel').style.display='none';
+    const willShow = panel.style.display==='none' || !panel.style.display;
+    panel.style.display = willShow ? '' : 'none';
+    if(!willShow) return;
+    panel.innerHTML = '<div style="font-size:12px;color:var(--muted)">Chargement...</div>';
+    try{
+      const r = await fetch(API_BASE + '/api/financial-records?periodType=' + currentPeriodType + '&limit=50');
+      const d = await r.json();
+      if(!d.items.length){ panel.innerHTML = '<div style="font-size:12px;color:var(--muted)">Aucun dossier sauvegardé pour "'+PERIOD_LABELS[currentPeriodType]+'" pour le moment.</div>'; return; }
+      panel.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:12px;">' +
+        '<thead><tr style="text-align:start"><th style="padding:6px">Période</th><th style="padding:6px">Revenu</th><th style="padding:6px">Profit net</th><th style="padding:6px">Marge</th><th style="padding:6px">Notes</th></tr></thead><tbody>' +
+        d.items.map(rec => '<tr style="border-top:1px solid var(--border)">' +
+          '<td style="padding:6px;white-space:nowrap">'+new Date(rec.startDate).toLocaleDateString('fr-DZ')+' → '+new Date(rec.endDate).toLocaleDateString('fr-DZ')+'</td>'+
+          '<td style="padding:6px;font-family:monospace">'+fmt(rec.revenue)+'</td>'+
+          '<td style="padding:6px;font-family:monospace;'+(rec.netProfit>=0?'color:var(--green)':'color:var(--red)')+'">'+fmt(rec.netProfit)+'</td>'+
+          '<td style="padding:6px">'+rec.margin.toFixed(1)+'%</td>'+
+          '<td style="padding:6px;color:var(--muted)">'+(rec.notes?rec.notes.replace(/</g,'&lt;'):'—')+(rec.source==='aggregated'?' <span style="opacity:.6">(agrégé)</span>':'')+'</td>'+
+        '</tr>').join('') + '</tbody></table>';
+    }catch(e){ panel.innerHTML = '<div style="font-size:12px;color:var(--red)">Erreur de chargement.</div>'; }
+  }
+
+  let lastAggregateResult = null;
+  /** For Mois/Trimestre/Année: rolls up whatever sub-period records are
+   *  ALREADY saved (weeks→month, months→quarter/year) instead of
+   *  recalculating anything from raw orders — req §6's entire point, and
+   *  much faster than re-syncing every product for a full year. */
+  async function aggregateCurrentPeriod(){
+    if(!['month','quarter','year'].includes(currentPeriodType)){
+      alert('L\'agrégation automatique concerne Mois, Trimestre et Année (elle additionne les enregistrements déjà sauvegardés du niveau en dessous — semaines pour un mois, mois pour un trimestre/année).');
+      return;
+    }
+    const panel = document.getElementById('fin_aggregate_panel');
+    document.getElementById('fin_history_panel').style.display='none';
+    panel.style.display = '';
+    panel.innerHTML = 'Chargement...';
+    try{
+      const r = await fetch(API_BASE + '/api/financial-records/aggregate?periodType='+currentPeriodType+'&startDate='+globalSince+'&endDate='+globalUntil);
+      const d = await r.json();
+      if(!d.covered){
+        panel.innerHTML = '<div style="font-size:12px;color:var(--muted)">Aucun enregistrement '+(PERIOD_LABELS[d.subPeriodType]||'')+' sauvegardé pour cette période — sauvegardez d\'abord les sous-périodes individuellement (ex: les 4 semaines avant d\'agréger le mois).</div>';
+        return;
+      }
+      lastAggregateResult = d;
+      panel.innerHTML =
+        '<div style="font-size:12px;color:var(--muted);margin-bottom:6px">Agrégé depuis '+d.subRecordsUsed+' enregistrement(s) "'+PERIOD_LABELS[d.subPeriodType]+'" déjà sauvegardé(s) — aucun recalcul depuis les commandes brutes.</div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Revenu</span><span style="font-family:monospace">'+fmt(d.revenue)+'</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Coûts produits</span><span style="font-family:monospace">'+fmt(d.productCosts)+'</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Livraison</span><span style="font-family:monospace">'+fmt(d.shippingCosts)+'</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Publicité</span><span style="font-family:monospace">'+fmt(d.advertisingCosts)+'</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Charges fixes (déjà proratées)</span><span style="font-family:monospace">'+fmt(d.fixedExpenses)+'</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-top:1px solid var(--border);margin-top:4px"><span style="font-weight:700">Profit net</span><span style="font-family:monospace;font-weight:700;'+(d.netProfit>=0?'color:var(--green)':'color:var(--red)')+'">'+fmt(d.netProfit)+'</span></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0"><span>Marge</span><span style="font-family:monospace">'+d.margin.toFixed(1)+'%</span></div>'+
+        '<button onclick="saveAggregateAsRecord()" style="margin-top:8px;width:100%;background:rgba(168,85,247,.2);border:1px solid #a855f7;color:#a855f7;border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;">💾 Sauvegarder cet agrégat comme dossier permanent</button>';
+    }catch(e){ panel.innerHTML = '<div style="font-size:12px;color:var(--red)">Erreur.</div>'; }
+  }
+  async function saveAggregateAsRecord(){
+    if(!lastAggregateResult) return;
+    const d = lastAggregateResult;
+    try{
+      const r = await fetch(API_BASE + '/api/financial-records', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+        periodType: d.periodType, startDate: d.startDate, endDate: d.endDate,
+        revenue: d.revenue, productCosts: d.productCosts, shippingCosts: d.shippingCosts, advertisingCosts: d.advertisingCosts,
+        fixedExpenses: d.fixedExpenses, unexpectedExpenses: d.unexpectedExpenses,
+        notes: 'Agrégé automatiquement depuis '+d.subRecordsUsed+' enregistrement(s) '+d.subPeriodType,
+        source: 'aggregated', actor: 'manager',
+      })});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      alert('✅ Agrégat sauvegardé comme dossier permanent.');
+      lastAggregateResult = null;
+    }catch(e){ alert('❌ Erreur: '+e.message); }
   }
 
   document.getElementById('products-container').addEventListener('input', e => {
@@ -964,7 +1181,7 @@
 
   addProduct();
   loadFixedCosts();
-  loadUnexpectedCharges();
+  setRange('week'); // aligned current week by default; also loads unexpected charges + prorated fixed costs scoped to it
 </script>
 </body>
 </html>
