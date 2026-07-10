@@ -709,7 +709,12 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
     <div class="page" id="page-clients">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
         <h2 style="font-size:15px;font-weight:500" data-i18n="nav_clients">العملاء</h2>
-        <input type="text" id="clientSearchInput" placeholder="" oninput="debounceClientSearch()" style="max-width:220px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="openClientImportModal()">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-i18n="client_import_title">استيراد عملاء</span>
+          </button>
+          <input type="text" id="clientSearchInput" placeholder="" oninput="debounceClientSearch()" style="max-width:220px">
+        </div>
       </div>
       <div id="clientsSummary" style="font-size:11px;color:var(--text3);margin-bottom:10px"></div>
       <div style="overflow:auto;border:1px solid var(--border);border-radius:var(--radius-lg)">
@@ -1370,6 +1375,25 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
   </div>
 </div>
 
+<div class="overlay" id="clientImportModal">
+  <div class="modal wide">
+    <h3>📥 <span data-i18n="client_import_title">استيراد عملاء</span></h3>
+    <div id="clientImportContent">
+      <div id="ciStep1">
+        <p style="font-size:12px;color:var(--text3);margin-bottom:8px" data-i18n="client_import_help">اختر ملف CSV أو Excel من نظامك القديم — تقدر تربط الأعمدة بعد ما يتحمّل</p>
+        <input type="file" id="ciFileInput" accept=".csv,.xlsx,.xls" onchange="handleClientImportFile(this)">
+      </div>
+      <div id="ciMapping" style="display:none;margin-top:14px"></div>
+      <div id="ciPreviewResult" style="display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sm" onclick="closeModal('clientImportModal')" data-i18n="cancel">إلغاء</button>
+      <button class="btn btn-sm" id="ciPreviewBtn" style="display:none" onclick="previewClientImport()" data-i18n="client_import_preview">معاينة</button>
+      <button class="btn btn-sm btn-green" id="ciConfirmBtn" style="display:none" onclick="confirmClientImport()" data-i18n="client_import_confirm">تأكيد الاستيراد</button>
+    </div>
+  </div>
+</div>
+
 <div class="menu-dropdown" id="globalMenu" style="display:none"></div>
 <div class="toast" id="toast"></div>
 
@@ -1389,6 +1413,16 @@ const I18N = {
     client_product:'المنتج',client_order_value:'قيمة الطلب',client_delivery_company:'شركة التوصيل',
     client_confirm_agent:'وكيل التأكيد',client_followup_agent:'وكيل المتابعة',client_timeline:'الجدول الزمني',
     client_order_history:'سجل الطلبات',
+    client_import_title:'استيراد عملاء',client_import_help:'اختر ملف CSV أو Excel من نظامك القديم — تقدر تربط الأعمدة بعد ما يتحمّل',
+    client_import_preview:'معاينة',client_import_confirm:'تأكيد الاستيراد',client_import_empty:'الملف فارغ أو ما قدرناش نقراه',
+    client_import_parse_error:'تعذّرت قراءة الملف — تأكد أنه CSV أو Excel صحيح',client_import_ignore:'— تجاهل —',
+    client_import_rows_found:'{n} صف تم اكتشافه فـ الملف',client_import_phone_required:'خاصك تربط عمود الهاتف — إجباري',
+    client_import_preview_summary:'{create} عميل جديد، {merge} سيندمج مع عملاء موجودين، {skip} سيُتجاهل (بلا هاتف)',
+    client_import_done:'تم: {created} جديد، {merged} مندمج، {skipped} مُتجاهل',
+    client_import_field_phone:'الهاتف',client_import_field_name:'الاسم',client_import_field_wilaya:'الولاية',
+    client_import_field_commune:'البلدية',client_import_field_address:'العنوان',client_import_field_totalOrders:'إجمالي الطلبات',
+    client_import_field_confirmedOrders:'المؤكدة',client_import_field_cancelledOrders:'الملغاة',
+    client_import_field_deliveredOrders:'المُسلَّمة',client_import_field_totalSpent:'إجمالي الصرف',
     notif_title:'الإشعارات',clear:'مسح',no_notif:'لا توجد إشعارات',overdue:'متأخر',new_order:'طلب جديد',search:'بحث...',order_list:'قائمة الطلبات',view_list:'قائمة',view_board:'بطاقات',manage_agents:'إدارة المؤكدين',add_agent:'إضافة مؤكد',add_product:'إضافة منتج',
     nav_delivery:'التوصيل',nav_stores:'المتاجر',delivery_tracking:'تتبع التوصيل',delivery_integrations:'مزوّدو التوصيل',delivery_help:'كل مزوّد يربط CRM بشركة توصيل. أضف مفتاح الـ API لتفعيل الإنشاء التلقائي للشحنات.',add_provider:'إضافة مزوّد',edit_provider:'تعديل المزوّد',provider_name:'اسم المزوّد',provider_code:'الرمز (Code)',provider_adapter:'النوع (Adapter)',api_url:'API URL',api_key:'API Key',secret_key:'Secret Key',webhook_url:'رابط Webhook',set_default:'المزوّد الافتراضي',default:'افتراضي',configured:'مهيّأ',no_creds:'بدون مفاتيح',inactive:'غير نشط',no_providers:'لا توجد مزوّدون',
     auto_shipment:'الإنشاء التلقائي للشحنات',auto_shipment_help:'إنشاء شحنة تلقائياً عند تأكيد الطلب',poll_interval:'فترة مزامنة التتبّع (دقيقة)',
@@ -1426,6 +1460,16 @@ const I18N = {
     client_product:'Produit',client_order_value:'Valeur',client_delivery_company:'Livreur',
     client_confirm_agent:'Agent confirmation',client_followup_agent:'Agent suivi',client_timeline:'Chronologie',
     client_order_history:'Historique des commandes',
+    client_import_title:'Importer des clients',client_import_help:'Choisissez un fichier CSV ou Excel de votre ancien système — vous pourrez lier les colonnes après le chargement',
+    client_import_preview:'Aperçu',client_import_confirm:'Confirmer l\u2019import',client_import_empty:'Fichier vide ou illisible',
+    client_import_parse_error:'Impossible de lire le fichier — vérifiez qu\u2019il s\u2019agit d\u2019un CSV ou Excel valide',client_import_ignore:'— Ignorer —',
+    client_import_rows_found:'{n} lignes détectées dans le fichier',client_import_phone_required:'La colonne Téléphone doit être liée — obligatoire',
+    client_import_preview_summary:'{create} nouveaux clients, {merge} seront fusionnés avec des clients existants, {skip} ignorés (sans téléphone)',
+    client_import_done:'Terminé : {created} créés, {merged} fusionnés, {skipped} ignorés',
+    client_import_field_phone:'Téléphone',client_import_field_name:'Nom',client_import_field_wilaya:'Wilaya',
+    client_import_field_commune:'Commune',client_import_field_address:'Adresse',client_import_field_totalOrders:'Total commandes',
+    client_import_field_confirmedOrders:'Confirmées',client_import_field_cancelledOrders:'Annulées',
+    client_import_field_deliveredOrders:'Livrées',client_import_field_totalSpent:'Total dépensé',
     notif_title:'Notifications',clear:'Effacer',no_notif:'Aucune notification',overdue:'En retard',new_order:'Nouvelle commande',search:'Rechercher...',order_list:'Liste des commandes',view_list:'Liste',view_board:'Cartes',manage_agents:'Gestion des agents',add_agent:'Ajouter agent',add_product:'Ajouter produit',
     nav_delivery:'Livraison',nav_stores:'Boutiques',delivery_tracking:'Suivi de livraison',delivery_integrations:'Transporteurs',delivery_help:'Chaque transporteur relie le CRM à une société de livraison. Ajoutez la clé API pour activer la création automatique des colis.',add_provider:'Ajouter transporteur',edit_provider:'Modifier',provider_name:'Nom',provider_code:'Code',provider_adapter:'Type',api_url:'API URL',api_key:'API Key',secret_key:'Secret Key',webhook_url:'URL Webhook',set_default:'Par défaut',default:'défaut',configured:'Configuré',no_creds:'Sans clés',inactive:'Inactif',no_providers:'Aucun transporteur',
     auto_shipment:'Création auto des colis',auto_shipment_help:'Créer un colis automatiquement à la confirmation',poll_interval:'Intervalle de synchro suivi (min)',
@@ -1463,6 +1507,16 @@ const I18N = {
     client_product:'Product',client_order_value:'Value',client_delivery_company:'Carrier',
     client_confirm_agent:'Confirmation agent',client_followup_agent:'Follow-up agent',client_timeline:'Timeline',
     client_order_history:'Order history',
+    client_import_title:'Import clients',client_import_help:'Pick a CSV or Excel file from your old system — you can map the columns after it loads',
+    client_import_preview:'Preview',client_import_confirm:'Confirm import',client_import_empty:'File is empty or unreadable',
+    client_import_parse_error:'Could not read the file — make sure it is a valid CSV or Excel file',client_import_ignore:'— Ignore —',
+    client_import_rows_found:'{n} rows detected in the file',client_import_phone_required:'The Phone column must be mapped — required',
+    client_import_preview_summary:'{create} new clients, {merge} will merge with existing clients, {skip} will be skipped (no phone)',
+    client_import_done:'Done: {created} created, {merged} merged, {skipped} skipped',
+    client_import_field_phone:'Phone',client_import_field_name:'Name',client_import_field_wilaya:'Wilaya',
+    client_import_field_commune:'Commune',client_import_field_address:'Address',client_import_field_totalOrders:'Total orders',
+    client_import_field_confirmedOrders:'Confirmed',client_import_field_cancelledOrders:'Cancelled',
+    client_import_field_deliveredOrders:'Delivered',client_import_field_totalSpent:'Total spent',
     notif_title:'Notifications',clear:'Clear',no_notif:'No notifications',overdue:'Overdue',new_order:'New Order',search:'Search...',order_list:'Orders list',view_list:'List',view_board:'Board',manage_agents:'Manage Agents',add_agent:'Add Agent',add_product:'Add Product',
     nav_delivery:'Delivery',nav_stores:'Stores',delivery_tracking:'Delivery Tracking',delivery_integrations:'Delivery Providers',delivery_help:'Each provider links the CRM to a carrier. Add the API key to enable automatic shipment creation.',add_provider:'Add Provider',edit_provider:'Edit Provider',provider_name:'Provider Name',provider_code:'Code',provider_adapter:'Adapter',api_url:'API URL',api_key:'API Key',secret_key:'Secret Key',webhook_url:'Webhook URL',set_default:'Set Default',default:'default',configured:'Configured',no_creds:'No credentials',inactive:'Inactive',no_providers:'No providers',
     auto_shipment:'Automatic Shipment Creation',auto_shipment_help:'Create a shipment automatically when an order is confirmed',poll_interval:'Tracking sync interval (minutes)',
@@ -3107,6 +3161,133 @@ async function saveClientEdit(){
     await api('PUT', '/api/clients/'+currentClientId, body);
     toast(t('t_updated'),'success');
     await openClientModal(currentClientId);
+    fetchClients();
+  }catch(e){ toast(t('t_err'),'error'); }
+}
+
+/* ---------- Client import wizard (architecture upgrade, phase B) ---------- */
+let ciRawRows = [];  // parsed data rows (array of arrays), header row excluded
+let ciHeaders = [];  // detected column headers from row 0
+let ciMapping = {};  // targetFieldKey -> source column index (-1 = ignored)
+const CI_TARGET_FIELDS = [
+  { key:'phone', required:true }, { key:'name' }, { key:'wilaya' }, { key:'commune' }, { key:'address' },
+  { key:'totalOrders' }, { key:'confirmedOrders' }, { key:'cancelledOrders' }, { key:'deliveredOrders' }, { key:'totalSpent' },
+];
+function openClientImportModal(){
+  ciRawRows = []; ciHeaders = []; ciMapping = {};
+  const fileInput = document.getElementById('ciFileInput'); if(fileInput) fileInput.value = '';
+  document.getElementById('ciMapping').style.display = 'none';
+  document.getElementById('ciPreviewResult').style.display = 'none';
+  document.getElementById('ciPreviewBtn').style.display = 'none';
+  document.getElementById('ciConfirmBtn').style.display = 'none';
+  document.getElementById('clientImportModal').classList.add('open');
+}
+/** Reads CSV OR Excel through the SAME SheetJS parser (already loaded for
+ *  the profit calculator's exports) — real CSV-quote handling and native
+ *  .xlsx/.xls support, unlike a naive comma-split.
+ *  CSV and Excel are read DIFFERENTLY on purpose, not just for convenience:
+ *  - CSV is plain text, so it's read via readAsText (the browser's own
+ *    reliable UTF-8 decoder) and parsed with type:'string'. Reading a CSV's
+ *    raw BYTES instead and letting SheetJS guess the encoding was tried
+ *    first and silently corrupted every Arabic name into mojibake — this
+ *    is not a hypothetical, it was caught by testing before shipping.
+ *  - Excel is a real binary container with its own well-defined per-cell
+ *    types, so it's read via readAsArrayBuffer and parsed with type:'array'.
+ *  Both paths use raw:true, which is essential either way: without it, a
+ *  phone number like "0555444333" gets auto-detected as the NUMBER
+ *  555444333 — silently losing the leading zero every Algerian mobile
+ *  number starts with. */
+function handleClientImportFile(input){
+  const file = input.files[0];
+  if(!file) return;
+  const isCsv = /\.csv$/i.test(file.name);
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try{
+      const wb = isCsv
+        ? XLSX.read(e.target.result, {type:'string', raw:true})
+        : XLSX.read(new Uint8Array(e.target.result), {type:'array', raw:true});
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, {header:1, defval:''});
+      if(!rows.length){ toast(t('client_import_empty'),'error'); return; }
+      ciHeaders = rows[0].map(h => String(h||'').trim());
+      ciRawRows = rows.slice(1).filter(r => r.some(c => String(c||'').trim()!==''));
+      if(!ciRawRows.length){ toast(t('client_import_empty'),'error'); return; }
+      renderClientImportMapping();
+    }catch(err){
+      toast(t('client_import_parse_error'),'error');
+    }
+  };
+  if(isCsv) reader.readAsText(file, 'UTF-8'); else reader.readAsArrayBuffer(file);
+}
+/** Best-effort auto-guess so the manager usually just has to confirm,
+ *  not build the whole mapping by hand — matched loosely (case/space
+ *  insensitive) against common column names in Arabic, French, and
+ *  English exports. */
+function autoGuessClientColumn(fieldKey, headers){
+  const guesses = {
+    phone: ['phone','téléphone','telephone','tel','mobile','هاتف'],
+    name: ['name','nom','client','fullname','اسم'],
+    wilaya: ['wilaya','province','state','ولاية'],
+    commune: ['commune','city','ville','baladiya','بلدية'],
+    address: ['address','adresse','عنوان'],
+    totalOrders: ['totalorders','orders','commandes','عددالطلبات'],
+    confirmedOrders: ['confirmed','confirmé','مؤكد'],
+    cancelledOrders: ['cancelled','canceled','annulé','ملغى'],
+    deliveredOrders: ['delivered','livré','مسلم'],
+    totalSpent: ['totalspent','spent','montant','مصروف','مبلغ'],
+  }[fieldKey] || [];
+  return headers.findIndex(h => {
+    const norm = String(h||'').toLowerCase().replace(/[\s_-]/g,'');
+    return guesses.some(g => norm.includes(g.replace(/[\s_-]/g,'')));
+  });
+}
+function renderClientImportMapping(){
+  const wrap = document.getElementById('ciMapping');
+  wrap.innerHTML = '<p style="font-size:11px;color:var(--text3);margin-bottom:8px">'+tfmt('client_import_rows_found',{n:ciRawRows.length})+'</p>' +
+    CI_TARGET_FIELDS.map(f => {
+      const guessed = autoGuessClientColumn(f.key, ciHeaders);
+      ciMapping[f.key] = guessed;
+      const options = '<option value="-1">'+t('client_import_ignore')+'</option>' +
+        ciHeaders.map((h,i) => '<option value="'+i+'"'+(i===guessed?' selected':'')+'>'+escapeHtml(h||('#'+(i+1)))+'</option>').join('');
+      return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'+
+        '<label style="width:140px;font-size:12px;color:var(--text2);flex-shrink:0">'+t('client_import_field_'+f.key)+(f.required?' *':'')+'</label>'+
+        '<select data-field="'+f.key+'" onchange="setClientImportMapping(this)" style="flex:1">'+options+'</select>'+
+      '</div>';
+    }).join('');
+  wrap.style.display = '';
+  document.getElementById('ciPreviewBtn').style.display = '';
+  document.getElementById('ciPreviewResult').style.display = 'none';
+  document.getElementById('ciConfirmBtn').style.display = 'none';
+}
+function setClientImportMapping(sel){ ciMapping[sel.dataset.field] = Number(sel.value); }
+function buildClientImportRecords(){
+  const get = (row, key) => { const idx = ciMapping[key]; return (idx!==undefined && idx>=0) ? String(row[idx]??'').trim() : ''; };
+  return ciRawRows.map(row => ({
+    phone: get(row,'phone'), name: get(row,'name'), wilaya: get(row,'wilaya'), commune: get(row,'commune'), address: get(row,'address'),
+    totalOrders: get(row,'totalOrders'), confirmedOrders: get(row,'confirmedOrders'), cancelledOrders: get(row,'cancelledOrders'),
+    deliveredOrders: get(row,'deliveredOrders'), totalSpent: get(row,'totalSpent'),
+  }));
+}
+async function previewClientImport(){
+  if(ciMapping.phone===undefined || ciMapping.phone<0){ toast(t('client_import_phone_required'),'error'); return; }
+  try{
+    const r = await api('POST','/api/clients/import/preview', { records: buildClientImportRecords() });
+    document.getElementById('ciPreviewResult').innerHTML =
+      '<div class="alert alert-info" style="margin-top:10px">'+tfmt('client_import_preview_summary',{create:r.toCreate,merge:r.toMerge,skip:r.skipped})+'</div>';
+    document.getElementById('ciPreviewResult').style.display = '';
+    document.getElementById('ciConfirmBtn').style.display = '';
+  }catch(e){ toast(t('t_err'),'error'); }
+}
+async function confirmClientImport(){
+  if(ciMapping.phone===undefined || ciMapping.phone<0){ toast(t('client_import_phone_required'),'error'); return; }
+  const fileInput = document.getElementById('ciFileInput');
+  const source = (fileInput && fileInput.files[0]) ? fileInput.files[0].name : 'Import';
+  try{
+    const r = await api('POST','/api/clients/import', { records: buildClientImportRecords(), source });
+    toast(tfmt('client_import_done',{created:r.created,merged:r.merged,skipped:r.skipped}),'success');
+    closeModal('clientImportModal');
+    clientsOffset = 0;
     fetchClients();
   }catch(e){ toast(t('t_err'),'error'); }
 }
