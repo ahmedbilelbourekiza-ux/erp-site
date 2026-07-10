@@ -244,6 +244,13 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
 .agent-stat{text-align:center;background:var(--bg3);border-radius:8px;padding:8px 4px}
 .agent-stat .n{font-size:16px;font-weight:600}
 .agent-stat .l{font-size:9px;color:var(--text3);margin-top:2px}
+.client-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin-bottom:14px}
+.client-stat{text-align:center;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 6px}
+.client-stat-value{font-size:16px;font-weight:700}
+.client-stat-label{font-size:10px;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:.3px}
+.client-edit-form{display:flex;gap:8px;flex-wrap:wrap;align-items:end;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin-bottom:14px}
+.client-edit-form>div{display:flex;flex-direction:column;gap:3px;min-width:110px}
+.client-edit-form label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.3px}
 .progress{height:4px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden}
 .progress-fill{height:100%;border-radius:2px;background:var(--purple);transition:width 0.5s}
 .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
@@ -524,6 +531,9 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
     <button class="nav-item" onclick="showPage('products',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span data-i18n="nav_products">المنتجات والمخزون</span> <span id="stockNavBadge" class="badge" style="display:none;background:var(--red-bg);color:var(--red);border:1px solid var(--red);margin-inline-start:4px"></span>
     </button>
+    <button class="nav-item" onclick="showPage('clients',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg><span data-i18n="nav_clients">العملاء</span>
+    </button>
     <button class="nav-item" onclick="showPage('export',this)">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-i18n="nav_export">تصدير</span>
     </button>
@@ -694,6 +704,25 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
       </div>
       <div id="lowStockBanner" class="alert" style="display:none;background:var(--red-bg);border:1px solid var(--red);color:var(--red);margin-bottom:14px;font-size:12px"></div>
       <div class="products-grid" id="productsGrid"></div>
+    </div>
+
+    <div class="page" id="page-clients">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <h2 style="font-size:15px;font-weight:500" data-i18n="nav_clients">العملاء</h2>
+        <input type="text" id="clientSearchInput" placeholder="" oninput="debounceClientSearch()" style="max-width:220px">
+      </div>
+      <div id="clientsSummary" style="font-size:11px;color:var(--text3);margin-bottom:10px"></div>
+      <div style="overflow:auto;border:1px solid var(--border);border-radius:var(--radius-lg)">
+        <table class="inv-tbl" style="width:100%">
+          <thead><tr>
+            <th data-i18n="client_name">الاسم</th><th data-i18n="client_phone">الهاتف</th><th data-i18n="client_wilaya">الولاية</th>
+            <th data-i18n="client_total_orders">الطلبات</th><th data-i18n="client_delivered">مُسلَّم</th>
+            <th data-i18n="client_total_spent">إجمالي الصرف</th><th data-i18n="client_last_order">آخر طلب</th>
+          </tr></thead>
+          <tbody id="clientsTableBody"></tbody>
+        </table>
+      </div>
+      <div id="clientsPagination" style="display:flex;justify-content:center;gap:8px;margin-top:12px"></div>
     </div>
 
     <div class="page" id="page-export">
@@ -1331,6 +1360,16 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
   </div>
 </div>
 
+<div class="overlay" id="clientModal">
+  <div class="modal wide">
+    <h3>👤 <span id="clientModalTitle"></span></h3>
+    <div id="clientModalContent"><div class="tracking-empty" data-i18n="t_loading">جاري التحميل...</div></div>
+    <div class="modal-footer">
+      <button class="btn btn-sm" onclick="closeModal('clientModal')" data-i18n="close">إغلاق</button>
+    </div>
+  </div>
+</div>
+
 <div class="menu-dropdown" id="globalMenu" style="display:none"></div>
 <div class="toast" id="toast"></div>
 
@@ -1342,7 +1381,14 @@ tr.selected td{background:var(--purple-bg);box-shadow:inset 3px 0 0 var(--purple
  * ======================================================================== */
 const I18N = {
   ar:{_dir:'rtl',
-    brand_title:'CRM التأكيدات',brand_sub:'لوحة المدير',nav_orders:'الطلبات',nav_agents:'المؤكدون',nav_products:'المنتجات والمخزون',nav_export:'تصدير',nav_analytics:'التحليلات',nav_import:'استيراد CSV',nav_settings:'الإعدادات',agent_iface:'واجهة المؤكدين',
+    brand_title:'CRM التأكيدات',brand_sub:'لوحة المدير',nav_orders:'الطلبات',nav_agents:'المؤكدون',nav_products:'المنتجات والمخزون',nav_clients:'العملاء',nav_export:'تصدير',nav_analytics:'التحليلات',nav_import:'استيراد CSV',nav_settings:'الإعدادات',agent_iface:'واجهة المؤكدين',
+    clients_search_ph:'بحث بالاسم أو الهاتف أو الولاية...',clients_summary_count:'{n} عميل',
+    client_name:'الاسم',client_phone:'الهاتف',client_wilaya:'الولاية',client_commune:'البلدية',client_address:'العنوان',
+    client_total_orders:'إجمالي الطلبات',client_confirmed:'مؤكد',client_cancelled:'ملغى',client_delivered:'مُسلَّم',
+    client_total_spent:'إجمالي الصرف',client_avg_order:'متوسط الطلب',client_store:'المتجر',client_brand:'الماركة',
+    client_product:'المنتج',client_order_value:'قيمة الطلب',client_delivery_company:'شركة التوصيل',
+    client_confirm_agent:'وكيل التأكيد',client_followup_agent:'وكيل المتابعة',client_timeline:'الجدول الزمني',
+    client_order_history:'سجل الطلبات',
     notif_title:'الإشعارات',clear:'مسح',no_notif:'لا توجد إشعارات',overdue:'متأخر',new_order:'طلب جديد',search:'بحث...',order_list:'قائمة الطلبات',view_list:'قائمة',view_board:'بطاقات',manage_agents:'إدارة المؤكدين',add_agent:'إضافة مؤكد',add_product:'إضافة منتج',
     nav_delivery:'التوصيل',nav_stores:'المتاجر',delivery_tracking:'تتبع التوصيل',delivery_integrations:'مزوّدو التوصيل',delivery_help:'كل مزوّد يربط CRM بشركة توصيل. أضف مفتاح الـ API لتفعيل الإنشاء التلقائي للشحنات.',add_provider:'إضافة مزوّد',edit_provider:'تعديل المزوّد',provider_name:'اسم المزوّد',provider_code:'الرمز (Code)',provider_adapter:'النوع (Adapter)',api_url:'API URL',api_key:'API Key',secret_key:'Secret Key',webhook_url:'رابط Webhook',set_default:'المزوّد الافتراضي',default:'افتراضي',configured:'مهيّأ',no_creds:'بدون مفاتيح',inactive:'غير نشط',no_providers:'لا توجد مزوّدون',
     auto_shipment:'الإنشاء التلقائي للشحنات',auto_shipment_help:'إنشاء شحنة تلقائياً عند تأكيد الطلب',poll_interval:'فترة مزامنة التتبّع (دقيقة)',
@@ -1372,7 +1418,14 @@ const I18N = {
     store_info:'معلومات المتجر',store_logo:'شعار المتجر',store_platform_short:'المنصة',store_brand_short:'العلامة',order_type:'نوع الطلب',order_type_normal:'طلب عادي',order_type_abandoned:'سلة مهجورة',order_type_draft:'طلب مسودة',nav_alerts:'تنبيهات الوكلاء',alerts_total:'التنبيهات النشطة',alerts_none:'لا توجد تنبيهات حالياً',alerts_flagged_calls:'مكالمة مشبوهة',has_notes_title:'ملاحظة',agent_suspended_label:'الحساب موقوف',role_confirmation:'وكيل تأكيد',err_work_hours_range:'ساعة النهاية لازم تكون أكبر من ساعة البداية',product_image:'صورة المنتج (تُستعمل إذا ماكانش تنويعات، أو التنويع بلا صورة خاصة به)',product_threshold:'عتبة تنبيه المخزون (بلا تنويعات)',calc_iface:'حاسبة الربح/الخسارة',nav_calculator:'حاسبة الربح/الخسارة',role_followup:'وكيل متابعة',role_both:'الاثنين معاً',reactivate:'إعادة تفعيل',missed_orders_label:'طلبات فايتة',reset_counter:'تصفير العداد',acct_section_title:'مساءلة وكلاء التأكيد',acct_section_help:'هذا مختلف عن "تنبيه إذا لم يُتصل" فوق — ذاك مجرد تنبيه بصري عندك، وهذا فعل تلقائي حقيقي على الخادم (إعادة تعيين + تعليق حساب).',reassign_minutes:'دقائق بلا اتصال قبل إعادة التعيين التلقائي',enable_auto_reassign:'تفعيل إعادة التعيين التلقائي',auto_reassign_off_help:'إذا معطل: الطلب يبقى عند نفس الوكيل، بصح التنبيه للمدير والعداد يبقاو خدامين',work_hours:'ساعات الدوام (توقيت الجزائر) — السويب ما يخدمش برا هاذ النطاق',to_label:'إلى',enable_auto_suspend:'تفعيل التعليق التلقائي',suspend_threshold:'عدد الطلبات الفايتة قبل التعليق التلقائي',latest_delivery_status:'آخر حالة توصيل',default_carrier:'المزوّد الافتراضي للمتجر',carrier_selector:'اختر شركة التوصيل',night_grace:'فترة سماح للطلبات اللي جات بره ساعات الدوام (دقائق) — بدل ما تتحاسب من ساعة الإنشاء، تتحاسب من بداية الدوام + هاذي المدة',delivered_colis:'طرود موصلة',returned_colis:'طرود مرتجعة'
   },
   fr:{_dir:'ltr',
-    brand_title:'CRM Confirmations',brand_sub:'Console Manager',nav_orders:'Commandes',nav_agents:'Agents',nav_products:'Produits & Stock',nav_export:'Export',nav_analytics:'Analystes',nav_import:'Import CSV',nav_settings:'Paramètres',agent_iface:'Interface Agents',
+    brand_title:'CRM Confirmations',brand_sub:'Console Manager',nav_orders:'Commandes',nav_agents:'Agents',nav_products:'Produits & Stock',nav_clients:'Clients',nav_export:'Export',nav_analytics:'Analystes',nav_import:'Import CSV',nav_settings:'Paramètres',agent_iface:'Interface Agents',
+    clients_search_ph:'Rechercher par nom, téléphone ou wilaya...',clients_summary_count:'{n} clients',
+    client_name:'Nom',client_phone:'Téléphone',client_wilaya:'Wilaya',client_commune:'Commune',client_address:'Adresse',
+    client_total_orders:'Total commandes',client_confirmed:'Confirmées',client_cancelled:'Annulées',client_delivered:'Livrées',
+    client_total_spent:'Total dépensé',client_avg_order:'Panier moyen',client_store:'Boutique',client_brand:'Marque',
+    client_product:'Produit',client_order_value:'Valeur',client_delivery_company:'Livreur',
+    client_confirm_agent:'Agent confirmation',client_followup_agent:'Agent suivi',client_timeline:'Chronologie',
+    client_order_history:'Historique des commandes',
     notif_title:'Notifications',clear:'Effacer',no_notif:'Aucune notification',overdue:'En retard',new_order:'Nouvelle commande',search:'Rechercher...',order_list:'Liste des commandes',view_list:'Liste',view_board:'Cartes',manage_agents:'Gestion des agents',add_agent:'Ajouter agent',add_product:'Ajouter produit',
     nav_delivery:'Livraison',nav_stores:'Boutiques',delivery_tracking:'Suivi de livraison',delivery_integrations:'Transporteurs',delivery_help:'Chaque transporteur relie le CRM à une société de livraison. Ajoutez la clé API pour activer la création automatique des colis.',add_provider:'Ajouter transporteur',edit_provider:'Modifier',provider_name:'Nom',provider_code:'Code',provider_adapter:'Type',api_url:'API URL',api_key:'API Key',secret_key:'Secret Key',webhook_url:'URL Webhook',set_default:'Par défaut',default:'défaut',configured:'Configuré',no_creds:'Sans clés',inactive:'Inactif',no_providers:'Aucun transporteur',
     auto_shipment:'Création auto des colis',auto_shipment_help:'Créer un colis automatiquement à la confirmation',poll_interval:'Intervalle de synchro suivi (min)',
@@ -1402,7 +1455,14 @@ const I18N = {
     store_info:'Infos boutique',store_logo:'Logo boutique',store_platform_short:'Plateforme',store_brand_short:'Marque',order_type:'Type de commande',order_type_normal:'Commande normale',order_type_abandoned:'Panier abandonné',order_type_draft:'Commande brouillon',nav_alerts:'Alertes agents',alerts_total:'Alertes actives',alerts_none:'Aucune alerte actuellement',alerts_flagged_calls:'appel(s) suspect(s)',agent_suspended_label:'Compte suspendu',role_confirmation:'Agent confirmation',err_work_hours_range:"L'heure de fin doit être supérieure à l'heure de début",product_image:"Image du produit (utilisée s'il n'y a pas de variantes, ou si la variante n'a pas sa propre image)",product_threshold:'Seuil d\'alerte de stock (sans variantes)',calc_iface:'Calculateur Profit/Perte',nav_calculator:'Calculateur Profit/Perte',role_followup:'Agent suivi',role_both:'Les deux',reactivate:'Réactiver',missed_orders_label:'Commandes manquées',reset_counter:'Réinitialiser',acct_section_title:'Responsabilité des agents',acct_section_help:'Différent de "alerte si pas appelé" ci-dessus — ça c\'est juste un indicateur visuel local, ceci est une action automatique réelle côté serveur (réaffectation + suspension).',reassign_minutes:'Minutes sans appel avant réaffectation automatique',enable_auto_reassign:'Activer la réaffectation automatique',auto_reassign_off_help:'Si désactivé : la commande reste chez le même agent, mais l\'alerte manager et le compteur continuent de fonctionner',work_hours:'Heures de travail (heure d\'Algérie) — le balayage n\'agit pas en dehors',to_label:'à',enable_auto_suspend:'Activer la suspension automatique',suspend_threshold:'Nombre de commandes manquées avant suspension automatique',has_notes_title:'Note',latest_delivery_status:'Dernier statut livraison',default_carrier:'Transporteur par défaut',carrier_selector:'Choisir le transporteur',night_grace:"Délai de grâce pour les commandes créées hors heures de travail (minutes) — comptées depuis le début du travail + ce délai, pas depuis leur création",delivered_colis:'Colis livrés',returned_colis:'Colis retournés'
   },
   en:{_dir:'ltr',
-    brand_title:'Confirmation CRM',brand_sub:'Manager Console',nav_orders:'Orders',nav_agents:'Agents',nav_products:'Products & Stock',nav_export:'Export',nav_analytics:'Analytics',nav_import:'CSV Import',nav_settings:'Settings',agent_iface:'Agents Interface',
+    brand_title:'Confirmation CRM',brand_sub:'Manager Console',nav_orders:'Orders',nav_agents:'Agents',nav_products:'Products & Stock',nav_clients:'Clients',nav_export:'Export',nav_analytics:'Analytics',nav_import:'CSV Import',nav_settings:'Settings',agent_iface:'Agents Interface',
+    clients_search_ph:'Search by name, phone, or wilaya...',clients_summary_count:'{n} clients',
+    client_name:'Name',client_phone:'Phone',client_wilaya:'Wilaya',client_commune:'Commune',client_address:'Address',
+    client_total_orders:'Total orders',client_confirmed:'Confirmed',client_cancelled:'Cancelled',client_delivered:'Delivered',
+    client_total_spent:'Total spent',client_avg_order:'Avg order',client_store:'Store',client_brand:'Brand',
+    client_product:'Product',client_order_value:'Value',client_delivery_company:'Carrier',
+    client_confirm_agent:'Confirmation agent',client_followup_agent:'Follow-up agent',client_timeline:'Timeline',
+    client_order_history:'Order history',
     notif_title:'Notifications',clear:'Clear',no_notif:'No notifications',overdue:'Overdue',new_order:'New Order',search:'Search...',order_list:'Orders list',view_list:'List',view_board:'Board',manage_agents:'Manage Agents',add_agent:'Add Agent',add_product:'Add Product',
     nav_delivery:'Delivery',nav_stores:'Stores',delivery_tracking:'Delivery Tracking',delivery_integrations:'Delivery Providers',delivery_help:'Each provider links the CRM to a carrier. Add the API key to enable automatic shipment creation.',add_provider:'Add Provider',edit_provider:'Edit Provider',provider_name:'Provider Name',provider_code:'Code',provider_adapter:'Adapter',api_url:'API URL',api_key:'API Key',secret_key:'Secret Key',webhook_url:'Webhook URL',set_default:'Set Default',default:'default',configured:'Configured',no_creds:'No credentials',inactive:'Inactive',no_providers:'No providers',
     auto_shipment:'Automatic Shipment Creation',auto_shipment_help:'Create a shipment automatically when an order is confirmed',poll_interval:'Tracking sync interval (minutes)',
@@ -1729,6 +1789,7 @@ function showPage(name,btn){
   document.getElementById('pageTitle').textContent=t(titleKey);
   if(name==='agents') renderAgents();
   if(name==='products') { fetchProducts().then(renderProducts); }
+  if(name==='clients') { fetchClients(); }
   if(name==='export') updateExportCount();
   if(name==='analytics') renderAnalytics();
   if(name==='delivery') renderProvidersPage();
@@ -2919,6 +2980,137 @@ async function saveFakeClassification(){
 /* ===========================================================================
  * INVENTORY — per-variant stock editor + append-only history (req §8, §10).
  * ======================================================================== */
+/* ---------- Clients (architecture upgrade, phase A) ---------- */
+let clientsOffset = 0;
+const CLIENTS_PAGE_SIZE = 50;
+let clientSearchDebounceTimer = null;
+let currentClientId = null;
+
+function debounceClientSearch(){
+  clearTimeout(clientSearchDebounceTimer);
+  clientSearchDebounceTimer = setTimeout(() => { clientsOffset = 0; fetchClients(); }, 350);
+}
+async function fetchClients(){
+  const input = document.getElementById('clientSearchInput');
+  if(input && !input.placeholder) input.placeholder = t('clients_search_ph');
+  const search = input ? input.value : '';
+  try{
+    const r = await api('GET', '/api/clients?search='+encodeURIComponent(search)+'&limit='+CLIENTS_PAGE_SIZE+'&offset='+clientsOffset);
+    renderClientsTable(r.items, r.total);
+  }catch(e){
+    document.getElementById('clientsTableBody').innerHTML = '<tr><td colspan="7" style="color:var(--red)">'+t('t_err')+'</td></tr>';
+  }
+}
+function renderClientsTable(items, total){
+  document.getElementById('clientsSummary').textContent = tfmt('clients_summary_count', {n: total});
+  const body = document.getElementById('clientsTableBody');
+  if(!items.length){
+    body.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px">'+t('t_no_products')+'</td></tr>';
+    renderClientsPagination(total); return;
+  }
+  body.innerHTML = items.map(c => (
+    '<tr style="cursor:pointer" data-id="'+c.id+'" onclick="openClientModal(this.dataset.id)">'+
+      '<td>'+escapeHtml(c.name||'—')+'</td>'+
+      '<td style="font-family:monospace">'+escapeHtml(c.phoneDisplay||c.phone)+'</td>'+
+      '<td>'+escapeHtml(c.wilaya||'—')+'</td>'+
+      '<td>'+c.totalOrders+'</td>'+
+      '<td style="color:var(--green)">'+c.deliveredOrders+'</td>'+
+      '<td style="color:var(--purple2);font-weight:600">'+Math.round(c.totalSpent).toLocaleString()+' DA</td>'+
+      '<td style="font-size:11px;color:var(--text3)">'+(c.lastOrderAt?fmt(c.lastOrderAt):'—')+'</td>'+
+    '</tr>'
+  )).join('');
+  renderClientsPagination(total);
+}
+function renderClientsPagination(total){
+  const el = document.getElementById('clientsPagination');
+  if(!el) return;
+  if(total <= CLIENTS_PAGE_SIZE){ el.innerHTML=''; return; }
+  const page = Math.floor(clientsOffset/CLIENTS_PAGE_SIZE)+1;
+  const pages = Math.ceil(total/CLIENTS_PAGE_SIZE);
+  el.innerHTML =
+    '<button class="btn btn-sm" '+(page<=1?'disabled':'')+' onclick="changeClientsPage(-1)">‹</button>'+
+    '<span style="font-size:12px;color:var(--text3);align-self:center">'+page+' / '+pages+'</span>'+
+    '<button class="btn btn-sm" '+(page>=pages?'disabled':'')+' onclick="changeClientsPage(1)">›</button>';
+}
+function changeClientsPage(dir){
+  clientsOffset = Math.max(0, clientsOffset + dir*CLIENTS_PAGE_SIZE);
+  fetchClients();
+}
+async function openClientModal(id){
+  currentClientId = id;
+  document.getElementById('clientModalTitle').textContent = t('t_loading');
+  document.getElementById('clientModalContent').innerHTML = '<div class="tracking-empty">'+t('t_loading')+'</div>';
+  document.getElementById('clientModal').classList.add('open');
+  try{
+    const c = await api('GET', '/api/clients/'+id);
+    renderClientModal(c);
+  }catch(e){
+    document.getElementById('clientModalContent').innerHTML = '<div class="tracking-empty" style="color:var(--red)">'+escapeHtml(e.message)+'</div>';
+  }
+}
+function clientStatCard(label, value, color){
+  return '<div class="client-stat"><div class="client-stat-value" style="color:'+(color||'var(--text)')+'">'+value+'</div><div class="client-stat-label">'+label+'</div></div>';
+}
+function renderClientModal(c){
+  document.getElementById('clientModalTitle').textContent = c.name || c.phoneDisplay || c.phone;
+  const stats = '<div class="client-stats-grid">'+
+      clientStatCard(t('client_total_orders'), c.totalOrders)+
+      clientStatCard(t('client_confirmed'), c.confirmedOrders, 'var(--green)')+
+      clientStatCard(t('client_cancelled'), c.cancelledOrders, 'var(--red)')+
+      clientStatCard(t('client_delivered'), c.deliveredOrders, 'var(--green)')+
+      clientStatCard(t('client_total_spent'), Math.round(c.totalSpent).toLocaleString()+' DA', 'var(--purple2)')+
+      clientStatCard(t('client_avg_order'), Math.round(c.avgOrderValue).toLocaleString()+' DA')+
+    '</div>';
+  const editForm = '<div class="client-edit-form">'+
+      '<div><label>'+t('client_name')+'</label><input id="clientEditName" value="'+escapeHtml(c.name||'')+'"></div>'+
+      '<div><label>'+t('client_wilaya')+'</label><input id="clientEditWilaya" value="'+escapeHtml(c.wilaya||'')+'"></div>'+
+      '<div><label>'+t('client_commune')+'</label><input id="clientEditCommune" value="'+escapeHtml(c.commune||'')+'"></div>'+
+      '<div style="flex:1;min-width:200px"><label>'+t('client_address')+'</label><input id="clientEditAddress" value="'+escapeHtml(c.address||'')+'"></div>'+
+      '<button class="btn btn-sm btn-green" onclick="saveClientEdit()">'+t('save')+'</button>'+
+    '</div>';
+  const historyRows = (c.history||[]).map(h => {
+    const timelineTxt = (h.timeline&&h.timeline.length) ? h.timeline.map(te=>escapeHtml(te.status||te.description||'')).join(' → ') : '—';
+    return '<tr>'+
+      '<td style="font-size:11px;color:var(--text3);white-space:nowrap">'+fmt(h.createdAt)+'</td>'+
+      '<td>'+escapeHtml(h.storeName||h.platform||'—')+'</td>'+
+      '<td>'+escapeHtml(h.brand||'—')+'</td>'+
+      '<td>'+escapeHtml(h.product||'—')+(h.productVariant?(' / '+escapeHtml(h.productVariant)):'')+'</td>'+
+      '<td>'+h.quantity+'</td>'+
+      '<td style="font-weight:600;white-space:nowrap">'+Math.round(h.orderValue).toLocaleString()+' DA</td>'+
+      '<td>'+escapeHtml(h.deliveryCompany||'—')+'</td>'+
+      '<td>'+escapeHtml(h.confirmationAgent||'—')+'</td>'+
+      '<td>'+escapeHtml(h.followupAgent||'—')+'</td>'+
+      '<td><span class="badge b-'+escapeHtml(h.status||'pending')+'">'+statusLabel(h.status||'pending')+'</span></td>'+
+      '<td style="font-size:11px">'+timelineTxt+'</td>'+
+    '</tr>';
+  }).join('');
+  const historyTable = (c.history&&c.history.length) ?
+    '<table class="inv-tbl" style="width:100%;margin-top:8px"><thead><tr>'+
+      '<th>'+t('inv_movement_time')+'</th><th>'+t('client_store')+'</th><th>'+t('client_brand')+'</th><th>'+t('client_product')+'</th>'+
+      '<th>'+t('add_stock_qty')+'</th><th>'+t('client_order_value')+'</th><th>'+t('client_delivery_company')+'</th>'+
+      '<th>'+t('client_confirm_agent')+'</th><th>'+t('client_followup_agent')+'</th><th>'+t('inv_reason')+'</th><th>'+t('client_timeline')+'</th>'+
+    '</tr></thead><tbody>'+historyRows+'</tbody></table>' :
+    '<div class="tracking-empty">'+t('t_no_movements')+'</div>';
+  document.getElementById('clientModalContent').innerHTML = stats + editForm +
+    '<h4 style="font-size:12px;color:var(--text3);margin:16px 0 4px;text-transform:uppercase;letter-spacing:.3px">'+t('client_order_history')+'</h4>'+
+    '<div style="max-height:320px;overflow:auto">'+historyTable+'</div>';
+}
+async function saveClientEdit(){
+  if(!currentClientId) return;
+  const body = {
+    name: document.getElementById('clientEditName')?.value||'',
+    wilaya: document.getElementById('clientEditWilaya')?.value||'',
+    commune: document.getElementById('clientEditCommune')?.value||'',
+    address: document.getElementById('clientEditAddress')?.value||'',
+  };
+  try{
+    await api('PUT', '/api/clients/'+currentClientId, body);
+    toast(t('t_updated'),'success');
+    await openClientModal(currentClientId);
+    fetchClients();
+  }catch(e){ toast(t('t_err'),'error'); }
+}
+
 let inventoryProductId = null; // current product shown in the inventory modal
 let inventoryHasVariants = false; // whether that product has any variants
 let addStockMode = null; // null | 'purchase' | 'return'
