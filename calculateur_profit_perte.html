@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculateur Profit / Perte — DA</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 
@@ -301,6 +302,9 @@
       <div class="card-body">
         <div id="grand-breakdown" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
         <div class="divider"></div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin:8px 0 4px;">Détail agrégé (tous produits) — comme le Résumé Détaillé de chaque produit</div>
+        <div id="grand-detailed-breakdown"></div>
+        <div class="divider"></div>
         <div class="summary-row"><span class="s-label">Somme des profits de tous les produits</span><span class="s-val pos" id="grand-sum-profit">—</span></div>
         <div class="summary-row"><span class="s-label">− Charges Fixes + Imprévues</span><span class="s-val neg" id="grand-other-costs">—</span></div>
         <div class="divider" style="margin:4px 0 8px;"></div>
@@ -323,6 +327,7 @@
           <button onclick="saveCurrentAsFinancialRecord()" style="background:linear-gradient(135deg,#a855f7,#7c3aed);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;">💾 Sauvegarder ce calcul</button>
           <button onclick="aggregateCurrentPeriod()" style="background:var(--input-bg);border:1px solid #a855f7;color:#a855f7;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;">⚡ Agréger depuis l'historique</button>
           <button onclick="openFinancialHistory()" style="background:var(--input-bg);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;">📜 Voir l'historique</button>
+          <button onclick="exportFinancialHistory()" style="background:var(--input-bg);border:1px solid #22c55e;color:#22c55e;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;">📥 Exporter (Excel)</button>
         </div>
         <div id="fin_aggregate_panel" style="display:none;margin-top:10px;padding:10px;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.3);border-radius:8px;"></div>
         <div id="fin_history_panel" style="display:none;margin-top:10px;max-height:320px;overflow:auto;"></div>
@@ -798,6 +803,17 @@
     } else {
       const range = computeAlignedRange(mode);
       globalSince = range[0]; globalUntil = range[1];
+      // BUGFIX: a preset button (Cette semaine, Ce mois-ci...) used to leave
+      // range_since/range_until empty. If the manager then clicked
+      // "Appliquer" (out of habit, or just to confirm), it always ran
+      // setRange('custom') and found both date fields empty -> alert
+      // "Choisissez les deux dates" and nothing applied, even though the
+      // preset itself DID work. Keeping the date inputs in sync with
+      // whatever preset is active makes "Appliquer" idempotent no matter
+      // what was clicked before it.
+      const toDateInputValue = ts => { const d = new Date(ts); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+      document.getElementById('range_since').value = toDateInputValue(globalSince);
+      document.getElementById('range_until').value = toDateInputValue(globalUntil);
     }
     document.getElementById('range_label').textContent =
       new Date(globalSince).toLocaleDateString('fr-DZ') + ' → ' + new Date(globalUntil).toLocaleDateString('fr-DZ') + ' (' + PERIOD_LABELS[mode] + ')';
@@ -1018,11 +1034,12 @@
     // Aggregate totals across every product — this is exactly what a saved
     // financial record needs (Revenue/Product costs/Shipping/Advertising),
     // computed fresh every time the inputs change, never stored mid-way.
-    let totalRevenue = 0, totalProductCosts = 0, totalShipping = 0, totalAdvertising = 0, totalIncidents = 0;
+    let totalRevenue = 0, totalProductCosts = 0, totalBuy = 0, totalPack = 0, totalShipping = 0, totalAdvertising = 0, totalIncidents = 0;
     activeProducts.forEach(pid => {
       const p = calcProduct(pid);
       sumProfit += p.profit;
       totalRevenue += p.real_ca; totalProductCosts += p.buy_total + p.pack_total;
+      totalBuy += p.buy_total; totalPack += p.pack_total;
       totalShipping += p.ship_total; totalAdvertising += p.ads_da; totalIncidents += p.incidents;
       const nameEl = document.getElementById('product_name_' + pid);
       breakdown.push({ name: (nameEl ? nameEl.value : pid) || pid, profit: p.profit, revenue: p.real_ca });
@@ -1045,6 +1062,23 @@
           <span style="color:var(--muted);">${(b.name||'Produit').replace(/</g,'&lt;')}</span>
           <span style="font-family:'JetBrains Mono',monospace;font-weight:600;${b.profit<0?'color:var(--red)':'color:var(--green)'}">${fmt(b.profit)}</span>
         </div>`).join('') : '<div style="font-size:12px;color:var(--muted);">Aucun produit ajouté</div>';
+    }
+
+    // Détail agrégé — mêmes 6 lignes que la carte "F — Résumé Détaillé" de
+    // chaque produit, mais sommées sur tous les produits actifs. La somme de
+    // ces 6 lignes doit égaler sumProfit (vérifiable ligne par ligne, comme
+    // pour un seul produit).
+    const dEl = document.getElementById('grand-detailed-breakdown');
+    if(dEl){
+      const row = (label, value, cls) => `<div class="summary-row"><span class="s-label">${label}</span><span class="s-val ${cls}" style="font-family:'JetBrains Mono',monospace;">${fmt(value)}</span></div>`;
+      dEl.innerHTML = activeProducts.length ? (
+        row('CA Réel (livreur) — total', totalRevenue, 'pos') +
+        row('− Coût Achat Total', totalBuy, 'neg') +
+        row('− Coût Emballage Total', totalPack, 'neg') +
+        row('− Coût Livraison Total', totalShipping, 'neg') +
+        row('− Budget Publicité (DA)', totalAdvertising, 'neg') +
+        row('− Total Incidents (retours + échanges + pertes)', totalIncidents, 'neg')
+      ) : '<div style="font-size:12px;color:var(--muted);">Aucun produit ajouté</div>';
     }
     const gp = document.getElementById('grand-sum-profit'); if(gp) gp.textContent = fmt(sumProfit);
     const go = document.getElementById('grand-other-costs'); if(go) go.textContent = fmt(other);
@@ -1122,6 +1156,29 @@
           '<td style="padding:6px;color:var(--muted)">'+(rec.notes?rec.notes.replace(/</g,'&lt;'):'—')+(rec.source==='aggregated'?' <span style="opacity:.6">(agrégé)</span>':'')+'</td>'+
         '</tr>').join('') + '</tbody></table>';
     }catch(e){ panel.innerHTML = '<div style="font-size:12px;color:var(--red)">Erreur de chargement.</div>'; }
+  }
+
+  /** Exports the CURRENTLY-SELECTED period-type's saved financial-record
+   *  history to Excel — same records openFinancialHistory() displays, but up
+   *  to the API's 500-record cap rather than the 50 shown on-page. */
+  async function exportFinancialHistory(){
+    try {
+      const r = await fetch(API_BASE + '/api/financial-records?periodType=' + currentPeriodType + '&limit=500');
+      const d = await r.json();
+      if(!d.items.length){ alert('Aucun dossier sauvegardé pour "'+PERIOD_LABELS[currentPeriodType]+'" à exporter.'); return; }
+      const rows = d.items.map(rec => ({
+        'Début période': new Date(rec.startDate).toLocaleDateString('fr-DZ'),
+        'Fin période': new Date(rec.endDate).toLocaleDateString('fr-DZ'),
+        'Type': PERIOD_LABELS[rec.periodType] || rec.periodType,
+        'Revenu': rec.revenue, 'Coûts Produits': rec.productCosts, 'Livraison': rec.shippingCosts,
+        'Publicité': rec.advertisingCosts, 'Charges Fixes': rec.fixedExpenses, 'Charges Imprévues': rec.unexpectedExpenses,
+        'Profit Net': rec.netProfit, 'Marge (%)': +Number(rec.margin).toFixed(1),
+        'Source': rec.source === 'aggregated' ? 'Agrégé' : 'Manuel', 'Notes': rec.notes || '',
+      }));
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), 'Historique');
+      XLSX.writeFile(wb, 'Historique_Financier_' + currentPeriodType + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    } catch(e) { alert('❌ Erreur d\'export: '+e.message); }
   }
 
   let lastAggregateResult = null;
